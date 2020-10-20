@@ -57,7 +57,9 @@ def main():
     else:
         space.save(path_output)
 
-    logging.info("--- %s seconds ---" % (time.time() - start_time))                   
+    logging.info("--- %s seconds ---" % (time.time() - start_time))                
+    print("")   
+
 
     
 if __name__ == '__main__':

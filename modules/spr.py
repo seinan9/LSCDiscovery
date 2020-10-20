@@ -62,7 +62,9 @@ def main():
 
     print('\t'.join((str(rho), str(p))))
               
-    logging.info("--- %s seconds ---" % (time.time() - start_time))                   
+    logging.info("--- %s seconds ---" % (time.time() - start_time))            
+    print("")
+
 
                 
 if __name__ == '__main__':

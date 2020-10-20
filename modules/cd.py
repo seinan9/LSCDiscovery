@@ -97,8 +97,9 @@ def main():
 
                 
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
+    print("")
     
-    
+
 
 if __name__ == '__main__':
     main()

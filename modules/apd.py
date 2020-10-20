@@ -74,7 +74,8 @@ def main():
     # Print average pairwise cosine distance
     print(apd)
 
-    logging.info("--- %s seconds ---" % (time.time() - start_time))                   
+    logging.info("--- %s seconds ---" % (time.time() - start_time))                 
+    print("")  
     
     
 

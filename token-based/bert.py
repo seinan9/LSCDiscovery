@@ -44,16 +44,16 @@ def main():
     logging.info("Load sentences")
     if language == 'eng':
         tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-        model = BertTokenizer.from_pretrained('bert-base-cased' ,output_hidden_states=True)
+        model = BertModel.from_pretrained('bert-base-cased', output_hidden_states=True)
     elif language == 'ger':
         tokenizer = BertTokenizer.from_pretrained('bert-base-german-cased')
-        model = BertTokenizer.from_pretrained('bert-base-german-cased',output_hidden_states=True)
+        model = BertModel.from_pretrained('bert-base-german-cased', output_hidden_states=True)
     elif language == 'swe':
         tokenizer = AutoTokenizer.from_pretrained('KB/bert-base-swedish-cased')
-        model = AutoTokenizer.from_pretrained('KB/bert-base-swedish-cased',output_hidden_states=True)
+        model = AutoModel.from_pretrained('KB/bert-base-swedish-cased', output_hidden_states=True)
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
-        model = BertTokenizer.from_pretrained('bert-base-multilingual-cased' ,output_hidden_states=True)
+        model = BertModel.from_pretrained('bert-base-multilingual-cased', output_hidden_states=True)
 
 
     # Load sentences 

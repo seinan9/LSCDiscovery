@@ -60,7 +60,8 @@ def main():
     # Print cosine distance
     print(cos)
 
-    logging.info("--- %s seconds ---" % (time.time() - start_time))                   
+    logging.info("--- %s seconds ---" % (time.time() - start_time))              
+    print("")     
     
     
 

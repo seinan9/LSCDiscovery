@@ -15,7 +15,7 @@ def main():
     # Get the arguments
     args = docopt("""
     Usage:
-        extract.py <path_corpus_lemma> <path_corpus_token> <path_target_words> <path_output_directory> <language>
+        extract_uses.py <path_corpus_lemma> <path_corpus_token> <path_target_words> <path_output_directory> <language>
            
     Arguments:
         <path_corpus_lemma>     = Path to the lemmatized corpus
@@ -56,7 +56,8 @@ def main():
                     u'm̃' : u'mm', u'æ' : u'ae', u'Æ' : u'Ae', u' ,': u',',
                     u' .': u'.', u' ;': u';', u' ?': u'?', u' !': u'!',
                     u'„ ': u'„', u' “': u'“', u' "': u'"', u' :': u':', u' )': u')',
-                    u'( ': u'(', u' \'s' : u'\'s', u'- ' : u'-', u'  ' : u' ', u'göñ' : u'gönn', u'spañ' : u'spann'}
+                    u'( ': u'(', u' \'s' : u'\'s', u'- ' : u'-', u'  ' : u' ', 
+                    u'göñ' : u'gönn', u'spañ' : u'spann'}
     elif language == 'eng':
          trans_table = {u' ,': u',',
                     u' .': u'.', u' ;': u';', u' ?': u'?', u' !': u'!',
@@ -108,6 +109,8 @@ def main():
                         writer.writerow([sentences_token[i], index, 0, target_word])
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
+    print("")
+
 
 
 if __name__ == '__main__':

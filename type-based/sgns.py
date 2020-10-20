@@ -79,6 +79,7 @@ def main():
     model.save(path_output + '.model')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
+    print("")
 
 
 
