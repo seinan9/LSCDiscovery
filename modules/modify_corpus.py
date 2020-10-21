@@ -59,20 +59,24 @@ def main():
     
     # Inject sentences
     logging.info("Inject usages")
+    usages = {}
     for target_word in target_words:
-        with open(dir_usages+target_word+'.csv', 'r', encoding='utf-8') as usages:
-            reader = csv.DictReader(usages, delimiter='\t')
+        with open(dir_usages+target_word+'.csv', 'r', encoding='utf-8') as usage_file:            
+            reader = csv.DictReader(usage_file, delimiter='\t', quoting=csv.QUOTE_NONE)
             for row in reader:
-                sentences.append(row['sentence_lemma'].strip('$'))
+                identifier = row['identifier'].rsplit('-', 1)[0]
+                usages[identifier] = row['sentence_lemma'].replace('$', '').replace('  ', ' ')
 
-    sentences = list(dict.fromkeys(sentences))
-    random.shuffle(sentences, random)
+    for key in usages:
+        sentences.append(usages[key])
+
+    random.shuffle(sentences)
 
     # Save corpus
     logging.info("Save corpus")
     with gzip.open(path_output+'.txt.gz', 'wt', encoding='utf-8') as corpus: 
         for sentence in sentences:
-            corpus.write(sentence+'\n')
+            corpus.write(sentence)
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")
