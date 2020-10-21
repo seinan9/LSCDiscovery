@@ -85,7 +85,6 @@ def main():
         distance = cosine_distance(v1, v2)
         scores[(t1, t2)] = distance
         
-        
     with open(path_output, 'w', encoding='utf-8') as f_out:
         for (t1, t2) in targets:
             if is_fst: # output only first target string
@@ -94,12 +93,10 @@ def main():
                 f_out.write('\t'.join((t2, str(scores[(t1, t2)])+'\n')))
             else: # standard outputs both target strings    
                 f_out.write('\t'.join(('%s,%s' % (t1,t2), str(scores[(t1, t2)])+'\n')))
-
                 
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
     print("")
     
-
 
 if __name__ == '__main__':
     main()

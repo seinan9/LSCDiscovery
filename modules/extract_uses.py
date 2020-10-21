@@ -36,12 +36,10 @@ def main():
     logging.info(__file__.upper())
     start_time = time.time()
 
-
     # Read targetWords into list
     logging.info("Read target words")
     with open(path_target_words) as f:
         target_words = [line.strip("\n") for line in f]
-
 
     # create csv-files with the correct structure
     for target_word in target_words:
@@ -73,14 +71,12 @@ def main():
     else:
         print('Language not supported')
 
-
     # Read lemmatized corpus
     logging.info("Read corpora ")
     sentences_lemma = []
     with gzip.open(path_corpus_lemma, 'rt', encoding="utf-8") as corpus_lemma:
         for sentence in corpus_lemma:
             sentences_lemma.append(sentence)
-
 
     # Read tokenized corpus
     sentences_token = []
@@ -89,7 +85,6 @@ def main():
             for key, value in trans_table.items():
                 sentence = sentence.replace(key, value)
             sentences_token.append(sentence)
-
 
     # Whenever a targetWord occurs in a sentence, write down sentences, target_index, 0 and the targetWord in the output file
     logging.info("Find word usages")
@@ -110,7 +105,6 @@ def main():
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")
-
 
 
 if __name__ == '__main__':

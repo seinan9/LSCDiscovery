@@ -34,7 +34,6 @@ def main():
     logging.info(__file__.upper())
     start_time = time.time()    
     
-
     # Load matrices 
     try:
         space1 = Space(path_matrix1, format='npz')   
@@ -48,11 +47,9 @@ def main():
     vectors1 = space1.matrix.toarray()
     vectors2 = space2.matrix.toarray()
 
-
     # Get number of rows/vectors
     samples_corpus1 = []
     samples_corpus2 = []
-
 
     # Set the sample size and get the samples
     size = min(len(vectors1), len(vectors2), 200)
@@ -60,7 +57,6 @@ def main():
     for i in randoms:
         samples_corpus1.append(vectors1[i])
         samples_corpus2.append(vectors2[i])
-
 
     # Compute the average pairwise cosine distance 
     apds = []
@@ -70,7 +66,6 @@ def main():
             apds.append(apd)    
     apd = np.mean(apds, axis=0)
 
-
     # Print average pairwise cosine distance
     print(apd)
 
@@ -78,6 +73,5 @@ def main():
     print("")  
     
     
-
 if __name__ == '__main__':
     main()
