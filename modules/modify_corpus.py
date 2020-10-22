@@ -61,7 +61,8 @@ def main():
     logging.info("Inject usages")
     usages = {}
     for target_word in target_words:
-        with open(dir_usages+target_word+'.csv', 'r', encoding='utf-8') as usage_file:            
+        clean_target_word = target_word.replace('ä', '').replace('ö', '').replace('ü', '').replace('ß', '')
+        with open(dir_usages+clean_target_word+'.csv', 'r', encoding='utf-8') as usage_file:            
             reader = csv.DictReader(usage_file, delimiter='\t', quoting=csv.QUOTE_NONE)
             for row in reader:
                 identifier = row['identifier'].rsplit('-', 1)[0]
