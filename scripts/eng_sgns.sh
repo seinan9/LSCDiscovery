@@ -3,9 +3,6 @@ language=eng
 outdir=output/sgns/$language
 resdir=results/sgns/$language
 
-#modify corpora
-python modules/modify_corpus.py data/${language}/corpus1/lemma/*.txt.gz data/${language}/targets.txt data/${language}/corpus1/uses/ data/${language}/corpus1/uses/modified_corpus   
-python modules/modify_corpus.py data/${language}/corpus2/lemma/*.txt.gz data/${language}/targets.txt data/${language}/corpus2/uses/ data/${language}/corpus2/uses/modified_corpus  
 #generate matrices with sgns
 mkdir -p ${outdir}
 python type-based/sgns.py data/${language}/corpus1/uses/modified_corpus.txt.gz ${outdir}/mat1 10 10 5 None 4 30
