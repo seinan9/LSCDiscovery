@@ -5,8 +5,8 @@ resdir=results/sgns/$language
 
 #generate matrices with sgns
 mkdir -p ${outdir}
-python type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 10 10 5 None 4 30
-python type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 10 10 5 None 4 30 
+python type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 10 10 5 None 1 30
+python type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 10 10 5 None 6 30 
 
 #length-normalize and mean-center
 python modules/center.py -l ${outdir}/mat1 ${outdir}/mat1c
