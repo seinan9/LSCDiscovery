@@ -69,7 +69,7 @@ def main():
                     u'„ ': u'„', u' “': u'“', u' "': u'"', u' :': u':', u' )': u')',
                     u'( ': u'(', u' \'s' : u'\'s', u'  ' : u' '}
     else:
-        print('Language not supported')
+        trans_table = {}
 
     # Read lemmatized corpus
     logging.info("Read corpora ")
