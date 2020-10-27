@@ -37,7 +37,7 @@ mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
 mkdir -p ${resdir}
 
-cat data/${language}/targets.txt | while read line 
+cat data/${language}/targets.txt | while read line || [ -n "$line" ]
 do  
     echo "${line}"
     python token-based/bert.py ${outdir}/uses_corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language}
