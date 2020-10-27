@@ -88,8 +88,15 @@ resdir=results/sgns/$language
 
 #generate matrices with sgns
 mkdir -p ${outdir}
-python type-based/sgns.py data/${language}/corpus1/uses/modified_corpus.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
-python type-based/sgns.py data/${language}/corpus2/uses/modified_corpus.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
+if [ $1 == "lat" ]
+    then
+        python type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
+        python type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
+else
+    then
+        python type-based/sgns.py data/${language}/corpus1/uses/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
+        python type-based/sgns.py data/${language}/corpus2/uses/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
+fi
 
 #length-normalize and mean-center
 python modules/center.py -l ${outdir}/mat1 ${outdir}/mat1c
