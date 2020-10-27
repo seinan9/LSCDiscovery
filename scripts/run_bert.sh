@@ -1,4 +1,5 @@
 #!/bin/bash
+name=$0
 language=$1
 
 function usage {
