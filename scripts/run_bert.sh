@@ -1,5 +1,26 @@
 #!/bin/bash
 language=$1
+
+function usage {
+    echo ""
+    echo "  Usage: ${name} <language>"
+    echo ""
+    echo "      <language>   = eng | ger | swe | lat"
+    echo ""
+}
+
+if [ $# -ne 1 ] 
+	then 
+		usage
+		exit 1
+fi
+
+if [[ ( $1 == "--help") ||  $1 == "-h" ]] 
+	then 
+		usage
+		exit 0
+fi
+
 outdir=output/bert/$language
 resdir=results/bert/$language
 
