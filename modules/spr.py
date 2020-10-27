@@ -42,10 +42,10 @@ def main():
     
     # Get data
     with open(path_file1, 'r', encoding='utf-8') as f_in:
-        data1 = np.array([float(line.strip().split('\t')[col1]) for line in f_in])
+        data1 = np.array([float(line.strip().split()[col1]) for line in f_in])
         
     with open(path_file2, 'r', encoding='utf-8') as f_in:
-        data2 = np.array([float(line.strip().split('\t')[col2]) for line in f_in])
+        data2 = np.array([float(line.strip().split()[col2]) for line in f_in])
 
     # Check if there are non-number values    
     nan_list1 = [x for x in data1 if np.isnan(x)]   
