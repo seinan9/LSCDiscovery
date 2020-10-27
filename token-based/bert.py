@@ -94,6 +94,9 @@ def main():
                             if len(target_word_indices) == len(target_words):
                                 break
                 
+                # Fix for ugly case (By?gnav breaks everything, actual targetWord is by)
+                if len(target_word_indices) == 0:
+                    break
 
                 # Trim tokenized_text if longer than 512
                 if len(tokenized_text) > 512:
