@@ -71,7 +71,7 @@ def main():
         for i in range(0, len(test_sentences)):
             try:
                 # Create target word(s)
-                target_word = str(test_sentences[i]["sentence"].split()[int([test_sentences[i]["target_index"]][0])])
+                target_word = str(test_sentences[i]["sentence_token"].split()[int([test_sentences[i]["target_index"]][0])])
                 clean_target_word = "".join(char for char in target_word if char.isalnum() or char == "-" or char == "'")
                 target_words = []
                 target_words.append(tokenizer.tokenize(clean_target_word))
@@ -79,7 +79,7 @@ def main():
         
 
                 # Tokenize text
-                text = test_sentences[i]["sentence"]
+                text = test_sentences[i]["sentence_token"]
                 marked_text = "[CLS] " + text + " [SEP]"
                 tokenized_text = tokenizer.tokenize(marked_text)
 
