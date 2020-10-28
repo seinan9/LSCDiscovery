@@ -1,6 +1,7 @@
 #!/bin/bash
 name=$0
 language=$1
+dir=$2
 
 function usage {
     echo ""
@@ -10,7 +11,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 1 ] 
+if [ $# -ne 2 ] 
 	then 
 		usage
 		exit 1
