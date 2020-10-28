@@ -45,7 +45,7 @@ def main():
     for target_word in target_words:
         with open(path_output_directory+target_word+".csv", 'w', encoding="utf-8") as file:
             writer = csv.writer(file, delimiter='\t')
-            writer.writerow(["sentence", "target_index",
+            writer.writerow(["sentence_token", "target_index",
                              "cluster", "original_word"])
     
     if language == 'ger':
