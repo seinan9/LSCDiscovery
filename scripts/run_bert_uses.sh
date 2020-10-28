@@ -30,9 +30,11 @@ mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
 mkdir -p ${resdir}
 
-cat data/${language}/targets.txt | while read line || [ -n "$line" ]
-do  
+for entry in ${dir}/*
+do
+    line=${entry##*/}
     echo "${line}"
+
     python token-based/bert.py data/${language}/corpus1/uses/${line}.csv ${outdir}/vectors_corpus1/${line} ${language}
     python token-based/bert.py data/${language}/corpus2/uses/${line}.csv ${outdir}/vectors_corpus2/${line} ${language}
 
