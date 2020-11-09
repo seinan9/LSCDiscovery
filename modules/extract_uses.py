@@ -45,7 +45,7 @@ def main():
     for target_word in target_words:
         with open(path_output_directory+target_word+".csv", 'w', encoding="utf-8") as f:
             writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-            writer.writerow(["sentence_token", "target_index", "cluster", "original_word"])
+            writer.writerow(["sentence_lemma", "sentence_token", "target_index", "original_word"])
     
     if language == 'ger':
         trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
@@ -91,7 +91,7 @@ def main():
                             index = sentences_token[i].split().index(wordT)
                     with open(path_output_directory+word+".csv", 'a', encoding="utf-8") as f:
                         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-                        writer.writerow([sentences_token[i].strip(), index, 0, target_word])
+                        writer.writerow([sentences_lemma[i].strip(), sentences_token[i].strip(), index, target_word])
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")
