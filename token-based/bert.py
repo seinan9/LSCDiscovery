@@ -124,7 +124,6 @@ def main():
             except:
                 print('{} {}'.format('Skipped sentence', i))
     
-
     # Normalize vectors in length
     context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
 
