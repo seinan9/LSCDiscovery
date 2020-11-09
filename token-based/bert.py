@@ -39,7 +39,6 @@ def main():
     logging.info(__file__.upper())
     start_time = time.time()
 
-
     # Load pre-trained model tokenizer (vocabulary) and model (weights)
     logging.info("Load sentences")
     if language == 'eng':
@@ -55,17 +54,15 @@ def main():
         tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
         model = BertModel.from_pretrained('bert-base-multilingual-cased', output_hidden_states=True)
 
-
     # Load sentences 
     context_vector_list = []
     test_sentences = []
     with open(path_usages, 'r') as csvFile:
-        reader = csv.DictReader(csvFile, delimiter="\t")
+        reader = csv.DictReader(csvFile, delimiter="\t", quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
             test_sentences.append(dict(row))
         del(test_sentences[1000:])  # some words have over 20000 usages
    
-    
         # Create the vectors
         logging.info("Create Bert embeddings")
         for i in range(0, len(test_sentences)):
@@ -76,14 +73,12 @@ def main():
                 target_words = []
                 target_words.append(tokenizer.tokenize(clean_target_word))
                 target_words = target_words[0]
-        
-
+               
                 # Tokenize text
                 text = test_sentences[i]["sentence_token"]
                 marked_text = "[CLS] " + text + " [SEP]"
                 tokenized_text = tokenizer.tokenize(marked_text)
-
-
+          
                 # Search the indices of the tokenized target word in the tokenized text
                 target_word_indices = []
                 for j in range(0, len(tokenized_text)):
@@ -94,7 +89,6 @@ def main():
                             if len(target_word_indices) == len(target_words):
                                 break
                 
-                # Fix for ugly case (By?gnav breaks everything, actual targetWord is by)
                 if len(target_word_indices) == 0:
                     break
 
@@ -107,7 +101,6 @@ def main():
                             del(tokenized_text[0])
                             for index, value in enumerate(target_word_indices):
                                 target_word_indices[index] -= 1
-                
                 
                 # Create BERT Token Embeddings
                 indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
@@ -127,8 +120,9 @@ def main():
                     sum_vec = np.sum([np.array(token[12]), np.array(token[1])], axis=0)
                     vectors.append(np.array(sum_vec))
                 context_vector_list.append(np.sum(vectors, axis=0, dtype=float))
+
             except:
-                print('{} {}{}'.format('Skipped sentence', i,'.'))
+                print('{} {}'.format('Skipped sentence', i))
     
 
     # Normalize vectors in length
