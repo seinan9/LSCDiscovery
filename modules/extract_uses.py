@@ -43,31 +43,21 @@ def main():
 
     # create csv-files with the correct structure
     for target_word in target_words:
-        with open(path_output_directory+target_word+".csv", 'w', encoding="utf-8") as file:
-            writer = csv.writer(file, delimiter='\t')
-            writer.writerow(["sentence_token", "target_index",
-                             "cluster", "original_word"])
+        with open(path_output_directory+target_word+".csv", 'w', encoding="utf-8") as f:
+            writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
+            writer.writerow(["sentence_token", "target_index", "cluster", "original_word"])
     
     if language == 'ger':
-         trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
+        trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
                     u'Oͤ' : u'Ö', u'Uͤ' : u'Ü', u'ſ' : u's', u'\ua75b' : u'r',
-                    u'm̃' : u'mm', u'æ' : u'ae', u'Æ' : u'Ae', u' ,': u',',
-                    u' .': u'.', u' ;': u';', u' ?': u'?', u' !': u'!',
-                    u'„ ': u'„', u' “': u'“', u' "': u'"', u' :': u':', u' )': u')',
-                    u'( ': u'(', u' \'s' : u'\'s', u'- ' : u'-', u'  ' : u' ', 
+                    u'm̃' : u'mm', u'æ' : u'ae', u'Æ' : u'Ae', 
                     u'göñ' : u'gönn', u'spañ' : u'spann'}
     elif language == 'eng':
-         trans_table = {u' ,': u',',
-                    u' .': u'.', u' ;': u';', u' ?': u'?', u' !': u'!',
-                    u'„ ': u'„', u' “': u'“', u' :': u':', u' )': u')',
-                    u'( ': u'(', u' \'s' : u'\'s', u'  ' : u' ',
+        trans_table = {u' \'s' : u'\'s',
                     u' n\'t' : u'n\'t', u' \'ve' : u'\'ve', u' \'d' : u'\'d',
                     u' \'re' : u'\'re', u' \'ll' : u'\'ll'}
     elif language == 'swe':
-         trans_table = {u' ,': u',',
-                    u' .': u'.', u' ;': u';', u' ?': u'?', u' !': u'!',
-                    u'„ ': u'„', u' “': u'“', u' "': u'"', u' :': u':', u' )': u')',
-                    u'( ': u'(', u' \'s' : u'\'s', u'  ' : u' '}
+        trans_table = {u' \'s' : u'\'s'}
     else:
         trans_table = {}
 
@@ -99,9 +89,9 @@ def main():
                         if ratio > max_ratio:
                             max_ratio = ratio
                             index = sentences_token[i].split().index(wordT)
-                    with open(path_output_directory+word+".csv", 'a', encoding="utf-8") as file:
-                        writer = csv.writer(file, delimiter='\t')
-                        writer.writerow([sentences_token[i], index, 0, target_word])
+                    with open(path_output_directory+word+".csv", 'a', encoding="utf-8") as f:
+                        writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
+                        writer.writerow([sentences_token[i].strip(), index, 0, target_word])
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")
