@@ -63,7 +63,7 @@ def main():
     for target_word in target_words:
         clean_target_word = target_word.replace('ä', '').replace('ö', '').replace('ü', '').replace('ß', '')
         with open(dir_usages+clean_target_word+'.csv', 'r', encoding='utf-8') as usage_file:            
-            reader = csv.DictReader(usage_file, delimiter='\t', quoting=csv.QUOTE_NONE)
+            reader = csv.DictReader(usage_file, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
             for row in reader:
                 identifier = row['identifier'].rsplit('-', 1)[0]
                 usages[identifier] = row['sentence_lemma'].replace('$', '').replace('  ', ' ')
