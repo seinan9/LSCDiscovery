@@ -9,7 +9,7 @@ function usage {
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
     echo ""
-    echo "      <identifier>          = give a good name!"
+    echo "      <identifier>    = give a good name!"
     echo ""
 }
 
@@ -25,8 +25,15 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/bert/${identifier}
-resdir=results/${language}/bert/${identifier}
+outdir=output/${language}/bertfull/${identifier}
+resdir=results/${language}/bertfull/${identifier}
+
+# Generate uses 
+mkdir -p ${outdir}/uses_corpus1
+mkdir -p ${outdir}/uses_corpus2
+
+python modules/extract_uses.py data/${language}/corpus1/lemma/*.txt.gz data/${language}/corpus1/token/*.txt.gz data/${language}/targets.txt ${outdir}/uses_corpus1/ ${language}
+python modules/extract_uses.py data/${language}/corpus2/lemma/*.txt.gz data/${language}/corpus2/token/*.txt.gz data/${language}/targets.txt ${outdir}/uses_corpus2/ ${language}
 
 # Compute vectors with bert, compute APD and COS
 mkdir -p ${outdir}/vectors_corpus1
@@ -36,8 +43,8 @@ mkdir -p ${resdir}
 cat data/${language}/targets.txt | while read line || [ -n "$line" ]
 do  
     echo "${line}"
-    python token-based/bert.py uses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language}
-    python token-based/bert.py uses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language}
+    python token-based/bert.py ${outdir}/uses_corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language}
+    python token-based/bert.py ${outdir}/uses_corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language}
 
     apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
     cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
@@ -52,4 +59,4 @@ python modules/spr.py data/${language}/truth/graded.txt ${resdir}/apd.txt 1 1 >>
 python modules/spr.py data/${language}/truth/graded.txt ${resdir}/cos.txt 1 1 >> ${resdir}/spr_cos.txt
 
 # Clean up directory 
-rm -r output/${language}/bert/${identifier}
+rm -r output/bert/${language}
