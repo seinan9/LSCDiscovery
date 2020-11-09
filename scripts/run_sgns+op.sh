@@ -1,19 +1,21 @@
 #!/bin/bash
 name=$0
 language=$1
-window_size=$2
-dim=$3
-k=$4
-t=$5
-min_count1=$6
-min_count2=$7
-itera=$8
+identifier=$2
+window_size=$3
+dim=$4
+k=$5
+t=$6
+min_count1=$7
+min_count2=$8
+itera=$9
 
 function usage {
     echo ""
     echo "  Usage1: ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
+    echo "      <identifier>    = give a good name!"
     echo "      <window_size>   = the linear distance of context words to consider in each direction"
     echo "      <dim>           = dimensionality of embeddings"
     echo "      <k>             = number of negative samples parameter (equivalent to shifting parameter for PPMI)"
@@ -30,7 +32,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 7 ] && [ $# -ne 1 ]
+if [ $# -ne 9 ] && [ $# -ne 2 ]
 	then 
 		usage
 		exit 1
@@ -42,7 +44,7 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
     then 
         if [ $1 == "eng" ]
             then 
@@ -83,8 +85,8 @@ if [ $# -eq 1 ]
         fi
 fi
 
-outdir=output/sgns/$language
-resdir=results/sgns/$language
+outdir=output/${language}/sgns/${identifier}
+resdir=results/$language/sgns/${identifier}
 
 #generate matrices with sgns
 mkdir -p ${outdir}
@@ -113,4 +115,4 @@ python modules/cd.py -f -d ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/ta
 python modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.txt 1 1 >> ${resdir}/spr.txt
 
 #clean directory
-rm -r output/sgns/${language}
+rm -r output/${language}/sgns/${identifier}

@@ -8,8 +8,7 @@ function usage {
     echo "  Usage: ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo ""
-    echo "      <identifier>          = give a good name!"
+    echo "      <identifier>    = give a good name!"
     echo ""
 }
 

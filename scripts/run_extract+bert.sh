@@ -8,7 +8,6 @@ function usage {
     echo "  Usage: ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo ""
     echo "      <identifier>    = give a good name!"
     echo ""
 }
@@ -59,4 +58,4 @@ python modules/spr.py data/${language}/truth/graded.txt ${resdir}/apd.txt 1 1 >>
 python modules/spr.py data/${language}/truth/graded.txt ${resdir}/cos.txt 1 1 >> ${resdir}/spr_cos.txt
 
 # Clean up directory 
-rm -r output/bert/${language}
+rm -r output/${language}/bertfull/${identifier}
