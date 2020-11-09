@@ -52,7 +52,7 @@ def main():
     samples_corpus2 = []
 
     # Set the sample size and get the samples
-    size = min(len(vectors1), len(vectors2), 200)
+    size = min(len(vectors1), len(vectors2))
     randoms = random.sample(range(0, min(len(vectors1), len(vectors2))), size)
     for i in randoms:
         samples_corpus1.append(vectors1[i])
