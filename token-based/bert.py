@@ -46,24 +46,15 @@ def main():
     if language == 'eng':
         tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
         model = BertModel.from_pretrained('bert-base-cased', output_hidden_states=True)
-        trans_table = {u' \'s' : u'\'s',
-                    u' n\'t' : u'n\'t', u' \'ve' : u'\'ve', u' \'d' : u'\'d',
-                    u' \'re' : u'\'re', u' \'ll' : u'\'ll'}
     elif language == 'ger':
         tokenizer = BertTokenizer.from_pretrained('bert-base-german-cased')
         model = BertModel.from_pretrained('bert-base-german-cased', output_hidden_states=True)
-        trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
-                    u'Oͤ' : u'Ö', u'Uͤ' : u'Ü', u'ſ' : u's', u'\ua75b' : u'r',
-                    u'm̃' : u'mm', u'æ' : u'ae', u'Æ' : u'Ae', 
-                    u'göñ' : u'gönn', u'spañ' : u'spann'}
     elif language == 'swe':
         tokenizer = AutoTokenizer.from_pretrained('KB/bert-base-swedish-cased')
         model = AutoModel.from_pretrained('KB/bert-base-swedish-cased', output_hidden_states=True)
-        trans_table = {u' \'s' : u'\'s'}
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
         model = BertModel.from_pretrained('bert-base-multilingual-cased', output_hidden_states=True)
-        trans_table = {}
 
     # Load sentences 
     context_vector_list = []
@@ -73,10 +64,6 @@ def main():
         for row in reader:
             test_sentences.append(dict(row))
         del(test_sentences[1000:])  # some words have over 20000 usages
-
-        for j in range(0, len(test_sentences)):
-            for key, value in trans_table.items():
-                test_sentences[j]["sentence_"+type_sentences] = test_sentences[j]["sentence_"+type_sentences].replace(key, value)
 
         # Create the vectors
         logging.info("Create Bert embeddings")
@@ -105,6 +92,7 @@ def main():
                                 break
                 
                 if len(target_word_indices) == 0:
+                    raise Exception("Indices not found")
                     break
 
                 # Trim tokenized_text if longer than 512
@@ -138,6 +126,11 @@ def main():
 
             except:
                 print('{} {}'.format('Skipped sentence', i))
+                print()
+                print(target_word)
+                print(clean_target_word)
+                print(text)
+                print(tokenized_text)
     
     # Normalize vectors in length
     context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
