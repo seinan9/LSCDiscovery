@@ -61,14 +61,16 @@ def main():
     else:
         trans_table = {}
 
-    # Read lemmatized corpus
+    # Read and clean lemmatized corpus
     logging.info("Read corpora ")
     sentences_lemma = []
     with gzip.open(path_corpus_lemma, 'rt', encoding="utf-8") as corpus_lemma:
         for sentence in corpus_lemma:
+            for key, value in trans_table.items():
+                sentence = sentence.replace(key, value)
             sentences_lemma.append(sentence)
 
-    # Read tokenized corpus
+    # Read and clean tokenized corpus
     sentences_token = []
     with gzip.open(path_corpus_token, 'rt', encoding="utf-8") as corpus_token:
         for sentence in corpus_token:
