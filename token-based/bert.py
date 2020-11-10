@@ -21,19 +21,21 @@ def main():
     args = docopt("""
 
     Usage:
-        Bert.py <path_usages> <path_output> <language>
+        Bert.py <path_usages> <path_output> <language> <type_sentences>
         
     Arguments:
        
-        <path_usages>   = Path to the test sentences
-        <path_output>   = Path for storing the vectors
-        <language>      = eng / ger / swe / lat
+        <path_usages>       = Path to the test sentences
+        <path_output>       = Path for storing the vectors
+        <language>          = eng / ger / swe / lat
+        <type_sentences>    = lemma | token
 
     """)
 
     path_usages = args['<path_usages>']
     path_output = args['<path_output>']
     language = args['<language>']
+    type_sentences = args['<type_sentences>']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -74,21 +76,21 @@ def main():
 
         for j in range(0, len(test_sentences)):
             for key, value in trans_table.items():
-                test_sentences[j]["sentence_token"] = test_sentences[j]["sentence_token"].replace(key, value)
+                test_sentences[j]["sentence_"+type_sentences] = test_sentences[j]["sentence_"+type_sentences].replace(key, value)
 
         # Create the vectors
         logging.info("Create Bert embeddings")
         for i in range(0, len(test_sentences)):
             try:
                 # Create target word(s)
-                target_word = str(test_sentences[i]["sentence_token"].split()[int([test_sentences[i]["target_index"]][0])])
+                target_word = str(test_sentences[i]["sentence_"+type_sentences].split()[int([test_sentences[i]["target_index"]][0])])
                 clean_target_word = "".join(char for char in target_word if char.isalnum() or char == "-" or char == "'")
                 target_words = []
                 target_words.append(tokenizer.tokenize(clean_target_word))
                 target_words = target_words[0]
                
                 # Tokenize text
-                text = test_sentences[i]["sentence_token"]
+                text = test_sentences[i]["sentence_"+type_sentences]
                 marked_text = "[CLS] " + text + " [SEP]"
                 tokenized_text = tokenizer.tokenize(marked_text)
           

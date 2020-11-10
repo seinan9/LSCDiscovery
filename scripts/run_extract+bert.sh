@@ -42,8 +42,8 @@ mkdir -p ${resdir}
 cat data/${language}/targets.txt | while read line || [ -n "$line" ]
 do  
     echo "${line}"
-    python token-based/bert.py ${outdir}/uses_corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language}
-    python token-based/bert.py ${outdir}/uses_corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language}
+    python token-based/bert.py ${outdir}/uses_corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} token
+    python token-based/bert.py ${outdir}/uses_corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} token
 
     apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
     cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
