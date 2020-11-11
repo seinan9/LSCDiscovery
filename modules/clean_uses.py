@@ -56,7 +56,8 @@ def main():
 
     sentences_lemma = []
     sentences_token = []
-    target_index = []
+    index_lemma = []
+    index_token =[]
 
     for sentence in sentences:
         sentences_lemma.append(sentence["sentence_lemma"])
@@ -66,12 +67,22 @@ def main():
     logging.info("Clean uses")
     for i in range(0, len(sentences_lemma)):
         for key, value in trans_table.items():
-            sentences_lemma[i] = sentences_lemma[i].replace(key, value)
+            #sentences_lemma[i] = sentences_lemma[i].replace(key, value)
             sentences_token[i] = sentences_token[i].replace(key, value)
 
     original_word = sentences[0]["lemma"]
 
-    # Find new target_index
+    # Find new target_index for lemmatized sentence
+    for sentence_lemma in sentences_lemma:
+        max_ratio = 0
+        for word in sentence_lemma.split():
+            ratio = fuzz.ratio(original_word, word.lower())
+            if ratio > max_ratio:
+                max_ratio = ratio
+                index = sentence_lemma.split().index(word)
+        index_lemma.append(index)
+
+    # Find new target_index for tokenized sentence
     for sentence_token in sentences_token:
         max_ratio = 0
         for word in sentence_token.split():
@@ -79,18 +90,18 @@ def main():
             if ratio > max_ratio:
                 max_ratio = ratio
                 index = sentence_token.split().index(word)
-        target_index.append(index)
+        index_token.append(index)
 
     with open(path_output+".csv", 'w', encoding="utf-8") as f:
         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-        writer.writerow(["sentence_lemma", "sentence_token", "target_index", "original_word"])
+        writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "original_word"])
 
     # Save cleaned uses
     logging.info("Save cleaned uses")
     with open(path_output+".csv", 'a', encoding="utf-8") as f:
         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
         for i in range(0, len(sentences_lemma)):
-            writer.writerow([sentences_lemma[i], sentences_token[i], target_index[i], original_word])
+            writer.writerow([sentences_lemma[i], sentences_token[i], index_lemma[i], index_token[i], original_word])
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")

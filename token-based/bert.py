@@ -70,17 +70,17 @@ def main():
         for i in range(0, len(test_sentences)):
             try:
                 # Create target word(s)
-                target_word = str(test_sentences[i]["sentence_"+type_sentences].split()[int([test_sentences[i]["target_index"]][0])])
+                target_word = str(test_sentences[i]["sentence_"+type_sentences].split()[int([test_sentences[i]["index_"+type_sentences]][0])])
                 clean_target_word = "".join(char for char in target_word if char.isalnum() or char == "-" or char == "'")
                 target_words = []
                 target_words.append(tokenizer.tokenize(clean_target_word))
                 target_words = target_words[0]
-               
+                
                 # Tokenize text
-                text = test_sentences[i]["sentence_"+type_sentences]
+                text = test_sentences[i]["sentence_"+type_sentences]    
                 marked_text = "[CLS] " + text + " [SEP]"
                 tokenized_text = tokenizer.tokenize(marked_text)
-          
+            
                 # Search the indices of the tokenized target word in the tokenized text
                 target_word_indices = []
                 for j in range(0, len(tokenized_text)):
@@ -92,7 +92,7 @@ def main():
                                 break
                 
                 if len(target_word_indices) == 0:
-                    raise Exception("Indices not found")
+                    print("Indices not found")
                     break
 
                 # Trim tokenized_text if longer than 512
@@ -123,14 +123,9 @@ def main():
                     sum_vec = np.sum([np.array(token[12]), np.array(token[1])], axis=0)
                     vectors.append(np.array(sum_vec))
                 context_vector_list.append(np.sum(vectors, axis=0, dtype=float))
-
             except:
                 print('{} {}'.format('Skipped sentence', i))
-                print()
-                print(target_word)
-                print(clean_target_word)
-                print(text)
-                print(tokenized_text)
+        
     
     # Normalize vectors in length
     context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
