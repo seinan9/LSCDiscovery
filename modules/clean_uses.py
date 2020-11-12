@@ -70,13 +70,13 @@ def main():
             #sentences_lemma[i] = sentences_lemma[i].replace(key, value)
             sentences_token[i] = sentences_token[i].replace(key, value)
 
-    original_word = sentences[0]["lemma"]
+    lemma = sentences[0]["original_word"]
 
     # Find new target_index for lemmatized sentence
     for sentence_lemma in sentences_lemma:
         max_ratio = 0
         for word in sentence_lemma.split():
-            ratio = fuzz.ratio(original_word, word.lower())
+            ratio = fuzz.ratio(lemma, word.lower())
             if ratio > max_ratio:
                 max_ratio = ratio
                 index = sentence_lemma.split().index(word)
@@ -86,7 +86,7 @@ def main():
     for sentence_token in sentences_token:
         max_ratio = 0
         for word in sentence_token.split():
-            ratio = fuzz.ratio(original_word, word.lower())
+            ratio = fuzz.ratio(lemma, word.lower())
             if ratio > max_ratio:
                 max_ratio = ratio
                 index = sentence_token.split().index(word)
@@ -94,14 +94,14 @@ def main():
 
     with open(path_output+".csv", 'w', encoding="utf-8") as f:
         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-        writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "original_word"])
+        writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "lemma"])
 
     # Save cleaned uses
     logging.info("Save cleaned uses")
     with open(path_output+".csv", 'a', encoding="utf-8") as f:
         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
         for i in range(0, len(sentences_lemma)):
-            writer.writerow([sentences_lemma[i], sentences_token[i], index_lemma[i], index_token[i], original_word])
+            writer.writerow([sentences_lemma[i], sentences_token[i], index_lemma[i], index_token[i], lemma])
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")
