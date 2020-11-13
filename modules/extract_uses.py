@@ -45,7 +45,7 @@ def main():
     for target_word in target_words:
         with open(path_output_directory+target_word+".csv", 'w', encoding="utf-8") as f:
             writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-            writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "original_word"])
+            writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "lemma"])
     
     if language == 'ger':
         trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
