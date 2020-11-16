@@ -1,13 +1,15 @@
 #!/bin/bash
 name=$0
 language=$1
-identifier=$2
+type=$2
+identifier=$3
 
 function usage {
     echo ""
     echo "  Usage: ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
+    echo "	<type>		= lemma | token"
     echo "      <identifier>    = give a good name!"
     echo ""
 }
@@ -35,8 +37,8 @@ mkdir -p ${resdir}
 cat data/${language}/targets.txt | while read line || [ -n "$line" ]
 do  
     echo "${line}"
-    python token-based/bert.py uses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} token
-    python token-based/bert.py uses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} token
+    python token-based/bert.py uses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
+    python token-based/bert.py uses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
     apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
     cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
