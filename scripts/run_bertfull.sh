@@ -14,7 +14,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 2 ] 
+if [ $# -ne 3 ] 
 	then 
 		usage
 		exit 1
