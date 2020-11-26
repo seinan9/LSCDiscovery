@@ -11,7 +11,7 @@ function usage {
     echo "      ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo "      <type>          = lemma | token"
+    echo "      <type>          = lemma | token | toklem"
     echo "      <identifier>    = give a good name!"
     echo ""
 }
@@ -39,8 +39,8 @@ mkdir -p ${resdir}
 cat data/${language}/targets.txt | while read line || [ -n "$line" ]
 do  
     echo "${line}"
-    python token-based/bert.py fulluses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
-    python token-based/bert.py fulluses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
+    python token-based/bert.py -l fulluses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
+    python token-based/bert.py -l fulluses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
     apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
     cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})

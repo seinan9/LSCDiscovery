@@ -18,17 +18,20 @@ from utils_ import Space
 def main():
 
     # Get the arguments
-    args = docopt("""
+    args = docopt("""Create token-based embeddings with BERT.
 
     Usage:
-        Bert.py <path_usages> <path_output> <language> <type_sentences>
+        Bert.py [-l] <path_usages> <path_output> <language> <type_sentences>
         
     Arguments:
        
         <path_usages>       = Path to the test sentences
         <path_output>       = Path for storing the vectors
         <language>          = eng / ger / swe / lat
-        <type_sentences>    = lemma | token
+        <type_sentences>    = lemma | token | toklem
+    
+    Options:
+        -l, --len           normalize vectors to unit length 
 
     """)
 
@@ -36,6 +39,8 @@ def main():
     path_output = args['<path_output>']
     language = args['<language>']
     type_sentences = args['<type_sentences>']
+
+    is_len = args['--len']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -56,6 +61,13 @@ def main():
         tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
         model = BertModel.from_pretrained('bert-base-multilingual-cased', output_hidden_states=True)
 
+    if type_sentences == 'lemma':
+        type_ = type_sentences
+    elif type_sentences == 'token':
+        type_ = type_sentences
+    elif type_sentences == 'toklem':
+        type_ = 'token'
+
     # Load sentences 
     context_vector_list = []
     test_sentences = []
@@ -70,14 +82,20 @@ def main():
         for i in range(0, len(test_sentences)):
             try:
                 # Create target word(s)
-                target_word = str(test_sentences[i]["sentence_"+type_sentences].split()[int([test_sentences[i]["index_"+type_sentences]][0])])
-                clean_target_word = "".join(char for char in target_word if char.isalnum() or char == "-" or char == "'")
                 target_words = []
-                target_words.append(tokenizer.tokenize(clean_target_word))
+                target_word = str(test_sentences[i]["sentence_"+type_].split()[int([test_sentences[i]["index_"+type_]][0])])
+                if type_ == 'toklem':
+                    original_word = test_sentences[i]["lemma"]
+                    target_words.append(tokenizer.tokenize(original_word))
+                else:
+                    clean_target_word = "".join(char for char in target_word if char.isalnum() or char == "-" or char == "'")
+                    target_words.append(tokenizer.tokenize(clean_target_word))
                 target_words = target_words[0]
                 
                 # Tokenize text
-                text = test_sentences[i]["sentence_"+type_sentences]    
+                text = test_sentences[i]["sentence_"+type_]
+                if type_ == 'toklem':
+                    text = text.replace(target_word, original_word) 
                 marked_text = "[CLS] " + text + " [SEP]"
                 tokenized_text = tokenizer.tokenize(marked_text)
             
@@ -120,7 +138,7 @@ def main():
                 vectors = []
                 for number in target_word_indices:
                     token = token_embeddings[number]
-                    sum_vec = np.sum([np.array(token[12]), np.array(token[1])], axis=0)
+                    sum_vec = np.sum([np.array(token[12]), np.array(token[11]), np.array(token[10]), np.array(token[9])], axis=0)
                     vectors.append(np.array(sum_vec))
                 context_vector_list.append(np.sum(vectors, axis=0, dtype=float))
             except:
@@ -128,7 +146,8 @@ def main():
         
     
     # Normalize vectors in length
-    context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
+    if is_len:
+        context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
 
     # Save contextVectorList_sparse matrix
     logging.info("Save vectors")

@@ -18,7 +18,7 @@ def main():
     args = docopt("""Compute cosine distance for targets in two matrices.
 
     Usage:
-        cd.py [(-f | -s)] -d <path_matrix1> <path_matrix2> <path_target_words> <path_output>
+        cd.py [(-f | -s)] [-d] <path_matrix1> <path_matrix2> <path_target_words> <path_output>
 
         <path_matrix1>      = path to first matrix
         <path_matrix2>      = path to second matrix
