@@ -1,9 +1,12 @@
+#!/bin/bash
 name=$0
 language=$1
 
 function usage {
+    echo "Clean uses with a trans table and save in an appropriate format."
     echo ""
-    echo "  Usage: ${name} <language>"
+    echo "  Usage:" 
+    echo "      ${name} <language>"
     echo ""
     echo "      <language>  = eng | ger | swe"
     echo ""

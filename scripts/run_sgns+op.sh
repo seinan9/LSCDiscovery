@@ -11,8 +11,10 @@ min_count2=$8
 itera=$9
 
 function usage {
+    echo "Create type-based embeddings with SGNS. Measure the cosine distance (CD) for every word and compute the Spearman correlation."
     echo ""
-    echo "  Usage1: ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
+    echo "  Usage1:" 
+    echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
     echo "      <identifier>    = give a good name!"
@@ -28,7 +30,7 @@ function usage {
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
     echo ""
-    echo "  Note: Usage2 choses the best performing paramters from SemEval2020 and How low can you go"
+    echo "  Note: Usage2 chooses the best performing paramters from SemEval2020 and How low can you go."
     echo ""
 }
 

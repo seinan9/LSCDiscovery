@@ -5,8 +5,10 @@ type=$2
 identifier=$3
 
 function usage {
+    echo "Create token-based BERT embeddings with fulluses extracted from SemEval data and compute average pairwise distance (APD), cosine similarity (COS) and Spearman correlation afterwards."
     echo ""
-    echo "  Usage: ${name} <language>"
+    echo "  Usage:" 
+    echo "      ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
     echo "      <type>          = lemma | token"

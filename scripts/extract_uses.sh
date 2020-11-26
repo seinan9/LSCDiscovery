@@ -3,10 +3,12 @@ name=$0
 language=$1
 
 function usage {
+	echo "Extract uses from given corpus and save in appropriate format."
     echo ""
-    echo "  Usage: ${name} <language>"
+    echo "  Usage:" 
+    echo "      ${name} <language>"
     echo ""
-    echo "      <language>      = eng | ger | swe | lat"
+    echo "      <language>  = eng | ger | swe"
     echo ""
 }
 

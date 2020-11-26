@@ -5,8 +5,10 @@ type=$2
 identifier=$3
 
 function usage {
+    echo "Create token-based embeddings with BERT and compute average pairwise distance (APD) and cosine similarity (COS) for every target word as well as the Spearman correlation afterwards."
     echo ""
-    echo "  Usage: ${name} <language>"
+    echo "  Usage:"
+    echo "      ${name} <language> <type> <identifier>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
     echo "      <type>          = lemma | token"
@@ -14,7 +16,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 2 ] 
+if [ $# -ne 3 ] 
 	then 
 		usage
 		exit 1
