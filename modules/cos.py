@@ -47,8 +47,8 @@ def main():
     vectors2 = space2.matrix.toarray()
 
     # Compute average vectors for both lists
-    avg1 = np.sum(vectors1, axis=0) / len(vectors1)
-    avg2 = np.sum(vectors2, axis=0) / len(vectors2)
+    avg1 = np.mean(vectors1, axis=0)
+    avg2 = np.mean(vectors2, axis=0)
 
     # Compute cosine distance between the two average vectors
     cos = cosine_distance(avg1,avg2)
