@@ -13,14 +13,14 @@ from utils_ import Space
 
 def main():
     """
-    Compute cosine distance between two averaged lists of vectors. 
+    Compute the average pairwise cosine distance (APD) for two lists of vectors. 
     """
 
     # Get the arguments
-    args = docopt("""Compute cosine distance for two averaged lists of vectors. 
+    args = docopt("""Compute the average pairwise cosine distance (APD) for two lists of vectors.  
 
     Usage:
-        cos.py <path_matrix1> <path_matrix2> 
+        apd.py <path_matrix1> <path_matrix2> 
 
         <path_matrix1> = path to first matrix
         <path_matrix2> = path to second matrix
@@ -52,16 +52,25 @@ def main():
     samples_corpus2 = []
 
     # Set the sample size and get the samples
-    size = min(len(vectors1), len(vectors2))
-    randoms = random.sample(range(size), size)
-    for i in randoms:
-        samples_corpus1.append(vectors1[i])
-        samples_corpus2.append(vectors2[i])
-
+    if len(vectors1) > len(vectors2):
+        max_ = len(vectors1)
+        min_ = len(vectors2)
+        samples_corpus2 = vectors2
+        randoms = random.sample(range(max_), min_)
+        for i in randoms:
+            samples_corpus1.append(vectors1[i])
+    else:
+        max_ = len(vectors2)
+        min_ = len(vectors1)
+        samples_corpus1 = vectors1
+        randoms = random.sample(range(max_), min_)
+        for i in randoms:
+            samples_corpus2.append(vectors2[i])
+    
     # Compute the average pairwise cosine distance 
     apds = []
-    for i in range(0, size):
-        for j in range(0, size):
+    for i in range(0, min_):
+        for j in range(0, min_):
             apd=cosine_distance(samples_corpus1[i], samples_corpus2[j])
             apds.append(apd)    
     apd = np.mean(apds, axis=0)
