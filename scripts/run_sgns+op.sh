@@ -1,14 +1,13 @@
 #!/bin/bash
 name=$0
 language=$1
-identifier=$2
-window_size=$3
-dim=$4
-k=$5
-t=$6
-min_count1=$7
-min_count2=$8
-itera=$9
+window_size=$2
+dim=$3
+k=$4
+t=$5
+min_count1=$6
+min_count2=$7
+itera=$8
 
 function usage {
     echo "Create type-based embeddings with SGNS. Measure the cosine distance (CD) for every word and compute the Spearman correlation."
@@ -17,7 +16,6 @@ function usage {
     echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo "      <identifier>    = directory name depends on this"
     echo "      <window_size>   = the linear distance of context words to consider in each direction"
     echo "      <dim>           = dimensionality of embeddings"
     echo "      <k>             = number of negative samples parameter (equivalent to shifting parameter for PPMI)"
@@ -29,13 +27,12 @@ function usage {
     echo "  Usage2: ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo "      <indentifier>   = directory name depends on this"
     echo ""
     echo "  Note: Usage2 chooses the paramters according to the best personal performance so far."
     echo ""
 }
 
-if [ $# -ne 9 ] && [ $# -ne 2 ]
+if [ $# -ne 8 ] && [ $# -ne 1 ]
 	then 
 		usage
 		exit 1
@@ -62,8 +59,8 @@ if [ $# -eq 2 ]
             then
                 window_size=10
                 dim=300
-                k=5
-                t=None
+                k=1
+                t=0.025
                 min_count1=39
                 min_count2=39
                 itera=5
@@ -87,6 +84,8 @@ if [ $# -eq 2 ]
                 itera=30
         fi
 fi
+
+identifier=w${window_size}-dim${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i${itera}
 
 outdir=output/${language}/sgns/${identifier}
 resdir=results/$language/sgns/${identifier}
