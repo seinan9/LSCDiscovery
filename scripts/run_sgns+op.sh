@@ -17,7 +17,7 @@ function usage {
     echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo "      <identifier>    = give a good name!"
+    echo "      <identifier>    = directory name depends on this"
     echo "      <window_size>   = the linear distance of context words to consider in each direction"
     echo "      <dim>           = dimensionality of embeddings"
     echo "      <k>             = number of negative samples parameter (equivalent to shifting parameter for PPMI)"
@@ -29,8 +29,9 @@ function usage {
     echo "  Usage2: ${name} <language>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
+    echo "      <indentifier>   = directory name depends on this"
     echo ""
-    echo "  Note: Usage2 chooses the best performing paramters from SemEval2020 and How low can you go."
+    echo "  Note: Usage2 chooses the paramters according to the best personal performance so far."
     echo ""
 }
 
@@ -105,7 +106,7 @@ python3.8 modules/map_embeddings.py --normalize unit center --init_identical --o
 
 #measure CD
 mkdir -p ${resdir}
-python3.8 modules/cd.py -f -d ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.txt
+python3.8 modules/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.txt
 
 #evaluate with SPR
 python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.txt 1 1 >> ${resdir}/spr.txt
