@@ -44,7 +44,7 @@ def main():
     # Write output
     with open(path_output, mode='w') as f_out:
         for pair in freqs_sorted:
-            if pair[1] >= 5:
+            if pair[1] >= 4:
                 f_out.write(pair[0] + '\t' + str(pair[1]) + '\n')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
