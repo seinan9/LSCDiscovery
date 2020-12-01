@@ -70,21 +70,10 @@ def main():
     balanced_accuracy = (tpr +tnr) / 2
     f_measure = (1 + beta**2) * ((precision * recall) / (precision + recall))
 
-    # print(positives)
-    # print(true_positives)
-    # print(false_positives, '\n')
-
-    # print(negatives)
-    # print(true_negatives)
-    # print(false_negatives, '\n')
-
-    print("Precision = ", precision)
-    print("Recall = ", recall)
-    print("Accuracy = ", accuracy)
-    print("Balanced accuracy = ", balanced_accuracy)
-    print("F-measre = ", precision)
+    print('\t'.join((str(precision), str(recall), str(accuracy), str(balanced_accuracy), str(f_measure))))
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))    
+    print("")
 
 
 if __name__ == '__main__':
