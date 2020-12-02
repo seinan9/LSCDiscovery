@@ -62,7 +62,7 @@ def main():
             binary[word] = 0
 
     # Write output
-    with open(path_output+'.csv', 'w', encoding='utf-8') as f:
+    with open(path_output, 'w', encoding='utf-8') as f:
         for key, value in binary.items():
             f.write(key + '\t' + str(value) + '\n')
 
