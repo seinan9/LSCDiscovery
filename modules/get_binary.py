@@ -1,7 +1,5 @@
 import csv
 import logging
-import sys
-sys.path.append('./modules/')
 import time 
 
 from docopt import docopt
@@ -23,12 +21,14 @@ def main():
         <path_distances>    = path to file containing word distance pairs (tab-separated)
         <path_targets>      = path to file containing target words
         <path_output>       = output path for result file
+        <deviaton_factor>   = threshold = mean + deviation_factor * std   
     
     """)
 
     path_distances = args['<path_distances>']
     path_targets = args['<path_targets>']
     path_output = args['<path_output>']
+    deviation_factor = float(args['<deviation_factor>'])
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -50,7 +50,7 @@ def main():
     mean = np.mean(distances, axis=0)
     std = np.std(distances, axis=0)
 
-    threshold = mean + std
+    threshold = mean + deviation_factor * std
 
     # Compute bianry scores
     binary = {}

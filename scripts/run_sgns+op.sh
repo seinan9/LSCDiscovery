@@ -113,7 +113,7 @@ python3.8 modules/get_binary.py ${resdir}/cd_all.csv data/${language}/targets.tx
 
 # evaluate with SPR
 python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.csv 1 1 >> ${resdir}/spr.csv
-python3.8 modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary.csv 1 >> ${resdir}/class.csv
+python3.8 modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary.csv >> ${resdir}/class.csv
 
 # clean directory
 rm -r output/${language}/sgns/${identifier}

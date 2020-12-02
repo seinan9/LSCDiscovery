@@ -13,17 +13,15 @@ def main():
     args = docopt("""Compute various classifcation measures.
 
     Usage:
-        classification_measures.py <path_truth> <path_file> <beta>
+        classification_measures.py <path_truth> <path_file> 
 
         <path_truth>    = path to binary gold data (tab-separated)
         <path_file>     = path to file containing words and binary values (tab-separated)
-        <beta>          = parameter for F-measure: >1 weights recall higher, <1 weights precision higher
 
     """)
     
     path_truth = args['<path_truth>']
     path_file = args['<path_file>']
-    beta = int(args['<beta>'])
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -60,16 +58,20 @@ def main():
 
     precision = true_positives / (true_positives + false_positives)
     recall = true_positives / (true_positives + false_negatives)
-    accuracy = (true_positives + true_negatives) / (true_positives + true_negatives + false_positives + false_negatives)
     tpr = true_positives / (true_positives + false_negatives)
     tnr = true_negatives / (true_negatives + false_positives)
     balanced_accuracy = (tpr +tnr) / 2
-    f_measure = (1 + beta**2) * ((precision * recall) / (precision + recall))
+    f1 = compute_f_measure(precision, recall, 1)
+    f05 = compute_f_measure(precision, recall, 0.5)
 
-    print('\t'.join((str(precision), str(recall), str(accuracy), str(balanced_accuracy), str(f_measure))))
+    print('\t'.join((str(precision), str(recall), str(balanced_accuracy), str(f1), str(f05))))
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))    
     print("")
+
+def compute_f_measure(precision, recall, beta):
+    f1_measure = (1 + beta**2) * ((precision * recall) / (beta**2 * (precision + recall)))
+    return f1_measure
 
 
 if __name__ == '__main__':
