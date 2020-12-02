@@ -16,7 +16,7 @@ def main():
     args = docopt("""Compute binary values for taget words.
     
     Usage:
-        get_binary.py <path_distances> <path_targets> <path_output>
+        get_binary.py <path_distances> <path_targets> <path_output> <deviation_factor>
 
         <path_distances>    = path to file containing word distance pairs (tab-separated)
         <path_targets>      = path to file containing target words
