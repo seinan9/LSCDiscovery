@@ -15,9 +15,9 @@ def main():
     Usage:
         classification_measures.py <path_truth> <path_file> <beta>
 
-        <path_truth>    = path to binary gold data 
+        <path_truth>    = path to binary gold data (tab-separated)
         <path_file>     = path to file containing words and binary values (tab-separated)
-        <beta>          = parameter for F-measure, >1 weights recall higher, <1 weights precision higher
+        <beta>          = parameter for F-measure: >1 weights recall higher, <1 weights precision higher
 
     """)
     
@@ -41,23 +41,19 @@ def main():
         for row in reader:
             data[row[0].strip()] = int(row[1].strip())
 
-    positives = 0
-    negatives = 0
     true_positives = 0
     false_positives = 0
     true_negatives = 0
     false_negatives = 0
 
-    for word, value in truth.items():
-        if truth[word] == 1:
-            positives += 1
-            if data[word] == 1:
+    for word, value in data.items():
+        if data[word] == 1:
+            if truth[word] == 1:
                 true_positives += 1
             else:
                 false_positives += 1
         else:
-            negatives += 1
-            if data[word] == 0:
+            if truth[word] == 0:
                 true_negatives += 1
             else:
                 false_negatives += 1
