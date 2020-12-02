@@ -1,5 +1,6 @@
 import csv
 import logging
+import sys
 import time 
 
 from docopt import docopt
@@ -55,14 +56,18 @@ def main():
                 true_negatives += 1
             else:
                 false_negatives += 1
-
-    precision = true_positives / (true_positives + false_positives)
-    recall = true_positives / (true_positives + false_negatives)
-    tpr = true_positives / (true_positives + false_negatives)
-    tnr = true_negatives / (true_negatives + false_positives)
-    balanced_accuracy = (tpr +tnr) / 2
-    f1 = compute_f_measure(precision, recall, 1)
-    f05 = compute_f_measure(precision, recall, 0.5)
+    
+    try:
+        precision = true_positives / (true_positives + false_positives)
+        recall = true_positives / (true_positives + false_negatives)
+        tpr = true_positives / (true_positives + false_negatives)
+        tnr = true_negatives / (true_negatives + false_positives)
+        balanced_accuracy = (tpr +tnr) / 2
+        f1 = compute_f_measure(precision, recall, 1)
+        f05 = compute_f_measure(precision, recall, 0.5)
+    except ZeroDivisionError:
+        print("ZeroDivisionError")
+        sys.exit()
 
     print('\t'.join((str(precision), str(recall), str(balanced_accuracy), str(f1), str(f05))))
 
