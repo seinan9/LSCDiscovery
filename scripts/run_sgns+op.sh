@@ -85,30 +85,35 @@ if [ $# -eq 2 ]
         fi
 fi
 
-identifier=w${window_size}-dim${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i${itera}
+identifier=w${window_size}-d${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i${itera}
 
 outdir=output/${language}/sgns/${identifier}
 resdir=results/$language/sgns/${identifier}
 
-#generate matrices with sgns
+# generate matrices with sgns
 mkdir -p ${outdir}
 
 python3.8 type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
 python3.8 type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
-#length-normalize and mean-center
+# length-normalize and mean-center
 python3.8 modules/center.py -l ${outdir}/mat1 ${outdir}/mat1c
 python3.8 modules/center.py -l ${outdir}/mat2 ${outdir}/mat2c
 
-#align with OP
+# align with OP
 python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1c ${outdir}/mat2c ${outdir}/mat1ca ${outdir}/mat2ca
 
-#measure CD
+# measure CD
 mkdir -p ${resdir}
-python3.8 modules/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.txt
+python3.8 modules/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.csv
+python3.8 modules/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.csv
 
-#evaluate with SPR
-python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.txt 1 1 >> ${resdir}/spr.txt
+# create binary scores
+python3.8 modules/get_binary.py ${resdir}/cd_all.csv data/${language}/targets.txt ${resdir}/binary.csv
 
-#clean directory
+# evaluate with SPR
+python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.csv 1 1 >> ${resdir}/spr.csv
+python3.8 modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary.csv 1 >> ${resdir}/class.csv
+
+# clean directory
 rm -r output/${language}/sgns/${identifier}
