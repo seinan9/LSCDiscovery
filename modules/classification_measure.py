@@ -47,6 +47,12 @@ def main():
     f1 = metrics.f1_score(truth, preds, zero_division=0)
     f05 = metrics.fbeta_score(truth, preds, beta=0.5, zero_division=0)
 
+    precision = round(precision, 3)
+    recall = round(recall, 3)
+    bal_acc = round(bal_acc, 3)
+    f1 = round(f1, 3)
+    f05 = round(f05, 3)
+
     print('\t'.join((str(precision), str(recall), str(bal_acc), str(f1), str(f05))))
 
 

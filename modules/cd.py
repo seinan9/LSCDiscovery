@@ -84,12 +84,10 @@ def main():
                 distances[word] = 'nan'
                 continue
     
-    distances = sorted(distances.items(), key=lambda x: x[1])    
-
     # Write output
     with open(path_output, 'w', encoding='utf-8') as f:
-        for pair in distances:
-            f.write(pair[0] + '\t' + str(pair[1]) + '\n')
+        for key in distances:
+            f.write(key + '\t' + str(distances[key]) + '\n')
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
     print("")
     
