@@ -1,7 +1,7 @@
 #!/bin/bash
 name=$0
 language=$1
-identifier=$2
+type=$2
 
 function usage {
     echo "Compute frequency baseline."
@@ -10,9 +10,7 @@ function usage {
     echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
-    echo "      <identifier>    = blalba"
-    echo ""
-
+    echo "      <type>          = lemma | token"
     echo ""
 }
 
@@ -28,24 +26,27 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/freq/${identifier}
-resdir=results/$language/freq/${identifier}
+outdir=output/${language}/freq/${type}
+resdir=results/${language}/freq/${type}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
 
-python3.8 modules/get_freqs.py data/${language}/corpus1_preprocessed/${identifier}/*.txt.gz ${outdir}/freqs1.csv
-python3.8 modules/get_freqs.py data/${language}/corpus2_preprocessed/${identifier}/*.txt.gz ${outdir}/freqs2.csv
+# Get frequencies
+python3.8 measures/freqs.py -n -l data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/freqs1_nl.tsv
+python3.8 measures/freqs.py -n -l data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/freqs2_nl.tsv
 
-python3.8 modules/subtract_freqs.py ${outdir}/freqs1.csv ${outdir}/freqs2.csv ${resdir}/freq_diffs.csv
+# Compute difference 
+python3.8 measures/subtract.py ${outdir}/freqs1_nl.tsv ${outdir}/freqs2_nl.tsv ${resdir}/freq_diffs_nl.tsv
 
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.csv
+# Create binary scores and evaluate 
+printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class_nl.tsv
 for i in `LANG=en_US seq -3 0.5 3`
     do  
-        python3.8 modules/get_binary.py ${resdir}/freq_diffs.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv " ${i} "
-        score=$(python modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.csv)
-        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.csv
+        python3.8 measures/binary.py ${resdir}/freq_diffs_nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}_nl.tsv " ${i} "
+        score_nl=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}_nl.tsv)
+        printf "%s\t%s\n" "${i}" "${score_nl}" >> ${resdir}/class_nl.tsv
     done
 
-# clean directory
-rm -r output/${language}/freq/${identifier}
+# Clean directory
+rm -r output/${language}/freq/${type}

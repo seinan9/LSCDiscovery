@@ -88,40 +88,40 @@ fi
 identifier=w${window_size}-d${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i${itera}
 
 outdir=output/${language}/sgns/${identifier}
-resdir=results/$language/sgns/${identifier}
+resdir=results/${language}/sgns/${identifier}
 
-# generate matrices with sgns
+# Generate matrices with sgns
 mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 python3.8 type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
 python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
-# length-normalize and mean-center
+# Length-normalize and mean-center
 python3.8 modules/center.py -l ${outdir}/mat1 ${outdir}/mat1c
 python3.8 modules/center.py -l ${outdir}/mat2 ${outdir}/mat2c
 
-# align with OP
+# Align with OP
 python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1c ${outdir}/mat2c ${outdir}/mat1ca ${outdir}/mat2ca
 
-# measure CD for target words
-python3.8 modules/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.csv
+# Measure CD for target words
+python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.tsv
 
-# evaluate with SPR
-spr=$(python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.csv 1 1)
-printf "%s\n" "${spr}" >> ${resdir}/spr.csv
+# Evaluate with SPR
+spr=$(python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/cd.tsv 1 1)
+printf "%s\n" "${spr}" >> ${resdir}/spr.tsv
 
-# measure CD for all words
-python3.8 modules/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.csv
+# Measure CD for all words
+python3.8 measures/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.tsv
 
-# create binary scores and evaluate 
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.csv
+# Create binary scores and evaluate 
+printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.tsv
 for i in `LANG=en_US seq -3 0.5 3`
     do  
-        python3.8 modules/get_binary.py ${resdir}/cd_all.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv " ${i} "
-        score=$(python modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.csv)
-        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.csv
+        python3.8 measures/binary.py ${resdir}/cd_all.tsv data/${language}/targets.txt ${resdir}/binary_t${i}.tsv " ${i} "
+        score=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.tsv)
+        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.tsv
     done
 
-# clean directory
+# Clean directory
 rm -r output/${language}/sgns/${identifier}
