@@ -15,7 +15,7 @@ def main():
     args = docopt("""Compute various classifcation measures.
 
     Usage:
-        classification_measures.py <path_truth> <path_file> 
+        class_metrics.py <path_truth> <path_file> 
 
         <path_truth>    = path to binary gold preds (tab-separated)
         <path_file>     = path to file containing words and binary values (tab-separated)

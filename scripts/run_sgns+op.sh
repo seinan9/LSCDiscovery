@@ -12,7 +12,7 @@ itera=$8
 function usage {
     echo "Create type-based embeddings with SGNS. Measure the cosine distance (CD) for every word and compute the Spearman correlation."
     echo ""
-    echo "  Usage1:" 
+    echo "  Usage:" 
     echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
@@ -24,11 +24,10 @@ function usage {
     echo "      <min_count2>    = number of occurrences for a word to be included in the vocabulary (corpus2)"
     echo "      <itera>         = number of iterations"
     echo ""
-    echo "  Usage2: ${name} <language>"
-    echo ""
-    echo "      <language>      = eng | ger | swe | lat"
-    echo ""
-    echo "  Note: Usage2 chooses the paramters according to the best personal performance so far."
+    echo "  Short usage: "
+    echo "      ${name} <language>"
+    echo "" 
+    echo "      Chooses the parameters according to the best personal performance so far"
     echo ""
 }
 
@@ -124,4 +123,4 @@ for i in `LANG=en_US seq -3 0.5 3`
     done
 
 # Clean directory
-rm -r output/${language}/sgns/${identifier}
+#rm -r output/${language}/sgns/${identifier}

@@ -14,7 +14,7 @@ def main():
     args = docopt("""Counts frequency
 
     Usage:
-        get_frequencies.py [-n] [-l] <path_corpus> <path_output>
+        entropy.py [-n] [-l] <path_corpus> <path_output>
 
     Arguments:
         <path_corpus>   = path to input corpus1 (in .txt.gz format)

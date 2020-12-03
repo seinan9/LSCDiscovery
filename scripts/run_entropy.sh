@@ -2,19 +2,25 @@
 name=$0
 language=$1
 type=$2
+window_size=$3
 
 function usage {
     echo "Compute entropy baseline."
     echo ""
-    echo "  Usage1:" 
-    echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
+    echo "  Usage:" 
+    echo "      ${name} <language> <type> <window_size>"
     echo ""
     echo "      <language>      = eng | ger | swe | lat"
     echo "      <type>          = lemma | token"
+    echo "      <window_size>   = window size"
+    echo ""
+    echo "  Short usage:"
+    echo "      ${name} <language> <type>"
+    echo ""
+    echo "      Window_size is set to 10"
     echo ""
 }
-
-if [ $# -ne 2 ] 
+if [ $# -ne 2 ] && [ $# -ne 3 ]
 	then 
 		usage
 		exit 1
@@ -26,18 +32,27 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
+if [ $# -eq 2 ]
+    then
+        window_size=10
+fi
+
 outdir=output/${language}/entropy/${type}
 resdir=results/${language}/entropy/${type}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
 
-# Get entropy scores
-python3.8 measures/entropy.py -n data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/entropy1_n.tsv
-python3.8 measures/entropy.py -n data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/entropy2_n.tsv
+# Create counte-based matrix
+python3.8 type-based/count.py data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/mat1 ${window_size}
+python3.8 type-based/count.py data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/mat2 ${window_size}
 
-python3.8 measures/entropy.py -n -l data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/entropy1_nl.tsv
-python3.8 measures/entropy.py -n -l data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/entropy2_nl.tsv
+# Get entropy scores
+python3.8 measures/entropy.py -n ${outdir}/mat1 ${outdir}/entropy1_n.tsv
+python3.8 measures/entropy.py -n ${outdir}/mat2 ${outdir}/entropy2_n.tsv
+
+python3.8 measures/entropy.py -n -l ${outdir}/mat1 ${outdir}/entropy1_nl.tsv
+python3.8 measures/entropy.py -n -l ${outdir}/mat2 ${outdir}/entropy2_nl.tsv
 
 # Compute difference 
 python3.8 measures/subtract.py ${outdir}/entropy1_n.tsv ${outdir}/entropy2_n.tsv ${resdir}/entropy_diffs_n.tsv

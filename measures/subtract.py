@@ -15,7 +15,7 @@ def main():
     args = docopt("""Subtracts values for two given lists (only for the same keys).
 
     Usage:
-        get_frequencies.py <path_values1> <path_values2> <path_output>
+        subtract.py <path_values1> <path_values2> <path_output>
 
     Arguments:
         <path_values1>  = path to values from corpus1 
