@@ -92,6 +92,7 @@ resdir=results/$language/sgns/${identifier}
 
 # generate matrices with sgns
 mkdir -p ${outdir}
+mkdir -p ${resdir}
 
 python3.8 type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
 python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
@@ -104,11 +105,11 @@ python3.8 modules/center.py -l ${outdir}/mat2 ${outdir}/mat2c
 python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1c ${outdir}/mat2c ${outdir}/mat1ca ${outdir}/mat2ca
 
 # measure CD for target words
-mkdir -p ${resdir}
 python3.8 modules/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.csv
 
 # evaluate with SPR
-python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.csv 1 1 >> ${resdir}/spr.csv
+spr=$(python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.csv 1 1)
+printf "%s\n" "${spr}" >> ${resdir}/spr.csv
 
 # measure CD for all words
 python3.8 modules/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.csv
