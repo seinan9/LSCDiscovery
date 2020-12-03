@@ -39,12 +39,13 @@ python3.8 modules/get_freqs.py data/${language}/corpus2_preprocessed/${identifie
 
 python3.8 modules/subtract_freqs.py ${outdir}/freqs1.csv ${outdir}/freqs2.csv ${resdir}/freq_diffs.csv
 
-for i in -3 -2 -1 0 1 2 3
-    do 
-        python3.8 modules/get_binary.py ${resdir}/freq_diffs.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv ${i}
+printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5"
+for i in `LANG=en_US seq -3 0.5 3`
+    do  
+        python3.8 modules/get_binary.py ${resdir}/freq_diffs.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv " ${i} "
         score=$(python modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.csv)
         printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.csv
     done
 
 # clean directory
-rm -r output/${language}/freqs/${identifier}
+rm -r output/${language}/freq/${identifier}
