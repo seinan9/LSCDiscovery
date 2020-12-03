@@ -115,7 +115,7 @@ printf "%s\n" "${spr}" >> ${resdir}/spr.csv
 python3.8 modules/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.csv
 
 # create binary scores and evaluate 
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5"
+printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.csv
 for i in `LANG=en_US seq -3 0.5 3`
     do  
         python3.8 modules/get_binary.py ${resdir}/cd_all.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv " ${i} "

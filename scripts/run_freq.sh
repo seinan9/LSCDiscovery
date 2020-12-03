@@ -39,7 +39,7 @@ python3.8 modules/get_freqs.py data/${language}/corpus2_preprocessed/${identifie
 
 python3.8 modules/subtract_freqs.py ${outdir}/freqs1.csv ${outdir}/freqs2.csv ${resdir}/freq_diffs.csv
 
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5"
+printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.csv
 for i in `LANG=en_US seq -3 0.5 3`
     do  
         python3.8 modules/get_binary.py ${resdir}/freq_diffs.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv " ${i} "
