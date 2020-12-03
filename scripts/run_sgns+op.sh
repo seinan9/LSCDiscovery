@@ -103,17 +103,23 @@ python3.8 modules/center.py -l ${outdir}/mat2 ${outdir}/mat2c
 # align with OP
 python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1c ${outdir}/mat2c ${outdir}/mat1ca ${outdir}/mat2ca
 
-# measure CD
+# measure CD for target words
 mkdir -p ${resdir}
 python3.8 modules/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.csv
-python3.8 modules/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.csv
-
-# create binary scores
-python3.8 modules/get_binary.py ${resdir}/cd_all.csv data/${language}/targets.txt ${resdir}/binary.csv 1
 
 # evaluate with SPR
 python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cd.csv 1 1 >> ${resdir}/spr.csv
-python3.8 modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary.csv >> ${resdir}/class.csv
+
+# measure CD for all words
+python3.8 modules/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.csv
+
+# create binary scores and evaluate 
+for i in `LANG=en_US seq -3 0.5 3`
+    do  
+        python3.8 modules/get_binary.py ${resdir}/freq_diffs.csv data/${language}/targets.txt ${resdir}/binary_t${i}.csv " ${i} "
+        score=$(python modules/classification_measure.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.csv)
+        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.csv
+    done
 
 # clean directory
 rm -r output/${language}/sgns/${identifier}
