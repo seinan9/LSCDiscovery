@@ -106,7 +106,7 @@ def main():
                     target_found = True
                 if target_found:
                     break
-            if uses == 2:
+            if uses == 100:
                 break
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
