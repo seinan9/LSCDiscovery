@@ -81,26 +81,28 @@ def main():
     for i, sentence in enumerate(sentences_lemma):
         for word in sentence.split():
             for target_word in target_words:
-                lemma = target_word.replace('_nn', '').replace('_vb', '')
-                if word == target_word:
-                    max_ratio_lemma = 0
-                    max_ratio_token = 0
-                    for word_lemma in sentences_lemma[i].split():
-                        ratio_lemma = fuzz.ratio(
-                            target_word.lower(), word_lemma.lower()) 
-                        if ratio_lemma > max_ratio_lemma:
-                            max_ratio_lemma = ratio_lemma
-                            index_lemma = sentences_lemma[i].split().index(word_lemma)
-                    for word_token in sentences_token[i].split():
-                        ratio_token = fuzz.ratio(
-                            lemma.lower(), word_token.lower())
-                        if ratio_token > max_ratio_token:
-                            max_ratio_token = ratio_token
-                            index_token = sentences_token[i].split().index(word_token)
-                    #print(target_word, sentences_token[i].split()[index_token])
-                    with open(path_output_directory+word+".csv", 'a', encoding="utf-8") as f:
-                        writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-                        writer.writerow([sentences_lemma[i].strip().replace(target_word, lemma), sentences_token[i].strip(), index_lemma, index_token, lemma])
+                uses = 200
+                while uses < 200:
+                    lemma = target_word.replace('_nn', '').replace('_vb', '')
+                    if word == target_word:
+                        uses += 1
+                        max_ratio_lemma = 0
+                        max_ratio_token = 0
+                        for word_lemma in sentences_lemma[i].split():
+                            ratio_lemma = fuzz.ratio(
+                                target_word.lower(), word_lemma.lower()) 
+                            if ratio_lemma > max_ratio_lemma:
+                                max_ratio_lemma = ratio_lemma
+                                index_lemma = sentences_lemma[i].split().index(word_lemma)
+                        for word_token in sentences_token[i].split():
+                            ratio_token = fuzz.ratio(
+                                lemma.lower(), word_token.lower())
+                            if ratio_token > max_ratio_token:
+                                max_ratio_token = ratio_token
+                                index_token = sentences_token[i].split().index(word_token)
+                        with open(path_output_directory+word+".csv", 'a', encoding="utf-8") as f:
+                            writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
+                            writer.writerow([sentences_lemma[i].strip().replace(target_word, lemma), sentences_token[i].strip(), index_lemma, index_token, lemma])
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")
