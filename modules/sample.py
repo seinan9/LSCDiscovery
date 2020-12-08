@@ -122,8 +122,8 @@ def main():
     for i in [samples_area1, samples_area2, samples_area3, samples_area4, samples_area5]:
         samples_full.update(i)
 
-    targets_freq = {key:new_freqs[key] for key in targets}
-    samples_full.update(targets_freq)
+    #targets_freq = {key:new_freqs[key] for key in targets}
+    #samples_full.update(targets_freq)
 
     with open(path_output+'samples_full.tsv', 'w', encoding='utf-8') as f:
         for sample in samples_full:
@@ -133,17 +133,17 @@ def main():
         for sample in samples_full:
             f.write(sample + '\t' + str(samples_full[sample]) + '\n')
 
-    loop_dict = {1: samples_area1, 2:samples_area2, 3:samples_area3, 4:samples_area4, 5:samples_area5}
+    # loop_dict = {1: samples_area1, 2:samples_area2, 3:samples_area3, 4:samples_area4, 5:samples_area5}
 
-    for i in range(1,6):
-        with open(path_output+'samples_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
-            for key in loop_dict[i]:
-                f.write(key + '\n')
+    # for i in range(1,6):
+    #     with open(path_output+'samples_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
+    #         for key in loop_dict[i]:
+    #             f.write(key + '\n')
 
-    for i in range(1,6):
-        with open(path_output+'freqs_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
-            for key in loop_dict[i]:
-                f.write(key + '\t' + str(loop_dict[i][key]) + '\n')
+    # for i in range(1,6):
+    #     with open(path_output+'freqs_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
+    #         for key in loop_dict[i]:
+    #             f.write(key + '\t' + str(loop_dict[i][key]) + '\n')
 
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))

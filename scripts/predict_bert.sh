@@ -28,8 +28,8 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/bertfull/${identifier}
-resdir=results/${language}/bertfull/${identifier}
+outdir=output/${language}/bert_predict/${identifier}
+resdir=results/${language}/bert_predict/${identifier}
 
 mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
