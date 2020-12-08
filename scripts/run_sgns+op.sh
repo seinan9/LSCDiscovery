@@ -89,10 +89,10 @@ identifier=w${window_size}-d${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i
 outdir=output/${language}/sgns/${identifier}
 resdir=results/${language}/sgns/${identifier}
 
-# Generate matrices with sgns
 mkdir -p ${outdir}
 mkdir -p ${resdir}
 
+# Generate matrices with sgns
 python3.8 type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
 python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
@@ -110,17 +110,5 @@ python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targ
 spr=$(python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/cd.tsv 1 1)
 printf "%s\n" "${spr}" >> ${resdir}/spr.tsv
 
-# Measure CD for all words
-python3.8 measures/cd.py -f ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd_all.tsv
-
-# Create binary scores and evaluate 
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.tsv
-for i in `LANG=en_US seq -3 0.5 3`
-    do  
-        python3.8 measures/binary.py ${resdir}/cd_all.tsv data/${language}/targets.txt ${resdir}/binary_t${i}.tsv " ${i} "
-        score=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.tsv)
-        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.tsv
-    done
-
 # Clean directory
-#rm -r output/${language}/sgns/${identifier}
+rm -r output/${language}/sgns/${identifier}
