@@ -42,8 +42,8 @@ cat data/${language}/targets.txt | while read line || [ -n "$line" ]
         python token-based/bert.py -l fulluses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
         python token-based/bert.py -l fulluses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
-        apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
-        cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        cos=$(python measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
         printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd.tsv
         printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos.tsv
@@ -53,8 +53,8 @@ cat data/${language}/targets.txt | while read line || [ -n "$line" ]
     done
 
 # Compute Spearman 
-python modules/spr.py data/${language}/truth/graded.tsv ${resdir}/apd.tsv 1 1 >> ${resdir}/spr_apd.tsv
-python modules/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 1 1 >> ${resdir}/spr_cos.tsv
+python evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/apd.tsv 1 1 >> ${resdir}/spr_apd.tsv
+python evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 1 1 >> ${resdir}/spr_cos.tsv
 
 
 # # Compute vectors with bert for samples, compute APD and COS
@@ -103,8 +103,8 @@ cat data/${language}/samples/samples_full.tsv | while read line || [ -n "$line" 
         python token-based/bert.py -l fulluses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
         python token-based/bert.py -l fulluses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
-        apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
-        cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        cos=$(python measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
         printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd_samples.tsv
         printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos_samples.tsv
