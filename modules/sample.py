@@ -17,17 +17,19 @@ def main():
     args = docopt("""Counts frequency
 
     Usage:
-        sample.py <path_freqs1> <path_freqs2> <path_output>
+        sample.py <path_freqs1> <path_freqs2> <path_targets> <path_output>
 
     Arguments:
         <path_freqs1>           = path to frequency list from corpus 1
         <path_freqs2>           = path to frequency list from corpus 2
-        <path_output>           = output directory.
+        <path_targets>          = path to file containing target words
+        <path_output>           = directory where the files are saved
 
     """)
 
     path_freqs1 = args['<path_freqs1>']
     path_freqs2 = args['<path_freqs2>']
+    path_targets = args['<path_targets>']
     path_output = args['<path_output>']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -36,7 +38,7 @@ def main():
 
     freqs1 = {}
     with open(path_freqs1, 'r', encoding='utf-8') as f:
-        reader = csv.reader(f, delimiter='\t')
+        reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
             freqs1[row[0]] = np.log2(int(row[1]))
 
@@ -46,13 +48,18 @@ def main():
         for row in reader:
             freqs2[row[0]] = np.log2(int(row[1]))
 
+    with open(path_targets, 'r', encoding='utf-8') as f:
+        targets = [line.strip() for line in f]
+
     intersection = freqs1.keys() & freqs2.keys()
+    
+    difference = [item for item in intersection if item not in targets]
 
     cleaned = []
 
     nlp = spacy.load("de_core_news_sm")
 
-    for word in intersection:
+    for word in difference:
         doc = nlp(word)
         for token in doc:
             pos = token.pos_
@@ -75,45 +82,69 @@ def main():
     range_ = max_ - min_
     size = range_ / 5
 
-    area_one = {}
-    area_two = {}
-    area_three = {}
-    area_four = {}
-    area_five = {}
+    area1 = {}
+    area2 = {}
+    area3 = {}
+    area4 = {}
+    area5 = {}
 
     for key in new_freqs:
         if new_freqs[key] < min_ + size:
-            area_one[key] = new_freqs[key]
+            area1[key] = new_freqs[key]
         elif new_freqs[key] < min_ + 2 * size:
-            area_two[key] = new_freqs[key]
+            area2[key] = new_freqs[key]
         elif new_freqs[key] < min_ + 3 * size:
-            area_three[key] = new_freqs[key]
+            area3[key] = new_freqs[key]
         elif new_freqs[key] < min_ + 4 * size:
-            area_four[key] = new_freqs[key]    
+            area4[key] = new_freqs[key]    
         else:
-            area_five[key] = new_freqs[key]
+            area5[key] = new_freqs[key]
 
-    rel1 = len(area_one) / len(new_freqs)
-    rel2 = len(area_two) / len(new_freqs)
-    rel3 = len(area_three) / len(new_freqs)
-    rel4 = len(area_four) / len(new_freqs)
-    rel5 = len(area_five) / len(new_freqs)
+    rel1 = len(area1) / len(new_freqs)
+    rel2 = len(area2) / len(new_freqs)
+    rel3 = len(area3) / len(new_freqs)
+    rel4 = len(area4) / len(new_freqs)
+    rel5 = len(area5) / len(new_freqs)
 
-    sample_size1 = round(rel1 * 500)
-    sample_size2 = round(rel2 * 500)
-    sample_size3 = round(rel3 * 500)
-    sample_size4 = round(rel4 * 500)
-    sample_size5 = round(rel5 * 500)
-    
+    sample_size1 = round(rel1 * 50)
+    sample_size2 = round(rel2 * 50)
+    sample_size3 = round(rel3 * 50)
+    sample_size4 = round(rel4 * 50)
+    sample_size5 = round(rel5 * 50)
 
-    # with open(path_output, 'w') as f:
-    #     for pair in freqs_sorted:
-    #         f.write(pair[0] + '\t' + str(pair[1]) + '\n')
+    samples_area1 = {key:area1[key] for key in random.sample(list(area1), sample_size1)}
+    samples_area2 = {key:area2[key] for key in random.sample(list(area2), sample_size2)}
+    samples_area3 = {key:area3[key] for key in random.sample(list(area3), sample_size3)}
+    samples_area4 = {key:area4[key] for key in random.sample(list(area4), sample_size4)}
+    samples_area5 = {key:area5[key] for key in random.sample(list(area5), sample_size5)}
 
-    # # Write output
-    # with open(path_output+'2', mode='w') as f_out:
-    #     for key in new_freqs2:
-    #         f_out.write(key + '\t' + str(new_freqs2[key]) + '\n')
+    samples_full = {}
+    for i in [samples_area1, samples_area2, samples_area3, samples_area4, samples_area5]:
+        samples_full.update(i)
+
+    targets_freq = {key:new_freqs[key] for key in targets}
+    samples_full.update(targets_freq)
+
+    with open(path_output+'samples_full.tsv', 'w', encoding='utf-8') as f:
+        for sample in samples_full:
+            f.write(sample + '\n')
+
+    with open(path_output+'freqs_full.tsv', 'w', encoding='utf-8') as f:
+        for sample in samples_full:
+            f.write(sample + '\t' + str(samples_full[sample]) + '\n')
+
+    loop_dict = {1: samples_area1, 2:samples_area2, 3:samples_area3, 4:samples_area4, 5:samples_area5}
+
+    for i in range(1,6):
+        with open(path_output+'samples_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
+            for key in loop_dict[i]:
+                f.write(key + '\n')
+
+    for i in range(1,6):
+        with open(path_output+'freqs_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
+            for key in loop_dict[i]:
+                f.write(key + '\t' + str(loop_dict[i][key]) + '\n')
+
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 
