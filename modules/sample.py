@@ -36,6 +36,7 @@ def main():
     logging.info(__file__.upper())
     start_time = time.time()
 
+    # Load frequencies
     freqs1 = {}
     with open(path_freqs1, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
@@ -48,17 +49,17 @@ def main():
         for row in reader:
             freqs2[row[0]] = np.log2(int(row[1]))
 
+    # Load target words
     with open(path_targets, 'r', encoding='utf-8') as f:
         targets = [line.strip() for line in f]
 
+    # Make intersection and remove targets from the list 
     intersection = freqs1.keys() & freqs2.keys()
-    
     difference = [item for item in intersection if item not in targets]
 
+    # Clean list with pos_tagging. Only NOUNs, VERBs and ADJs survive. 
     cleaned = []
-
     nlp = spacy.load("de_core_news_sm")
-
     for word in difference:
         doc = nlp(word)
         for token in doc:
@@ -67,50 +68,54 @@ def main():
             if pos == 'NOUN' or pos == 'VERB' or pos == 'ADJ':
                 cleaned.append(word)
 
-    freqs = {}
+    # Convert to dict and get frequencies from freqs1 
+    freqs_cleaned = {}
     for word in cleaned:
-        freqs[word] = freqs1[word]
+        freqs_cleaned[word] = freqs1[word]
     
-    freqs_sorted = sorted(freqs.items(), key=lambda x: x[1])
-
-    new_freqs = {}
-    for pair in freqs_sorted:
-        new_freqs[pair[0]] = pair[1]
+    # Sort by freqeuncy and convert back to dict
+    sorted_tmp = sorted(freqs_cleaned.items(), key=lambda x: x[1])
+    freqs_sorted = {}
+    for pair in sorted_tmp:
+        freqs_sorted[pair[0]] = pair[1]
     
-    max_ = list(new_freqs.values())[-1]
-    min_ = list(new_freqs.values())[0]
+    # Compute range and area_size
+    max_ = list(freqs_sorted.values())[-1]
+    min_ = list(freqs_sorted.values())[0]
     range_ = max_ - min_
     size = range_ / 5
 
+    # Create and fill areas accordingly
     area1 = {}
     area2 = {}
     area3 = {}
     area4 = {}
     area5 = {}
 
-    for key in new_freqs:
-        if new_freqs[key] < min_ + size:
-            area1[key] = new_freqs[key]
-        elif new_freqs[key] < min_ + 2 * size:
-            area2[key] = new_freqs[key]
-        elif new_freqs[key] < min_ + 3 * size:
-            area3[key] = new_freqs[key]
-        elif new_freqs[key] < min_ + 4 * size:
-            area4[key] = new_freqs[key]    
+    for key in freqs_sorted:
+        if freqs_sorted[key] < min_ + size:
+            area1[key] = freqs_sorted[key]
+        elif freqs_sorted[key] < min_ + 2 * size:
+            area2[key] = freqs_sorted[key]
+        elif freqs_sorted[key] < min_ + 3 * size:
+            area3[key] = freqs_sorted[key]
+        elif freqs_sorted[key] < min_ + 4 * size:
+            area4[key] = freqs_sorted[key]    
         else:
-            area5[key] = new_freqs[key]
+            area5[key] = freqs_sorted[key]
 
-    rel1 = len(area1) / len(new_freqs)
-    rel2 = len(area2) / len(new_freqs)
-    rel3 = len(area3) / len(new_freqs)
-    rel4 = len(area4) / len(new_freqs)
-    rel5 = len(area5) / len(new_freqs)
+    # Compute percentages to determine how many samples to take from each area
+    rel1 = len(area1) / len(freqs_sorted)
+    rel2 = len(area2) / len(freqs_sorted)
+    rel3 = len(area3) / len(freqs_sorted)
+    rel4 = len(area4) / len(freqs_sorted)
+    rel5 = len(area5) / len(freqs_sorted)
 
-    sample_size1 = round(rel1 * 50)
-    sample_size2 = round(rel2 * 50)
-    sample_size3 = round(rel3 * 50)
-    sample_size4 = round(rel4 * 50)
-    sample_size5 = round(rel5 * 50)
+    sample_size1 = round(rel1 * 500)
+    sample_size2 = round(rel2 * 500)
+    sample_size3 = round(rel3 * 500)
+    sample_size4 = round(rel4 * 500)
+    sample_size5 = round(rel5 * 500)
 
     samples_area1 = {key:area1[key] for key in random.sample(list(area1), sample_size1)}
     samples_area2 = {key:area2[key] for key in random.sample(list(area2), sample_size2)}
@@ -118,33 +123,30 @@ def main():
     samples_area4 = {key:area4[key] for key in random.sample(list(area4), sample_size4)}
     samples_area5 = {key:area5[key] for key in random.sample(list(area5), sample_size5)}
 
-    samples_full = {}
-    for i in [samples_area1, samples_area2, samples_area3, samples_area4, samples_area5]:
-        samples_full.update(i)
+    # Put the target words in the according area behind the samples 
+    for key in targets:
+        if freqs1[key] < min_ + size:
+            samples_area1[key] = freqs1[key]
+        elif freqs1[key] < min_ + 2 * size:
+            samples_area2[key] = freqs1[key]
+        elif freqs1[key] < min_ + 3 * size:
+            samples_area3[key] = freqs1[key]
+        elif freqs1[key] < min_ + 4 * size:
+            samples_area4[key] = freqs1[key]
+        else:
+            samples_area5[key] = freqs1[key]
 
-    #targets_freq = {key:new_freqs[key] for key in targets}
-    #samples_full.update(targets_freq)
+    # Write output
+    loop_dict = {1: samples_area1, 2:samples_area2, 3:samples_area3, 4:samples_area4, 5:samples_area5}
 
-    with open(path_output+'samples_full.tsv', 'w', encoding='utf-8') as f:
-        for sample in samples_full:
-            f.write(sample + '\n')
+    for i in range(1,6):
+        with open(path_output+'samples.tsv', 'a', encoding='utf-8') as f:
+            for key in loop_dict[i]:
+                f.write(key + '\n')
 
-    with open(path_output+'freqs_full.tsv', 'w', encoding='utf-8') as f:
-        for sample in samples_full:
-            f.write(sample + '\t' + str(samples_full[sample]) + '\n')
-
-    # loop_dict = {1: samples_area1, 2:samples_area2, 3:samples_area3, 4:samples_area4, 5:samples_area5}
-
-    # for i in range(1,6):
-    #     with open(path_output+'samples_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
-    #         for key in loop_dict[i]:
-    #             f.write(key + '\n')
-
-    # for i in range(1,6):
-    #     with open(path_output+'freqs_area'+str(i)+'.tsv', 'w', encoding='utf-8') as f:
-    #         for key in loop_dict[i]:
-    #             f.write(key + '\t' + str(loop_dict[i][key]) + '\n')
-
+    with open(path_output+'areas.tsv', 'w', encoding='utf-8') as f:
+        f.write('\t'.join((str(sample_size1), str(sample_size2), str(sample_size3), str(sample_size4), str(sample_size5))))
+        f.write('\t'.join((str(len(samples_area1)), str(len(samples_area2)), str(len(samples_area3)), str(len(samples_area4)), str(len(samples_area5)))))
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 

@@ -26,26 +26,30 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/freq/${type}
-resdir=results/${language}/freq/${type}
+outdir=output/${language}/freq_predict/${type}
+resdir=results/${language}/freq_predict/${type}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Get frequencies
-python3.8 measures/freqs.py -n -l data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/freqs1_nl.tsv
-python3.8 measures/freqs.py -n -l data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/freqs2_nl.tsv
+python3.8 measures/freqs.py -n -l data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/freqs1-nl.tsv
+python3.8 measures/freqs.py -n -l data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/freqs2-nl.tsv
 
 # Compute difference 
-python3.8 measures/subtract.py ${outdir}/freqs1_nl.tsv ${outdir}/freqs2_nl.tsv ${resdir}/freq_diffs_nl.tsv
+python3.8 measures/subtract.py ${outdir}/freqs1-nl.tsv ${outdir}/freqs2-nl.tsv data/${language}/samples/samples.tsv ${resdir}/freq_diffs-nl.tsv
 
 # Create binary scores and evaluate 
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class_nl.tsv
-for i in `LANG=en_US seq -3 0.5 3`
+printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class-nl.tsv
+for i in `LANG=en_US seq -2 1 2`
     do  
-        python3.8 measures/binary.py ${resdir}/freq_diffs_nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}_nl.tsv " ${i} "
-        score_nl=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}_nl.tsv)
-        printf "%s\t%s\n" "${i}" "${score_nl}" >> ${resdir}/class_nl.tsv
+        python3.8 measures/binary.py ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
+        score-nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
+        printf "%s\t%s\n" "${i}" "${score-nl}" >> ${resdir}/class-nl.tsv
+
+        python3.8 measures/binary.py -a ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
+        score-nl-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
+        printf "%s\t%s\n" "${i}" "${score-nl-a}" >> ${resdir}/class-nl-a.tsv
     done
 
 # Clean directory
