@@ -39,8 +39,8 @@ mkdir -p ${resdir}
 cat data/${language}/samples/samples.tsv | while read line || [ -n "$line" ]
     do  
         echo "${line}"
-        python3.8 token-based/bert.py -l fulluses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
-        python3.8 token-based/bert.py -l fulluses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
+        python3.8 token-based/bert.py -l sample_uses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
+        python3.8 token-based/bert.py -l sample_uses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
         apd=$(python3.8 measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
         cos=$(python3.8 measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
@@ -64,7 +64,7 @@ python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 
 
 # Create binary scores using full samples
 printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class_apd.tsv
-for j in `LANG=en_US seq -2 1 2`
+for j in `LANG=en_US seq 0.5 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/apd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${j}_apd.tsv " ${j} "
         python3.8 measures/binary.py ${resdir}/cos_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${j}_cos.tsv " ${j} "

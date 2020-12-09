@@ -115,7 +115,7 @@ python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samp
 
 # Create binary scores and evaluate 
 printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class.tsv
-for i in `LANG=en_US seq -2 1 2`
+for i in `LANG=en_US seq 0.5 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${i}.tsv " ${i} "
         score=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.tsv)

@@ -41,7 +41,7 @@ python3.8 measures/subtract.py ${outdir}/freqs1-nl.tsv ${outdir}/freqs2-nl.tsv d
 
 # Create binary scores and evaluate 
 printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class-nl.tsv
-for i in `LANG=en_US seq -2 1 2`
+for i in `LANG=en_US seq 0.5 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
         score-nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)

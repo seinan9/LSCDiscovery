@@ -61,7 +61,7 @@ python3.8 measures/subtract.py ${outdir}/entropy1-nl.tsv ${outdir}/entropy2-nl.t
 # Create binary scores and evaluate 
 printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class-n.tsv
 printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class-nl.tsv
-for i in `LANG=en_US seq 2 1 2`
+for i in `LANG=en_US seq 0.5 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n.tsv " ${i} "
         python3.8 measures/binary.py ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
