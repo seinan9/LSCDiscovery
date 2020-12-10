@@ -65,15 +65,15 @@ for i in `LANG=en_US seq 0.5 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n.tsv " ${i} "
         python3.8 measures/binary.py ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
-        score-n=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n.tsv)
-        score-nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
+        score_n=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n.tsv)
+        score_nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
         printf "%s\t%s\n" "${i}" "${score-n}" >> ${resdir}/class-n.tsv
         printf "%s\t%s\n" "${i}" "${score-nl}" >> ${resdir}/class-nl.tsv
 
         python3.8 measures/binary.py -a ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n-a.tsv " ${i} " data/${language}/samples/areas.tsv 
         python3.8 measures/binary.py -a ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
-        score-n-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n-a.tsv)
-        score-nl-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
+        score_n_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n-a.tsv)
+        score_nl_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
         printf "%s\t%s\n" "${i}" "${score-n-a}" >> ${resdir}/class-n-a.tsv
         printf "%s\t%s\n" "${i}" "${score-nl-a}" >> ${resdir}/class-nl-a.tsv
     done

@@ -78,8 +78,8 @@ for j in `LANG=en_US seq 0.5 0.5 2`
         python3.8 measures/binary.py -a ${resdir}/apd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${j}_apd-a.tsv " ${j} " data/${language}/samples/areas.tsv 
         python3.8 measures/binary.py -a ${resdir}/cos_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${j}_cos-a.tsv " ${j} " data/${language}/samples/areas.tsv 
 
-        score_apd-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${j}_apd-a.tsv)
-        score_cos-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${j}_cos-a.tsv)
+        score_apd_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${j}_apd-a.tsv)
+        score_cos_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${j}_cos-a.tsv)
 
         printf "%s\t%s\n" "${j}" "${class_apd-a}" >> ${resdir}/class_apd-a.tsv
         printf "%s\t%s\n" "${j}" "${class_cos-a}" >> ${resdir}/class_cos-a.tsv

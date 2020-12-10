@@ -122,8 +122,8 @@ for i in `LANG=en_US seq 0.5 0.5 2`
         printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.tsv
 
         python3.8 measures/binary.py -a ${resdir}/cd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-a.tsv " ${i} " data/${language}/samples/areas.tsv
-        score-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-a.tsv)
-        printf "%s\t%s\n" "${i}" "${score-a}" >> ${resdir}/class-a.tsv
+        score_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-a.tsv)
+        printf "%s\t%s\n" "${i}" "${score_a}" >> ${resdir}/class-a.tsv
     done
 
 # Clean directory

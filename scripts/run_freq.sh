@@ -44,12 +44,12 @@ printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "
 for i in `LANG=en_US seq 0.5 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
-        score-nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
-        printf "%s\t%s\n" "${i}" "${score-nl}" >> ${resdir}/class-nl.tsv
+        score_nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
+        printf "%s\t%s\n" "${i}" "${score_nl}" >> ${resdir}/class-nl.tsv
 
         python3.8 measures/binary.py -a ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
-        score-nl-a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
-        printf "%s\t%s\n" "${i}" "${score-nl-a}" >> ${resdir}/class-nl-a.tsv
+        score_nl_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
+        printf "%s\t%s\n" "${i}" "${score_nl_a}" >> ${resdir}/class-nl-a.tsv
     done
 
 # Clean directory
