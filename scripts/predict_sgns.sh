@@ -96,12 +96,8 @@ mkdir -p ${resdir}
 python3.8 type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
 python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
-# Length-normalize and mean-center
-python3.8 modules/center.py -l ${outdir}/mat1 ${outdir}/mat1c
-python3.8 modules/center.py -l ${outdir}/mat2 ${outdir}/mat2c
-
 # Align with OP
-python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1c ${outdir}/mat2c ${outdir}/mat1ca ${outdir}/mat2ca
+python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
 # Measure CD for target words
 python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.tsv
