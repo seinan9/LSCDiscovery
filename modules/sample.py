@@ -145,8 +145,8 @@ def main():
                 f.write(key + '\n')
 
     with open(path_output+'areas.tsv', 'w', encoding='utf-8') as f:
-        f.write('\t'.join((str(sample_size1), str(sample_size2), str(sample_size3), str(sample_size4), str(sample_size5))))
-        f.write('\t'.join((str(len(samples_area1)), str(len(samples_area2)), str(len(samples_area3)), str(len(samples_area4)), str(len(samples_area5)))))
+        f.write('\t'.join((str(sample_size1), str(sample_size2), str(sample_size3), str(sample_size4), str(sample_size5), '\n')))
+        f.write('\t'.join((str(len(samples_area1)), str(len(samples_area2)), str(len(samples_area3)), str(len(samples_area4)), str(len(samples_area5)), '\n')))
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 

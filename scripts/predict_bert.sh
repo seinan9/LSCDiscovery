@@ -63,8 +63,7 @@ python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/apd.tsv 
 python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 1 1 >> ${resdir}/spr_cos.tsv
 
 # Create binary scores using full samples
-printf "%s\t%s\t%s\t%s\t%s\t%s\n" "factor" "precision" "recall" "bal_acc" "f1" "f0.5" >> ${resdir}/class_apd.tsv
-for j in `LANG=en_US seq 0.5 0.5 2`
+for j in `LANG=en_US seq 0 0.5 2`
     do  
         python3.8 measures/binary.py ${resdir}/apd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${j}_apd.tsv " ${j} "
         python3.8 measures/binary.py ${resdir}/cos_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${j}_cos.tsv " ${j} "
