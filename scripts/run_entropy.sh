@@ -37,8 +37,8 @@ if [ $# -eq 2 ]
         window_size=10
 fi
 
-outdir=output/${language}/entropy_predict/${type}
-resdir=results/${language}/entropy_predict/${type}
+outdir=output/${language}/predict_entropy/${type}
+resdir=results/${language}/predict_entropy/${type}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
@@ -79,4 +79,4 @@ for i in `LANG=en_US seq 0.5 0.5 2`
     done
 
 # Clean directory
-rm -r output/${language}/entropy/${type}
+rm -r output/${language}/predict_entropy/${type}

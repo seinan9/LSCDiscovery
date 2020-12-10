@@ -26,8 +26,8 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/freq_predict/${type}
-resdir=results/${language}/freq_predict/${type}
+outdir=output/${language}/predict_freq/${type}
+resdir=results/${language}/predict_freq/${type}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
@@ -53,4 +53,4 @@ for i in `LANG=en_US seq 0.5 0.5 2`
     done
 
 # Clean directory
-rm -r output/${language}/freq/${type}
+rm -r output/${language}/predict_freq/${type}

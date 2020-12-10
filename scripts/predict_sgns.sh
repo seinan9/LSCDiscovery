@@ -86,8 +86,8 @@ fi
 
 identifier=w${window_size}-d${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i${itera}
 
-outdir=output/${language}/sgns_predict/${identifier}
-resdir=results/${language}/sgns_predict/${identifier}
+outdir=output/${language}/predict_sgns/${identifier}
+resdir=results/${language}/predict_sgns/${identifier}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
@@ -127,4 +127,4 @@ for i in `LANG=en_US seq 0.5 0.5 2`
     done
 
 # Clean directory
-rm -r output/${language}/sgns/${identifier}
+rm -r output/${language}/predict_sgns/${identifier}

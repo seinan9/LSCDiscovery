@@ -28,8 +28,8 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/bert_predict/${identifier}
-resdir=results/${language}/bert_predict/${identifier}
+outdir=output/${language}/predict_bert/${identifier}
+resdir=results/${language}/predict_bert/${identifier}
 
 mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
@@ -86,4 +86,4 @@ for j in `LANG=en_US seq 0.5 0.5 2`
     done
 
 # Clean up directory 
-rm -r output/${language}/bertfull/${identifier}
+rm -r output/${language}/predict_bert/${identifier}
