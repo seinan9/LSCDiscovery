@@ -49,7 +49,7 @@ cat data/${language}/samples/samples.tsv | while read line || [ -n "$line" ]
         printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos_samples.tsv
     done
 
-cat data/${language}/target.txt | while read line || [ -n "$line" ]
+cat data/${language}/targets.txt | while read line || [ -n "$line" ]
     do
         echo "${line}"
         apd=$(python3.8 measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
@@ -57,10 +57,11 @@ cat data/${language}/target.txt | while read line || [ -n "$line" ]
 
         printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd.tsv
         printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos.tsv 
+    done
 
 # Compute Spearman 
-python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/apd.tsv 1 1 >> ${resdir}/spr_apd.tsv
-python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 1 1 >> ${resdir}/spr_cos.tsv
+python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/apd.tsv 1 1 >> ${resdir}/spr_apd.tsv
+python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/cos.tsv 1 1 >> ${resdir}/spr_cos.tsv
 
 # Create binary scores using full samples
 for j in `LANG=en_US seq 0 0.5 2`
