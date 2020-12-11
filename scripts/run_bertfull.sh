@@ -42,8 +42,8 @@ do
     python3.8 token-based/bert.py -l fulluses/${language}/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
     python3.8 token-based/bert.py -l fulluses/${language}/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
-    apd=$(python3.8 modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
-    cos=$(python3.8 modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+    apd=$(python3.8 measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+    cos=$(python3.8 measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
     printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd.txt
     printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos.txt
@@ -51,8 +51,8 @@ do
 done
 
 # Compute Spearman 
-python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/apd.txt 1 1 >> ${resdir}/spr_apd.txt
-python3.8 modules/spr.py data/${language}/truth/graded.txt ${resdir}/cos.txt 1 1 >> ${resdir}/spr_cos.txt
+python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/apd.txt 1 1 >> ${resdir}/spr_apd.txt
+python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/cos.txt 1 1 >> ${resdir}/spr_cos.txt
 
 # Clean up directory 
 rm -r output/${language}/bertfull/${identifier}
