@@ -30,8 +30,8 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/bert/prediction/${identifier}
-resdir=results/${language}/bert/prediction/${identifier}
+outdir=output/${language}/bert/classification/${identifier}
+resdir=results/${language}/bert/classification/${identifier}
 
 mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
@@ -47,17 +47,20 @@ cat data/${language}/samples/samples.tsv | while read line || [ -n "$line" ]
         apd=$(python3.8 measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
         cos=$(python3.8 measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
-        printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd.tsv
-        printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos.tsv
+        printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd_samples.tsv
+        printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos_samples.tsv
     done
 
-# Create predictions
-python3.8 measures/binary.py ${residr}/apd.tsv data/${language}/targets.tsv ${resdir}/predictions_apd.tsv " ${deviation_factor} " -p 
-python3.8 measures/binary.py ${residr}/cos.tsv data/${language}/targets.tsv ${resdir}/predictions_cos.tsv " ${deviation_factor} " -p 
+# Classify targets
+python3.8 measures/binary.py ${resdir}/apd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_apd.tsv " ${deviation_factor} " 
+python3.8 measures/binary.py ${resdir}/cos_samples.tsv data/${language}/targets.tsv ${resdir}/binary_cos.tsv " ${deviation_factor} "  
 
-# Filter predictions
-bash scripts/filter_predictions.sh ${language} ${resdir}/predictions_apd.tsv ${resdir}/filtered_predictions_apd.tsv 
-bash scripts/filter_predictions.sh ${language} ${resdir}/predictions_cos.tsv ${resdir}/filtered_predictions_cos.tsv 
+# Evaluate classification
+score_apd=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_apd.tsv)
+score_cos=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_cos.tsv)
+
+printf "%s\n" "${score_apd}" >> ${resdir}/class_apd.tsv
+printf "%s\n" "${score_cos}" >> ${resdir}/class_cos.tsv
 
 # Clean up directory 
-rm -r output/${language}/bert/prediction/${identifier}
+rm -r output/${language}/bert/classification/${identifier}

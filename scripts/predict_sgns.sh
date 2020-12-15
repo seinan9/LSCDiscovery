@@ -8,6 +8,7 @@ t=$5
 min_count1=$6
 min_count2=$7
 itera=$8
+deviation_factor=$9
 
 function usage {
     echo "Create type-based embeddings with SGNS. Compute binary classification for SemEval Subtask 1 and Spearman correlation for Subtask 2."
@@ -15,14 +16,15 @@ function usage {
     echo "  Usage:" 
     echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
     echo ""
-    echo "      <language>      = eng | ger | swe | lat"
-    echo "      <window_size>   = the linear distance of context words to consider in each direction"
-    echo "      <dim>           = dimensionality of embeddings"
-    echo "      <k>             = number of negative samples parameter (equivalent to shifting parameter for PPMI)"
-    echo "      <t>             = threshold for subsampling"
-    echo "      <min_count1>    = number of occurrences for a word to be included in the vocabulary (corpus1)"
-    echo "      <min_count2>    = number of occurrences for a word to be included in the vocabulary (corpus2)"
-    echo "      <itera>         = number of iterations"
+    echo "      <language>          = eng | ger | swe | lat"
+    echo "      <window_size>       = the linear distance of context words to consider in each direction"
+    echo "      <dim>               = dimensionality of embeddings"
+    echo "      <k>                 = number of negative samples parameter (equivalent to shifting parameter for PPMI)"
+    echo "      <t>                 = threshold for subsampling"
+    echo "      <min_count1>        = number of occurrences for a word to be included in the vocabulary (corpus1)"
+    echo "      <min_count2>        = number of occurrences for a word to be included in the vocabulary (corpus2)"
+    echo "      <itera>             = number of iterations"
+    echo "      <deviation_factor>  = threshold = mean + deviation_factor * std"
     echo ""
     echo "  Short usage: "
     echo "      ${name} <language>"
@@ -31,7 +33,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 8 ] && [ $# -ne 1 ]
+if [ $# -ne 9 ] && [ $# -ne 1 ]
 	then 
 		usage
 		exit 1
@@ -58,11 +60,12 @@ if [ $# -eq 2 ]
             then
                 window_size=10
                 dim=300
-                k=1
-                t=0.025
+                k=5
+                t=0.001
                 min_count1=39
                 min_count2=39
                 itera=5
+                deviation_factor=1
         elif [ $1 == "swe" ]
             then
                 window_size=10
@@ -86,8 +89,8 @@ fi
 
 identifier=w${window_size}-d${dim}-k${k}-t${t}-mc${min_count1}-mc${min_count2}-i${itera}
 
-outdir=output/${language}/predict_sgns/${identifier}
-resdir=results/${language}/predict_sgns/${identifier}
+outdir=output/${language}/sgns/prediction/${identifier}
+resdir=results/${language}/sgns/prediction/${identifier}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
@@ -99,27 +102,14 @@ python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.g
 # Align with OP
 python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
-# Measure CD for target words
-python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.txt ${resdir}/cd.tsv
-
-# Evaluate with SPR
-spr=$(python3.8 evaluation/spr.py data/${language}/truth/graded.txt ${resdir}/cd.tsv 1 1)
-printf "%s\n" "${spr}" >> ${resdir}/spr.tsv
-
 # Measure CD for samples + target words
 python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samples/samples.tsv ${resdir}/cd_samples.tsv
 
-# Create binary scores and evaluate 
-for i in `LANG=en_US seq 0 0.5 2`
-    do  
-        python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${i}.tsv " ${i} "
-        score=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}.tsv)
-        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.tsv
+# Create predictions
+python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/predictions.tsv " ${deviation_factor} " -p
 
-        python3.8 measures/binary.py -a ${resdir}/cd_samples.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-a.tsv " ${i} " data/${language}/samples/areas.tsv
-        score_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-a.tsv)
-        printf "%s\t%s\n" "${i}" "${score_a}" >> ${resdir}/class-a.tsv
-    done
+# Filter predictions
+bash scripts/filter_predictions.sh ${language} ${resdir}/predictions.tsv ${resdir}/filtered_predictions.tsv
 
 # Clean directory
-rm -r output/${language}/predict_sgns/${identifier}
+rm -r output/${language}/sgns/prediction/${identifier}
