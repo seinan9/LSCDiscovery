@@ -111,7 +111,7 @@ python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.t
 # Evaluate classification
 score=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary.tsv)
 
-printf "%s\n" "${score_apd}" >> ${resdir}/class.tsv
+printf "%s\n" "${score}" >> ${resdir}/class.tsv
 
 # Clean directory
 rm -r output/${language}/sgns/classification/${identifier}
