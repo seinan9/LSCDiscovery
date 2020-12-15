@@ -10,7 +10,7 @@ min_count2=$7
 itera=$8
 
 function usage {
-    echo "Create type-based embeddings with SGNS. Measure the cosine distance (CD) for every word and compute the Spearman correlation."
+    echo "Create type-based embeddings with SGNS. Compute binary classification for SemEval Subtask 1 and Spearman correlation for Subtask 2."
     echo ""
     echo "  Usage:" 
     echo "      ${name} <language> <window_size> <dim> <k> <t> <min_count> <itera>" 
@@ -58,8 +58,8 @@ if [ $# -eq 2 ]
             then
                 window_size=10
                 dim=300
-                k=5
-                t=0.001
+                k=1
+                t=0.025
                 min_count1=39
                 min_count2=39
                 itera=5
@@ -96,10 +96,6 @@ mkdir -p ${resdir}
 python3.8 type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
 python3.8 type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
-# # Length-normalize and mean-center
-# python3.8 modules/center.py -l ${outdir}/mat1 ${outdir}/mat1c
-# python3.8 modules/center.py -l ${outdir}/mat2 ${outdir}/mat2c
-
 # Align with OP
 python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
@@ -110,5 +106,20 @@ python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targ
 spr=$(python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cd.tsv 1 1)
 printf "%s\n" "${spr}" >> ${resdir}/spr.tsv
 
+# Measure CD for samples + target words
+python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samples/samples.tsv ${resdir}/cd_samples.tsv
+
+# Create binary scores and evaluate 
+for i in `LANG=en_US seq 0 0.5 2`
+    do  
+        python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_t${i}.tsv " ${i} "
+        score=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_t${i}.tsv)
+        printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.tsv
+
+        python3.8 measures/binary.py -a ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_t${i}-a.tsv " ${i} " data/${language}/samples/areas.tsv
+        score_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_t${i}-a.tsv)
+        printf "%s\t%s\n" "${i}" "${score_a}" >> ${resdir}/class-a.tsv
+    done
+
 # Clean directory
-rm -r output/${language}/sgns/${identifier}
+rm -r output/${language}/predict_sgns/${identifier}
