@@ -22,7 +22,7 @@ def main():
         <path_corpus_token>     = path to the tokenized corpus
         <path_target_words>     = path to the target words list
         <path_output_directory> = directory where the csv-files are saved
-        <language>              = Language of the corpora (eng/ger/swe/lat)
+        <language>              = Language of the corpora ( eng | ger | swe | lat )
 
     """)
 
@@ -106,7 +106,7 @@ def main():
                     target_found = True
                 if target_found:
                     break
-            if uses == 1000:
+            if uses == 100:
                 break
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))

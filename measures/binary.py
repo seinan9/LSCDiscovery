@@ -15,7 +15,7 @@ def main():
     args = docopt("""Compute binary values for taget words.
     
     Usage:
-        binary.py [-a] <path_distances> <path_targets> <path_output> <deviation_factor> [<path_areas>]
+        binary.py [-a] [-p] <path_distances> <path_targets> <path_output> <deviation_factor> [<path_areas>]
 
         <path_distances>    = path to file containing word distance pairs (tab-separated)
         <path_targets>      = path to file containing target words
@@ -25,6 +25,7 @@ def main():
     
     Options:
         -a, --area  target words are classified by threshold in the freqeuncy area they belong to
+        -p, --pre   save file with predictions
         
     """)
 
@@ -35,6 +36,7 @@ def main():
     path_areas = args['<path_areas>']
 
     is_area = args['--area']
+    is_pred = args['--pre']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -160,11 +162,22 @@ def main():
                 binary[word] = 1
             else:
                 binary[word] = 0
+    
+        predictions = []
+        for key in dist_without_targets:
+            if distances[key] >= threshold:
+                predictions.append(key)
 
     # Write output
-    with open(path_output, 'w', encoding='utf-8') as f:
-        for key, value in binary.items():
-            f.write(key + '\t' + str(value) + '\n')
+    if is_pred:
+        print(threshold)
+        with open(path_output, 'w', encoding='utf-8') as f:
+            for word in predictions:
+                f.write(word + '\n')
+    else:
+        with open(path_output, 'w', encoding='utf-8') as f:
+            for key, value in binary.items():
+                f.write(key + '\t' + str(value) + '\n')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))    
 

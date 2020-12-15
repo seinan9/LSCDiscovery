@@ -60,9 +60,9 @@ def main():
             pass
 
     # Write output
-    with open(path_output, mode='w') as f_out:
+    with open(path_output, mode='w') as f:
         for key in diffs:
-            f_out.write(key + '\t' + str(diffs[key]) + '\n')
+            f.write(key + '\t' + str(diffs[key]) + '\n')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 

@@ -26,10 +26,10 @@ fi
 
 
 # Generate uses 
-mkdir -p large_uses/${language}/corpus1
-mkdir -p large_uses/${language}/corpus2
+mkdir -p data/${language}/uses/corpus1
+mkdir -p data/${language}/uses/corpus2
 
-python modules/extract_uses.py data/${language}/corpus1/lemma/*.txt.gz data/${language}/corpus1/token/*.txt.gz data/${language}/targets.txt large_uses/${language}/corpus1/ ${language}
-python modules/extract_uses.py data/${language}/corpus2/lemma/*.txt.gz data/${language}/corpus2/token/*.txt.gz data/${language}/targets.txt large_uses/${language}/corpus2/ ${language}
+python3.8 modules/extract_uses.py data/${language}/corpus1/lemma/*.txt.gz data/${language}/corpus1/token/*.txt.gz data/${language}/targets.tsv data/${language}/uses/corpus1/ ${language}
+python3.8 modules/extract_uses.py data/${language}/corpus2/lemma/*.txt.gz data/${language}/corpus2/token/*.txt.gz data/${language}/targets.tsv data/${language}/uses/corpus2/ ${language}
 
 
