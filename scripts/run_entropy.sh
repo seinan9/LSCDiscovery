@@ -44,34 +44,34 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Create counte-based matrix
-python3.8 type-based/count.py data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/mat1 ${window_size}
-python3.8 type-based/count.py data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/mat2 ${window_size}
+python type-based/count.py data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/mat1 ${window_size}
+python type-based/count.py data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/mat2 ${window_size}
 
 # Get entropy scores
-python3.8 measures/entropy.py -n ${outdir}/mat1 ${outdir}/entropy1-n.tsv
-python3.8 measures/entropy.py -n ${outdir}/mat2 ${outdir}/entropy2-n.tsv
+python measures/entropy.py -n ${outdir}/mat1 ${outdir}/entropy1-n.tsv
+python measures/entropy.py -n ${outdir}/mat2 ${outdir}/entropy2-n.tsv
 
-python3.8 measures/entropy.py -n -l ${outdir}/mat1 ${outdir}/entropy1-nl.tsv
-python3.8 measures/entropy.py -n -l ${outdir}/mat2 ${outdir}/entropy2-nl.tsv
+python measures/entropy.py -n -l ${outdir}/mat1 ${outdir}/entropy1-nl.tsv
+python measures/entropy.py -n -l ${outdir}/mat2 ${outdir}/entropy2-nl.tsv
 
 # Compute difference 
-python3.8 measures/subtract.py ${outdir}/entropy1-n.tsv ${outdir}/entropy2-n.tsv data/${language}/samples/samples.tsv ${resdir}/entropy_diffs-n.tsv
-python3.8 measures/subtract.py ${outdir}/entropy1-nl.tsv ${outdir}/entropy2-nl.tsv data/${language}/samples/samples.tsv ${resdir}/entropy_diffs-nl.tsv
+python measures/subtract.py ${outdir}/entropy1-n.tsv ${outdir}/entropy2-n.tsv data/${language}/samples/samples.tsv ${resdir}/entropy_diffs-n.tsv
+python measures/subtract.py ${outdir}/entropy1-nl.tsv ${outdir}/entropy2-nl.tsv data/${language}/samples/samples.tsv ${resdir}/entropy_diffs-nl.tsv
 
 # Create binary scores and evaluate 
 for i in `LANG=en_US seq 0 0.5 2`
     do  
-        python3.8 measures/binary.py ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n.tsv " ${i} "
-        python3.8 measures/binary.py ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
-        score_n=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n.tsv)
-        score_nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
+        python measures/binary.py ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n.tsv " ${i} "
+        python measures/binary.py ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
+        score_n=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n.tsv)
+        score_nl=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
         printf "%s\t%s\n" "${i}" "${score_n}" >> ${resdir}/class-n.tsv
         printf "%s\t%s\n" "${i}" "${score_nl}" >> ${resdir}/class-nl.tsv
 
-        python3.8 measures/binary.py -a ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n-a.tsv " ${i} " data/${language}/samples/areas.tsv 
-        python3.8 measures/binary.py -a ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
-        score_n_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n-a.tsv)
-        score_nl_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
+        python measures/binary.py -a ${resdir}/entropy_diffs-n.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-n-a.tsv " ${i} " data/${language}/samples/areas.tsv 
+        python measures/binary.py -a ${resdir}/entropy_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
+        score_n_a=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-n-a.tsv)
+        score_nl_a=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
         printf "%s\t%s\n" "${i}" "${score_n_a}" >> ${resdir}/class-n-a.tsv
         printf "%s\t%s\n" "${i}" "${score_nl_a}" >> ${resdir}/class-nl-a.tsv
     done

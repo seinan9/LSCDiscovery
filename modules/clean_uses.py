@@ -70,7 +70,7 @@ def main():
             #sentences_lemma[i] = sentences_lemma[i].replace(key, value)
             sentences_token[i] = sentences_token[i].replace(key, value)
 
-    lemma = sentences[0]["original_word"]
+    lemma = sentences[0]["lemma"]
 
     # Find new target_index for lemmatized sentence
     for sentence_lemma in sentences_lemma:

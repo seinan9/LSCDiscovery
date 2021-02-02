@@ -93,17 +93,17 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Generate matrices with sgns
-python3.8 type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
-python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
+python type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
+python type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
 # Align with OP
-python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
+python modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
 # Measure CD for target words
-python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.tsv ${resdir}/cd.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.tsv ${resdir}/cd.tsv
 
 # Evaluate with SPR
-spr=$(python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cd.tsv 1 1)
+spr=$(python evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cd.tsv 1 1)
 printf "%s\n" "${spr}" >> ${resdir}/spr.tsv
 
 # Clean directory

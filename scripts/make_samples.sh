@@ -30,14 +30,14 @@ mkdir -p data/${language}/uses/corpus1
 mkdir -p data/${language}/uses/corpus2
 
 # Generate frequency lists
-python3.8 measures/freqs.py data/${language}/corpus1_preprocessed/lemma/*txt.gz data/${language}/samples/freqs1.tsv
-python3.8 measures/freqs.py data/${language}/corpus2_preprocessed/lemma/*txt.gz data/${language}/samples/freqs2.tsv
+python measures/freqs.py data/${language}/corpus1_preprocessed/lemma/*txt.gz data/${language}/samples/freqs1.tsv
+python measures/freqs.py data/${language}/corpus2_preprocessed/lemma/*txt.gz data/${language}/samples/freqs2.tsv
 
 # Generate samples
-python3.8 modules/sample.py data/${language}/samples/freqs1.tsv data/${language}/samples/freqs2.tsv data/${language}/targets.tsv data/${language}/samples/
+python modules/sample.py data/${language}/samples/freqs1.tsv data/${language}/samples/freqs2.tsv data/${language}/targets.tsv data/${language}/samples/
 
 # Extract uses for samples
-python3.8 modules/extract_uses.py data/${language}/corpus1/lemma/*.txt.gz data/${language}/corpus1/token/*.txt.gz data/${language}/samples/samples.tsv data/${language}/uses/corpus1/ ${language}
-python3.8 modules/extract_uses.py data/${language}/corpus2/lemma/*.txt.gz data/${language}/corpus2/token/*.txt.gz data/${language}/samples/samples.tsv data/${language}/uses/corpus2/ ${language}
+python modules/extract_uses.py data/${language}/corpus1/lemma/*.txt.gz data/${language}/corpus1/token/*.txt.gz data/${language}/samples/samples.tsv data/${language}/uses/corpus1/ ${language}
+python modules/extract_uses.py data/${language}/corpus2/lemma/*.txt.gz data/${language}/corpus2/token/*.txt.gz data/${language}/samples/samples.tsv data/${language}/uses/corpus2/ ${language}
 
 

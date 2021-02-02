@@ -93,31 +93,31 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Generate matrices with sgns
-python3.8 type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
-python3.8 type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
+python type-based/sgns.py data/${language}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
+python type-based/sgns.py data/${language}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
 # Align with OP
-python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
+python modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
 # Measure CD for target words
-python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.tsv ${resdir}/cd.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/targets.tsv ${resdir}/cd.tsv
 
 # Evaluate with SPR
-spr=$(python3.8 evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cd.tsv 1 1)
+spr=$(python evaluation/spr.py data/${language}/truth/graded.tsv ${resdir}/cd.tsv 1 1)
 printf "%s\n" "${spr}" >> ${resdir}/spr.tsv
 
 # Measure CD for samples + target words
-python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samples/samples.tsv ${resdir}/cd_samples.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samples/samples.tsv ${resdir}/cd_samples.tsv
 
 # Create binary scores and evaluate 
 for i in `LANG=en_US seq 0 0.5 2`
     do  
-        python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_t${i}.tsv " ${i} "
-        score=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_t${i}.tsv)
+        python measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_t${i}.tsv " ${i} "
+        score=$(python evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_t${i}.tsv)
         printf "%s\t%s\n" "${i}" "${score}" >> ${resdir}/class.tsv
 
-        python3.8 measures/binary.py -a ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_t${i}-a.tsv " ${i} " data/${language}/samples/areas.tsv
-        score_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_t${i}-a.tsv)
+        python measures/binary.py -a ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_t${i}-a.tsv " ${i} " data/${language}/samples/areas.tsv
+        score_a=$(python evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_t${i}-a.tsv)
         printf "%s\t%s\n" "${i}" "${score_a}" >> ${resdir}/class-a.tsv
     done
 

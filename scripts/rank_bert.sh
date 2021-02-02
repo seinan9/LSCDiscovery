@@ -39,19 +39,19 @@ mkdir -p ${resdir}
 cat data/${language}/targets.tsv | while read line || [ -n "$line" ]
 do  
     echo "${line}"
-    python3.8 token-based/bert.py -l data/${language}/uses/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
-    python3.8 token-based/bert.py -l data/${language}/uses/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
+    python token-based/bert.py -l data/${language}/uses/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
+    python token-based/bert.py -l data/${language}/uses/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
-    apd=$(python3.8 modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
-    cos=$(python3.8 modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+    apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+    cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
     printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd.tsv
     printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos.tsv
 done
 
 # Compute Spearman 
-spr_apd=$(python3.8 modules/spr.py data/${language}/truth/graded.tsv ${resdir}/apd.tsv 1 1)
-spr_cos=$(python3.8 modules/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 1 1)
+spr_apd=$(python modules/spr.py data/${language}/truth/graded.tsv ${resdir}/apd.tsv 1 1)
+spr_cos=$(python modules/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.tsv 1 1)
 
 printf "%s\t%s\n" "${apd}" "${spr_apd}" >> ${resdir}/spr_apd.tsv
 printf "%s\t%s\n" "${cos}" "${spr_cos}" >> ${resdir}/spr_cos.tsv

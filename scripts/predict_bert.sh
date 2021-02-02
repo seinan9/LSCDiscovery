@@ -41,19 +41,19 @@ mkdir -p ${resdir}
 cat data/${language}/samples/samples.tsv | while read line || [ -n "$line" ]
     do  
         echo "${line}"
-        python3.8 token-based/bert.py -l data/${language}/uses/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
-        python3.8 token-based/bert.py -l data/${language}/uses/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
+        python token-based/bert.py -l data/${language}/uses/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
+        python token-based/bert.py -l data/${language}/uses/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
 
-        apd=$(python3.8 measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
-        cos=$(python3.8 measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        cos=$(python measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
         printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd.tsv
         printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos.tsv
     done
 
 # Create predictions
-python3.8 measures/binary.py ${residr}/apd.tsv data/${language}/targets.tsv ${resdir}/predictions_apd.tsv " ${deviation_factor} " -p 
-python3.8 measures/binary.py ${residr}/cos.tsv data/${language}/targets.tsv ${resdir}/predictions_cos.tsv " ${deviation_factor} " -p 
+python measures/binary.py ${residr}/apd.tsv data/${language}/targets.tsv ${resdir}/predictions_apd.tsv " ${deviation_factor} " -p 
+python measures/binary.py ${residr}/cos.tsv data/${language}/targets.tsv ${resdir}/predictions_cos.tsv " ${deviation_factor} " -p 
 
 # Filter predictions
 bash scripts/filter_predictions.sh ${language} ${resdir}/predictions_apd.tsv ${resdir}/filtered_predictions_apd.tsv 

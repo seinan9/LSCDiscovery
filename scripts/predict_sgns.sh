@@ -96,17 +96,17 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Generate matrices with sgns
-python3.8 type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
-python3.8 type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
+python type-based/sgns.py data/${language}/corpus1_preprocessed/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${t} ${min_count1} ${itera}
+python type-based/sgns.py data/${language}/corpus2_preprocessed/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${t} ${min_count2} ${itera}
 
 # Align with OP
-python3.8 modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
+python modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
 # Measure CD for samples + target words
-python3.8 measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samples/samples.tsv ${resdir}/cd_samples.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${language}/samples/samples.tsv ${resdir}/cd_samples.tsv
 
 # Create predictions
-python3.8 measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/predictions.tsv " ${deviation_factor} " -p
+python measures/binary.py ${resdir}/cd_samples.tsv data/${language}/targets.tsv ${resdir}/predictions.tsv " ${deviation_factor} " -p
 
 # Filter predictions
 bash scripts/filter_predictions.sh ${language} ${resdir}/predictions.tsv ${resdir}/filtered_predictions.tsv

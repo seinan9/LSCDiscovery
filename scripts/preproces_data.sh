@@ -47,7 +47,7 @@ mkdir -p data/${language}/corpus1_preprocessed/token
 mkdir -p data/${language}/corpus2_preprocessed/lemma
 mkdir -p data/${language}/corpus2_preprocessed/token
 
-python3.8 modules/preprocess.py data/${language}/corpus1/lemma/*txt.gz data/${language}/corpus1_preprocessed/lemma/preprocessed.txt.gz ${min_count1}
-python3.8 modules/preprocess.py data/${language}/corpus1/token/*txt.gz data/${language}/corpus1_preprocessed/token/preprocessed.txt.gz ${min_count1}
-python3.8 modules/preprocess.py data/${language}/corpus2/lemma/*txt.gz data/${language}/corpus2_preprocessed/lemma/preprocessed.txt.gz ${min_count2}
-python3.8 modules/preprocess.py data/${language}/corpus2/token/*txt.gz data/${language}/corpus2_preprocessed/token/preprocessed.txt.gz ${min_count2}
+python modules/preprocess.py data/${language}/corpus1/lemma/*txt.gz data/${language}/corpus1_preprocessed/lemma/preprocessed.txt.gz ${min_count1}
+python modules/preprocess.py data/${language}/corpus1/token/*txt.gz data/${language}/corpus1_preprocessed/token/preprocessed.txt.gz ${min_count1}
+python modules/preprocess.py data/${language}/corpus2/lemma/*txt.gz data/${language}/corpus2_preprocessed/lemma/preprocessed.txt.gz ${min_count2}
+python modules/preprocess.py data/${language}/corpus2/token/*txt.gz data/${language}/corpus2_preprocessed/token/preprocessed.txt.gz ${min_count2}

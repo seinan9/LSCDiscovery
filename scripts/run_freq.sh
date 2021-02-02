@@ -33,21 +33,21 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Get frequencies
-python3.8 measures/freqs.py -n -l data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/freqs1-nl.tsv
-python3.8 measures/freqs.py -n -l data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/freqs2-nl.tsv
+python measures/freqs.py -n -l data/${language}/corpus1_preprocessed/${type}/*.txt.gz ${outdir}/freqs1-nl.tsv
+python measures/freqs.py -n -l data/${language}/corpus2_preprocessed/${type}/*.txt.gz ${outdir}/freqs2-nl.tsv
 
 # Compute difference 
-python3.8 measures/subtract.py ${outdir}/freqs1-nl.tsv ${outdir}/freqs2-nl.tsv data/${language}/samples/samples.tsv ${resdir}/freq_diffs-nl.tsv
+python measures/subtract.py ${outdir}/freqs1-nl.tsv ${outdir}/freqs2-nl.tsv data/${language}/samples/samples.tsv ${resdir}/freq_diffs-nl.tsv
 
 # Create binary scores and evaluate 
 for i in `LANG=en_US seq 0 0.5 2`
     do  
-        python3.8 measures/binary.py ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
-        score_nl=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
+        python measures/binary.py ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl.tsv " ${i} "
+        score_nl=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl.tsv)
         printf "%s\t%s\n" "${i}" "${score_nl}" >> ${resdir}/class-nl.tsv
 
-        python3.8 measures/binary.py -a ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
-        score_nl_a=$(python3.8 evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
+        python measures/binary.py -a ${resdir}/freq_diffs-nl.tsv data/${language}/targets.txt ${resdir}/binary_t${i}-nl-a.tsv " ${i} " data/${language}/samples/areas.tsv 
+        score_nl_a=$(python evaluation/class_metrics.py data/${language}/truth/binary.txt ${resdir}/binary_t${i}-nl-a.tsv)
         printf "%s\t%s\n" "${i}" "${score_nl_a}" >> ${resdir}/class-nl-a.tsv
     done
 
