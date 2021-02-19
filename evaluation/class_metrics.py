@@ -8,16 +8,16 @@ import numpy as np
 from sklearn import metrics
 
 def main():
-    """Compute various classification measures.
+    """Compute precission, recall, f_1 and f_0.5.
     """
 
     # Get the argument 
-    args = docopt("""Compute various classifcation measures.
+    args = docopt("""Compute precission, recall, f_1 and f_0.5..
 
     Usage:
         class_metrics.py <path_truth> <path_file> 
 
-        <path_truth>    = path to binary gold preds (tab-separated)
+        <path_truth>    = path to binary gold data (tab-separated)
         <path_file>     = path to file containing words and binary values (tab-separated)
 
     """)
@@ -37,27 +37,25 @@ def main():
             truth.append(int(row[1]))
 
     # Load predictions
-    preds = []
+    predictions = []
     with open(path_file, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter='\t')
         for row in reader:
-            preds.append(int(row[1]))
+            predictions.append(int(row[1]))
 
     # Compute metrics
-    precision = metrics.precision_score(truth, preds, zero_division=0)
-    recall = metrics.recall_score(truth, preds, zero_division=0)
-    bal_acc = metrics.balanced_accuracy_score(truth, preds)
-    f1 = metrics.f1_score(truth, preds, zero_division=0)
-    f05 = metrics.fbeta_score(truth, preds, beta=0.5, zero_division=0)
+    precision = metrics.precision_score(truth, predictions, zero_division=0)
+    recall = metrics.recall_score(truth, predictions, zero_division=0)
+    f1 = metrics.f1_score(truth, predictions, zero_division=0)
+    f05 = metrics.fbeta_score(truth, predictions, beta=0.5, zero_division=0)
 
     precision = round(precision, 3)
     recall = round(recall, 3)
-    bal_acc = round(bal_acc, 3)
     f1 = round(f1, 3)
     f05 = round(f05, 3)
 
-    # Write output
-    print('\t'.join((str(precision), str(recall), str(bal_acc), str(f1), str(f05))))
+    # Print output
+    print('\t'.join((str(precision), str(recall), str(f1), str(f05))))
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))    
     print("")

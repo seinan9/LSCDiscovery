@@ -60,6 +60,7 @@ def main():
         logging.info(e)
         rho, p = float('nan'), float('nan')
 
+    # Print output
     print('\t'.join((str(rho), str(p))))
               
     logging.info("--- %s seconds ---" % (time.time() - start_time))            
