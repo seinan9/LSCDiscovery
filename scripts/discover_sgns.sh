@@ -26,7 +26,7 @@ function usage {
     echo "      <min_count2>        = number of occurrences for a word to be included in the vocabulary (corpus2)"
     echo "      <itera>             = number of iterations"
     echo "      <t>                 = threshold = mean + t * standard deviation"
-    echo "      <langauge>          = language for filtering"
+    echo "      <langauge>          = en | de | it | ru | other"
     echo ""
     echo "  Options:"
     echo "      -s, --save      Use this flag (at the last position) to save the output matrices."
@@ -55,8 +55,8 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Generate word embeddins with SGNS
-python type-based/sgns.py data/${id}/corpus1/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
-python type-based/sgns.py data/${id}/corpus2/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
+python type-based/sgns.py data/${id}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
+python type-based/sgns.py data/${id}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
 
 # Length-normalize, meanc-center and align with OP
 python modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
@@ -65,7 +65,7 @@ python modules/map_embeddings.py --normalize unit center --init_identical --orth
 python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca ${resdir}/cd_intersection.tsv
 
 # Create predictions
-python measures/binary.py ${resdir}/cd_intersection.tsv ${resdir}/predictions.tsv " ${deviation_factor} " 
+python measures/binary.py ${resdir}/cd_intersection.tsv ${resdir}/predictions.tsv " ${t} " 
 
 # Filter1: remove words that are not a NOUN, VERB or ADJ
 cat ${resdir}/predictions.tsv | while read line || [ -n "$line" ]
