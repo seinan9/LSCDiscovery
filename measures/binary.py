@@ -15,13 +15,13 @@ def main():
     args = docopt("""Compute binary scores for taget words.
     
     Usage:
-        binary.py <path_distances> <path_output> <deviation_factor>
-        binary.py <path_distances> <path_targets> <path_output> <deviation_factor> 
+        binary.py <path_distances> <path_output> <t>
+        binary.py <path_distances> <path_targets> <path_output> <t> 
  
         <path_distances>    = path to file containing word distance pairs (tab-separated)
         <path_targets>      = path to file containing target words (optional for binary classification)
         <path_output>       = output path for result file
-        <deviaton_factor>   = threshold = mean + deviation_factor * std   
+        <t>                 = threshold = mean + t * std   
         
     Note:
         Choose the first usage to discover changing words in <path_distances>.
@@ -32,7 +32,7 @@ def main():
     path_distances = args['<path_distances>']
     path_targets = args['<path_targets>']
     path_output = args['<path_output>']
-    deviation_factor = float(args['<deviation_factor>'])
+    t = float(args['<t>'])
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -50,7 +50,7 @@ def main():
 
     mean = np.mean(list_distances, axis=0)
     std = np.std(list_distances, axis=0)
-    threshold = mean + deviation_factor * std
+    threshold = mean + t * std
 
     # Usage 1: discover changing words 
     if path_targets == None:

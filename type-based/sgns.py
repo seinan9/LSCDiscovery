@@ -17,7 +17,7 @@ def main():
     args = docopt("""Make embedding vector space with Skip-Gram with Negative Sampling from corpus.
 
     Usage:
-        sgns.py [-l] <path_corpus> <path_output> <window_size> <dim> <k> <t> <min_count> <itera>
+        sgns.py [-l] <path_corpus> <path_output> <window_size> <dim> <k> <s> <min_count> <itera>
         
     Arguments:
        
@@ -26,7 +26,7 @@ def main():
         <window_size>   = the linear distance of context words to consider in each direction
         <dim>           = dimensionality of embeddings
         <k>             = number of negative samples parameter (equivalent to shifting parameter for PPMI)
-        <t>             = threshold for subsampling
+        <s>             = threshold for subsampling
         <min_count>     = number of occurrences for a word to be included in the vocabulary
         <itera>         = number of iterations
 
@@ -40,10 +40,10 @@ def main():
     window_size = int(args['<window_size>'])    
     dim = int(args['<dim>'])    
     k = int(args['<k>'])
-    if args['<t>']=='None':
-        t = None
+    if args['<s>']=='None':
+        s = None
     else:
-        t = float(args['<t>'])        
+        s = float(args['<s>'])        
     min_count = int(args['<min_count>'])    
     itera = int(args['<itera>'])    
 
@@ -58,7 +58,7 @@ def main():
     model = gensim.models.Word2Vec(sg=1, # skipgram
     							   hs=0, # negative sampling
     							   negative=k, # number of negative samples
-    							   sample=t, # threshold for subsampling, if None, no subsampling is performed
+    							   sample=s, # threshold for subsampling, if None, no subsampling is performed
     							   size=dim, window=window_size, min_count=min_count, iter=itera, workers=40)
 
     # Initialize vocabulary
