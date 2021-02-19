@@ -12,11 +12,11 @@ from utils_ import Space
 
 def main():
     """
-    Compute cosine distance between two averaged lists of vectors. 
+    Compute cosine distance between two averaged matrices (lists of vectors). 
     """
 
     # Get the arguments
-    args = docopt("""Compute cosine distance for two averaged lists of vectors. 
+    args = docopt("""Compute cosine distance for two averaged matrices (lists of vectors). 
 
     Usage:
         cos.py <path_matrix1> <path_matrix2> 
@@ -53,7 +53,7 @@ def main():
     # Compute cosine distance between the two average vectors
     cos = cosine_distance(avg1,avg2)
 
-    # Print cosine distance
+    # Print output
     print(cos)
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))              

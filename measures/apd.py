@@ -13,11 +13,11 @@ from utils_ import Space
 
 def main():
     """
-    Compute the average pairwise cosine distance (APD) for two lists of vectors. 
+    Compute the average pairwise cosine distance (APD) between two matrices (lists of vectors). 
     """
 
     # Get the arguments
-    args = docopt("""Compute the average pairwise cosine distance (APD) for two lists of vectors.  
+    args = docopt("""Compute the average pairwise cosine distance (APD) between two matrices (lists of vectors).  
 
     Usage:
         apd.py <path_matrix1> <path_matrix2> 
@@ -75,7 +75,7 @@ def main():
             apds.append(apd)    
     apd = np.mean(apds, axis=0)
 
-    # Print average pairwise cosine distance
+    # Print output
     print(apd)
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))                 

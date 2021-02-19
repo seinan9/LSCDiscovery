@@ -18,17 +18,18 @@ def main():
     args = docopt("""Compute cosine distance for targets in two matrices.
 
     Usage:
-        cd.py [-f] <path_matrix1> <path_matrix2> <path_targets> <path_output>
+        cd.py <path_matrix1> <path_matrix2> <path_output>
+        cd.py <path_matrix1> <path_matrix2> <path_targets> <path_output>
 
         <path_matrix1>      = path to first matrix
         <path_matrix2>      = path to second matrix
-        <path_targets>      = path to file with target words
+        <path_targets>      = path to file with target words (optional)
         <path_output>       = output path for result file
 
-    Options:
-        -f, --full  compute cosine distance for every word in the two matrices
      Note:
-         Important: spaces must be already aligned (columns in same order)! Targets in first/second column of testset are computed from matrix1/matrix2.
+        Choose the first usage to compute CDs for all word in the intersection of the vocabularies.
+        Choose the secondary usage to compute CDs only for <path_targets>. 
+        Important: spaces must be already aligned (columns in same order)! Targets in first/second column of testset are computed from matrix1/matrix2.
         
     """)
     
@@ -36,8 +37,6 @@ def main():
     path_matrix2 = args['<path_matrix2>']
     path_targets = args['<path_targets>']
     path_output = args['<path_output>']
-
-    is_full = args['--full']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -60,8 +59,10 @@ def main():
 
     distances = {}
     
-    # Compute cosine distances
-    if is_full:
+    # Usage 1: compute CD for every word in the intersection of the vocabularies
+    if path_targets == None:
+
+        # Compute CD
         for key in row2id1:
             try:
                 vec1 = matrix1[row2id1[key]].toarray().flatten()
@@ -70,10 +71,13 @@ def main():
                 distances[key] = cd
             except KeyError:
                 pass
+    # Usage 2: compute CD for every word in <path_targets>
     else:
+        # Load targets
         with open(path_targets, 'r', encoding='utf-8') as f:
             targets = [line.strip() for line in f]
 
+        # Compute CD
         for word in targets:
             try:
                 vec1 = matrix1[row2id1[word]].toarray().flatten()
@@ -84,7 +88,7 @@ def main():
                 distances[word] = 'nan'
                 continue
     
-    # Write output
+    # Write output to <paht_output>
     with open(path_output, 'w', encoding='utf-8') as f:
         for key in distances:
             f.write(key + '\t' + str(distances[key]) + '\n')
