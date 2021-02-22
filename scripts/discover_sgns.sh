@@ -22,6 +22,8 @@ function usage {
     echo ""
     echo "  Usage:" 
     echo "      discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count> <itera> <t> <language>" 
+    echo "      discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count> <itera> <t> <language> <sample_id> <sample_size> max_usages>" 
+    echo "      discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count> <itera> <t> <language> <sample_id> <sample_size> <max_usages> <max_samples>" 
     echo ""
     echo "      <data_set_id>       = data set param_id"
     echo "      <window_size>       = the linear distance of context words to consider in each direction"
@@ -33,9 +35,10 @@ function usage {
     echo "      <itera>             = number of iterations"
     echo "      <t>                 = threshold = mean + t * standard deviation"
     echo "      <language>          = en | de"
-    echo ""
-    echo "  Options:"
-    echo "      -s, --save      Use this flag (at the last position) to save the output matrices."
+    echo "      <sample_id>         = TODO"    
+    echo "      <sample_size>       = TODO"
+    echo "      <max_usages>        = TODO"
+    echo "      <max_samples>       = TODO"
     echo ""
 }
 
@@ -64,17 +67,22 @@ mkdir -p ${resdir}
 python type-based/sgns.py data/${data_set_id}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
 python type-based/sgns.py data/${data_set_id}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
 
+
 # Length-normalize, meanc-center and align with OP
 python modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
+
 
 # Measure CD for every word in the intersection of the vocabularies
 python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca ${resdir}/distances_intersection.tsv
 
+
 # Create predictions
 python measures/binary.py ${resdir}/cd_intersection.tsv ${resdir}/predictions.tsv " ${t} " 
 
+
 # Apply filter1
 python modules/filter1.py ${resdir}/predictions.tsv ${resdir}/predictions_f1.tsv ${language}
+
 
 # Sample from <predictions_f1.tsv> 
 if [ $# -eq 13 ] || [ $# -eq 14 ]
@@ -102,6 +110,7 @@ if [ $# -eq 13 ] || [ $# -eq 14 ]
             done
 fi
 
+
 # Store in DURel format
 if [ $# -eq 14 ]
     then
@@ -111,8 +120,3 @@ if [ $# -eq 14 ]
             python modules/make_format.py ${outdir}/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/${sample_id}/usages_corpus2/${line}.tsv ${resdir}/${sample_id}/DURel/${line}.tsv ${language} " ${max_samples} "
         done
 fi
-
-
-# # Clean output directory
-# rm -rf output/${data_set_id}/${param_id}/discovery/t${t}
-# rm -rf outdir

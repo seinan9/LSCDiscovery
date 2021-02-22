@@ -1,24 +1,30 @@
 #!/bin/bash
 name=$0
-language=$1
-type=$2
-identifier=$3
-deviation_factor=$4
+data_set_id=$1
+sample_id=$2
+language=$3
+type=$4
+layers=$5
+t=$6
+
+# USAGES für targets müssen davor erzeugt werden (außerhalb dieses skripts)
 
 function usage {
-    echo "Create token-based BERT embeddings for 500 samples + target words. Compute binary classification for SemEval Subtask 1 and Spearman correlation for Subtask 2." 
+    echo "For a set of target words, decide which words lost or gained sense(s) between C_1 and C_2." 
     echo ""
     echo "  Usage:" 
-    echo "      ${name} <language>"
+    echo "      classify_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t>"
     echo ""
-    echo "      <language>          = eng | ger | swe | lat"
-    echo "      <type>              = lemma | token | toklem"
-    echo "      <identifier>        = give a good name!"
-    echo "      <deviation_factor>  = threshold = mean + deviation_factor * std"
+    echo "      <data_set_id>   = data set identifsier"
+    echo "      <sample_id>     = sample identifier"
+    echo "      <language>      = en | de"
+    echo "      <type>          = lemma | token | toklem"
+    echo "      <layers>        = TODO"
+    echo "      <t>             = threshold = mean + t * std"
     echo ""
 }
 
-if [ $# -ne 4 ] 
+if [ $# -ne 6 ] 
 	then 
 		usage
 		exit 1
@@ -30,37 +36,48 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/bert/classification/${identifier}
-resdir=results/${language}/bert/classification/${identifier}
+param_id=BERT_layers${layers}_type${type}
+
+outdir=output/${data_set_id}/${param_id}/classification/${sample_id}/t${t}
+resdir=results/${data_set_id}/${param_id}/classification/${sample_id}/t${t}
 
 mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
-mkdir -p ${resdir}
+mkdir -p ${resdir}/APD
+mkdir -p ${resdir}/COS
 
-# Compute vectors with bert for target words, compute APD and COS
-cat data/${language}/samples/samples.tsv | while read line || [ -n "$line" ]
+
+# Generate contextualized word embeddings with BERT for words in <sample.tsv> 
+cat data/${data_set_id}/samples/${sample_id}/sample.tsv | while read line || [ -n "$line" ]
     do  
         echo "${line}"
-        python token-based/bert.py -l data/${language}/uses/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type}
-        python token-based/bert.py -l data/${language}/uses/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type}
+        python token-based/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/vectors_corpus1/${line} ${language} ${type} ${layers}
+        python token-based/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus2/${line}.tsv ${outdir}/vectors_corpus2/${line} ${language} ${type} ${layers}
 
+        # Measure APD and COS for every word in <sample.tsv>
         apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
         cos=$(python measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
-        printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/apd_samples.tsv
-        printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/cos_samples.tsv
+        printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/APD/distances_sample.tsv
+        printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/COS/distances_sample.tsv
     done
 
-# Classify targets
-python measures/binary.py ${resdir}/apd_samples.tsv data/${language}/targets.tsv ${resdir}/binary_apd.tsv " ${deviation_factor} " 
-python measures/binary.py ${resdir}/cos_samples.tsv data/${language}/targets.tsv ${resdir}/binary_cos.tsv " ${deviation_factor} "  
+# Generate contextualized word embeddings with BERT for words in <targets.tsv> 
+cat data/${data_set_id}/targets.tsv | while read line || [ -n "$line" ]
+    do  
+        echo "${line}"
+        python token-based/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/vectors_corpus1/${line} ${language} ${type} ${layers}
+        python token-based/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus2/${line}.tsv ${outdir}/vectors_corpus2/${line} ${language} ${type} ${layers}
 
-# Evaluate classification
-score_apd=$(python evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_apd.tsv)
-score_cos=$(python evaluation/class_metrics.py data/${language}/truth/binary.tsv ${resdir}/binary_cos.tsv)
+        # Measure APD and COS for every word in <sample.tsv>
+        apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+        cos=$(python measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
-printf "%s\n" "${score_apd}" >> ${resdir}/class_apd.tsv
-printf "%s\n" "${score_cos}" >> ${resdir}/class_cos.tsv
+        printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/APD/distances_targets.tsv
+        printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/COS/distances_targets.tsv
+    done
 
-# Clean up directory 
-rm -r output/${language}/bert/classification/${identifier}
+
+# Create predictions
+python measures/binary.py ${resdir}/APD/distances_sample.tsv ${resdir}/APD/distances_targets.tsv ${resdir}/APD/scores_targets.tsv " ${t} "
+python measures/binary.py ${resdir}/COS/distances_sample.tsv ${resdir}/COS/distances_targets.tsv ${resdir}/COS/scores_targets.tsv " ${t} "

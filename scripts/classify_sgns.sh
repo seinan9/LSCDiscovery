@@ -1,6 +1,6 @@
 #!/bin/bash
 name=$0
-id=$1
+data_set_id=$1
 window_size=$2
 dim=$3
 k=$4
@@ -14,9 +14,9 @@ function usage {
     echo "For a set of target words, decide which words lost or gained sense(s) between C_1 and C_2."
     echo ""
     echo "  Usage:" 
-    echo "      classify_sgns.sh <id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> [-s]" 
+    echo "      classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> [-s]" 
     echo ""
-    echo "      <id>                = data set identifier"
+    echo "      <data_set_id>       = data set identifier"
     echo "      <window_size>       = the linear distance of context words to consider in each direction"
     echo "      <dim>               = dimensionality of embeddings"
     echo "      <k>                 = number of negative samples parameter (equivalent to shifting parameter for PPMI)"
@@ -26,9 +26,6 @@ function usage {
     echo "      <itera>             = number of iterations"
     echo "      <t>                 = threshold = mean + t * standard deviation"
     echo ""
-    echo "  Options:"
-    echo "      -s, --save      Use this flag (at the last position) to save the output matrices."
-
 }
 
 if [ $# -ne 9 ] && [ $# -ne 10 ]
@@ -43,32 +40,31 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-identifier=win${window_size}-dim${dim}-k${k}-s${s}-mc${min_count1}-mc${min_count2}-i${itera}
+param_id=win${window_size}_dim${dim}_k${k}_s${s}_mc${min_count1}_mc${min_count2}_i${itera}
 
-outdir=output/${id}/classification/${identifier}
-resdir=results/${id}/classification/${identifier}
+outdir=output/${id}/${param_id}/classification/t${t}
+resdir=results/${id}/${param_id}/classification/t${t}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
+
 
 # Generate word embeddins with SGNS
 python type-based/sgns.py data/${id}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
 python type-based/sgns.py data/${id}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
 
+
 # Length-normalize, meanc-center and align with OP
 python modules/map_embeddings.py --normalize unit center --init_identical --orthogonal ${outdir}/mat1 ${outdir}/mat2 ${outdir}/mat1ca ${outdir}/mat2ca
 
+
 # Measure CD for every word in the intersection
-python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca ${resdir}/cd_intersection.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca ${resdir}/distances_intersection.tsv
+
 
 # Measure CD for every target word
-python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${id}/targets.txt ${resdir}/cd_targets.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${id}/targets.txt ${resdir}/distances_targets.tsv
+
 
 # Compute binary scores for targets
-python measures/binary.py results/${id}/classification/${identifier}/cd_intersection.tsv results/${id}/classification/${identifier}/cd_targets.tsv results/${id}/classification/${identifier}/binary_scores_targets.tsv " ${t} "
-
-if [ $# -eq 9 ]
-    then 
-        # Clean directory
-        rm -r output/${id}/classification/${identifier}
-fi
+python measures/binary.py ${resdir}/distances_intersection.tsv ${resdir}/distances_targets.tsv ${resdir}/scores_targets.tsv " ${t} "
