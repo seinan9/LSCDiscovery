@@ -17,34 +17,67 @@ def main():
     args = docopt("""Detect whether a word is a NOUN, VERB or ADJ.
 
     Usage:
-        filter1.py <word> <language>
+        filter1.py [-tab] <path_words> <path_output> <language>
 
     Arguments:
-        <word>      = changing word
-        <language>  = en | de | it | ru
+        <path_words>    = changing word
+        <path_output>   = path to output
+        <language>      = en | de | it | ru
+
+    Options:
+        -t --tab   includes tab-seperated values
+
 
     """)
 
-    word = str(args['<word>'])
+    path_words = args['<path_words>']
+    path_output = args['<path_output>']
     language = args['<language>']
+
+    is_tab = args['--tab']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()
 
-    spacy_langauges = {
+    spacy_languages = {
         "en": "en_core_web_sm",
         "de": "de_core_news_sm",
         "it": "it_core_news_sm",
         "ru": "ru_core_news_sm"
     }
 
-    nlp = spacy.load(spacy_langauges[language])
-    doc = nlp(word)
-    if doc[0].pos_ == "NOUN" or doc[0].pos_ == "VERB" or doc[0].pos_ == "ADJ":
-        print(1)
+    if not is_tab:
+        with open(path_words, 'r', encoding='utf-8') as f:
+            words = [line.strip() for line in f]
+
     else:
-        print(0)
+        words_tab = {}
+        with open(path_words, 'r', encoding='utf-8') as f:
+            reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
+            for row in reader:
+                try:
+                    words_tab[row[0]] = float(row[1])
+                except ValueError:
+                    pass
+        words = words_tab.keys()
+
+    filtered = []
+    nlp = spacy.load(spacy_languages[language])
+    for word in words:
+        doc = nlp(word)
+        for token in doc:
+            pos = token.pos_
+        if len(doc) == 1:
+            if pos == 'NOUN' or pos == 'VERB' or pos == 'ADJ':
+                filtered.append(word)
+
+    with open(path_output, 'w', encoding='utf-8') as f:
+        for word in filtered:
+            if not is_tab:
+                f.write(word + '\n')
+            else:
+                f.write(word + '\t' + str(words_tab[word]) + '\n')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 

@@ -1,8 +1,9 @@
 #!/bin/bash
 name=$0
-language=$1
-type=$2
-identifier=$3
+data_set_id=$1
+language=$2
+type=$3
+layers=$4
 
 function usage {
     echo "Create token-based embeddings with BERT and compute average pairwise distance (APD) and cosine similarity (COS) for every target word as well as the Spearman correlation afterwards."
@@ -16,7 +17,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 3 ] 
+if [ $# -ne 4 ] 
 	then 
 		usage
 		exit 1
@@ -28,8 +29,10 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-outdir=output/${language}/bert/ranking/${identifier}
-resdir=results/${language}/bert/ranking/${identifier}
+param_id=BERT_layers${layers}_type${type}
+
+outdir=output/${data_set_id}/${param_id}/ranking
+resdir=results/${data_set_id}/${param_id}/ranking
 
 mkdir -p ${outdir}/vectors_corpus1
 mkdir -p ${outdir}/vectors_corpus2
@@ -56,5 +59,5 @@ spr_cos=$(python modules/spr.py data/${language}/truth/graded.tsv ${resdir}/cos.
 printf "%s\t%s\n" "${apd}" "${spr_apd}" >> ${resdir}/spr_apd.tsv
 printf "%s\t%s\n" "${cos}" "${spr_cos}" >> ${resdir}/spr_cos.tsv
 
-# Clean up directory 
-rm -r output/${language}/bert/ranking/${identifier}
+# # Clean up directory 
+# rm -r output/${language}/bert/ranking/${param_id}

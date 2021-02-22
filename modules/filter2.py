@@ -74,7 +74,6 @@ def main():
     nlp.add_pipe(LanguageDetector(), name='language_detector', last=True)
 
     # Count unwanted uses in c1
-    logging.info("Count unwanted uses in c1")
     counter1 = 0
     for i in range(len(token1)):
         try:
@@ -100,7 +99,6 @@ def main():
             counter1 += 1
 
     # Count unwanted uses in c2
-    logging.info("Count unwanted uses in c2")
     counter2 = 0
     for i in range(len(token2)):
         try:

@@ -43,7 +43,10 @@ def main():
     with open(path_distances, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
-            distances[row[0]] = float(row[1])
+            try:
+                distances[row[0]] = float(row[1])
+            except ValueError:
+                pass
 
     # Compute mean, std and threshold
     list_distances = np.array(list(distances.values()))
@@ -71,7 +74,10 @@ def main():
         with open(path_targets, 'r', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
             for row in reader:
-                target_distances[row[0]] = float(row[1])
+                try:
+                    target_distances[row[0]] = float(row[1])
+                except ValueError:
+                    pass
 
         # Compute binary scores
         binary_scores = {}

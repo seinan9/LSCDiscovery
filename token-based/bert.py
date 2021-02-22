@@ -21,7 +21,7 @@ def main():
     args = docopt("""Create token-based embeddings with BERT.
 
     Usage:
-        Bert.py [-l] <path_usages> <path_output> <language> <type_sentences>
+        Bert.py [-l] <path_usages> <path_output> <language> <type_sentences> <layers>
         
     Arguments:
        
@@ -29,6 +29,7 @@ def main():
         <path_output>       = Path for storing the vectors
         <language>          = eng / ger / swe / lat
         <type_sentences>    = lemma | token | toklem
+        <layers>            = TODO
     
     Options:
         -l, --len           normalize vectors to unit length 
@@ -39,6 +40,7 @@ def main():
     path_output = args['<path_output>']
     language = args['<language>']
     type_sentences = args['<type_sentences>']
+    layers = args['<layers>']
 
     is_len = args['--len']
 
@@ -47,26 +49,22 @@ def main():
     start_time = time.time()
 
     # Load pre-trained model tokenizer (vocabulary) and model (weights)
-    logging.info("Load sentences")
-    if language == 'eng':
-        tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-        model = BertModel.from_pretrained('bert-base-cased', output_hidden_states=True)
-    elif language == 'ger':
-        tokenizer = BertTokenizer.from_pretrained('bert-base-german-cased')
-        model = BertModel.from_pretrained('bert-base-german-cased', output_hidden_states=True)
-    elif language == 'swe':
-        tokenizer = AutoTokenizer.from_pretrained('KB/bert-base-swedish-cased')
-        model = AutoModel.from_pretrained('KB/bert-base-swedish-cased', output_hidden_states=True)
-    else:
-        tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
-        model = BertModel.from_pretrained('bert-base-multilingual-cased', output_hidden_states=True)
+    logging.info("LOAD SENTENCES")
+    model_language = {
+        'en': 'bert-base-cased', 
+        'de': 'bert-base-german-cased', 
+        'sw': 'KB/bert-base-swedish-cased', 
+        'multi': 'bert-base-multilingual-cased'
+        }
 
-    if type_sentences == 'lemma':
-        type_ = type_sentences
-    elif type_sentences == 'token':
-        type_ = type_sentences
-    elif type_sentences == 'toklem':
+    tokenizer = BertTokenizer.from_pretrained(model_language[language])
+    model = BertModel.from_pretrained(model_language[language], output_hidden_states=True)
+
+    if type_sentences == 'toklem':
         type_ = 'token'
+    else:
+        type_ = type_sentences
+
 
     # Load sentences 
     context_vector_list = []
@@ -75,7 +73,6 @@ def main():
         reader = csv.DictReader(csvFile, delimiter="\t", quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
             test_sentences.append(dict(row))
-        del(test_sentences[1000:])  # some words have over 20000 usages
 
         # Create the vectors
         logging.info("Create Bert embeddings")
@@ -84,17 +81,19 @@ def main():
                 # Create target word(s)
                 target_words = []
                 target_word = str(test_sentences[i]["sentence_"+type_].split()[int([test_sentences[i]["index_"+type_]][0])])
-                if type_ == 'toklem':
+                if type_sentences == 'toklem':
                     original_word = test_sentences[i]["lemma"]
                     target_words.append(tokenizer.tokenize(original_word))
                 else:
-                    clean_target_word = "".join(char for char in target_word if char.isalnum() or char == "-" or char == "'")
+                    clean_target_word = "".join(char for k,char in enumerate(target_word) if char.isalpha() or char == "-" or (char == "'" and k == len(target_word)-1))
+                    if clean_target_word[-1] == "'":
+                        clean_target_word = test_sentences[i]["lemma"]
                     target_words.append(tokenizer.tokenize(clean_target_word))
                 target_words = target_words[0]
                 
                 # Tokenize text
                 text = test_sentences[i]["sentence_"+type_]
-                if type_ == 'toklem':
+                if type_sentences == 'toklem':
                     text = text.replace(target_word, original_word) 
                 marked_text = "[CLS] " + text + " [SEP]"
                 tokenized_text = tokenizer.tokenize(marked_text)
@@ -138,7 +137,11 @@ def main():
                 vectors = []
                 for number in target_word_indices:
                     token = token_embeddings[number]
-                    sum_vec = np.sum([np.array(token[12]), np.array(token[11]), np.array(token[10]), np.array(token[9])], axis=0)
+                    layers_list = layers.split('+')
+                    layers_list = list(map(int, layers_list))
+                    #vec = [np.array(token[l]) for l in layers_list]
+                    sum_vec = np.sum([np.array(token[l]) for l in layers_list], axis=0)
+                    #sum_vec = np.sum([np.array(token[12]), np.array(token[11]), np.array(token[10]), np.array(token[9])], axis=0)
                     vectors.append(np.array(sum_vec))
                 context_vector_list.append(np.sum(vectors, axis=0, dtype=float))
             except:

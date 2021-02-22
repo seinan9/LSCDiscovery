@@ -39,14 +39,20 @@ def main():
     with open(path_values1, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
-            values1[row[0]] = float(row[1])
+            try:
+                values1[row[0]] = float(row[1])
+            except ValueError:
+                pass
 
     # Load values2
     values2 = {}
     with open(path_values2, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
-            values2[row[0]] = float(row[1])
+            try:
+                values2[row[0]] = float(row[1])
+            except ValueError:
+                pass
 
     with open(path_samples, 'r', encoding='utf-8') as f:
         samples = [line.strip() for line in f]
