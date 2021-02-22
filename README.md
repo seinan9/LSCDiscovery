@@ -3,17 +3,20 @@ Scripts for large-scale prediction of lexical semantic change.
 
 First do:
 ```
-bash get_data.sh
-bash scripts/preprocess_data.sh ger
-bash scripts/make_samples.sh ger
+bash scripts/prepare_data.sh corpus1_token corpus2_token corpus1_lemma corpus2_lemma [targets] [binary_gold] [graded_gold]
+```
+For SGNS
+```
+bash scripts/discover_sgns.sh data_set_id window_size dim k s min_count1 min_count2 itera t language
+(O) bash scripts/f2.sh (optional parameter to extract usages if needed) 
+(O) bash scripts/make_format.sh (optional parameter to extract usages if needed)
+```
+For BERT
+```
+bash scripts/make_sample.sh id sample_id sample_size usage_size language
+bash scripts/discover_bert.sh id sample_id layers type t language
+(O) bash scripts/f2.sh 
+(O) bash scripts/make_format.sh
 ```
 
-Pipeline to generate SGNS+OP+CD predictions with a threshold of t=1.0:
-```
-bash scripts/predict_sgns.sh ger 10 300 5 0.001 39 39 5 1.0
-```
-
-Pipeline to generate BERT+APD and BERT+COS (toklem, layer 12+1) predictions with a threshold of t=0.1:
-```
-bash scripts/predict_bert.sh ger toklem toklem 0.1
-```
+- implement fortschritt in bash scripts (current_line/number_of_lines)
