@@ -20,7 +20,8 @@
 ### General
 
 A framework that utilizes common approaches for Lexical Semantic Change Detection to solve the task of lexical semantic change discovery:
-> Given a corpus pair (C1,C2), decide for the intersection of their vocabularieswhich words lost or gained sense(s) betweenC1andC2.
+> Given a corpus pair (C1,C2), decide for the intersection of their vocabularies which words lost or gained sense(s) between $C_1$ and $C_2$.
+
 Furthermore, additional tools are provided to solve task related to the field of Lexical Semantic Change Detection, e.g., the binary classification and graded ranking.
 
 If you use this software for academic research, please [cite](#bibtex) these papers:
@@ -34,18 +35,31 @@ Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect)
 
 The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-	python measures/cd.py <path_matrix1> <path_matrix2> <path_targets> <path_output> 
+	python type-based/count.py <path_corpus> <path_output> <window_size>
 
 e.g.
-	python type-based/sgns.py <path_corpus> <path_output> <window_size> <dim> <k> <s> <min_count> <itera>
 
-	python representations/count.py corpora/test/corpus1/ test_matrix1 1
+	python type-based/count.py data/test/corpus1/lemma.txt.gz test_matrix1 1
 
 The usage of each script (including .sh scripts) can be understood by running it with help option `-h`, e.g.:
 
-	python3 representations/count.py -h
+	python3 type-based/count.py -h
 
 It is strongly recommend you to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`.
+
+
+### LSCDiscovery
+
+#### Process
+The following steps are executed to obtain a set of predictions:
+
+1.A neural language model (SGNS, BERT) is used to generate word embeddings (dense representation of words in the form of a numeric vector) for words in the intersection of the corpus vocabularies.\footnote{In BERT's case only a sample of the intersection is considered due to computational limitations.}
+2.Differences between word embedding(s) from $C_1$ and word embedding(s) from $C_2$ are measured, resulting in graded values.  
+3.A threshold is calculated according to these graded values. Words whose graded values are greater than or equal to this threshold, are labeled as changing words. 
+4.A filtering is applied to these predictions in order to remove undesirable words (e.g., proper names and foreign words).
+5.(Optional) Usages for the filtered predictions are extracted and saved in a specific format. These can then be used to evaluate the predictions or detect false positives.
+
+
 
 ### Models
 
