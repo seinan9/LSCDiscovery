@@ -4,8 +4,8 @@
   * [Usage](#usage)
   * [Prepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
-    + [Static Approach (SGNS)](#static-approach)
-    + [Contextualized Approach (BERT)](#contextualized-approach)
+    + [Static Approach](#static-approach)
+    + [Contextualized Approach](#contextualized-approach)
   * [Other Tasks](#other-tasks)
   * [Parameter Settings](#parameter-settings)
 
@@ -71,7 +71,7 @@ The sample identifier <sample_id> should also be unique and descriptive.
 
 ### Automated LSC Discovery
 
-#### Static Approach (SGNS)
+#### Static Approach
 
 The following script can be used to automatically discover changing words in the intersection of the corpus vacubaliers:
 
@@ -93,7 +93,7 @@ e.g.
 	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en sample_1 100 50 25
 	
 	
-#### Contextualized Approach (BERT)
+#### Contextualized Approach
 
 The following script can be used to automatically discover changing words in a sample of the intersection of the corpus vocabularies:
 
