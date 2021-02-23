@@ -52,8 +52,8 @@ The minimum required data is the following:
 2. raw corpus pair (in .txt.gz format)
 
 The following data is optional:
-3. a file containing target words (one word per line)
-4. binary and graded gold data (one word-value pair per line, tab seperated)
+1. a file containing target words (one word per line)
+2. binary and graded gold data (one word-value pair per line, tab seperated)
 
 A shell script is provided to bring the data into the required format:
 
