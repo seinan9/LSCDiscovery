@@ -32,11 +32,13 @@ Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect)
 
 The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-e.g.	`python type-based/count.py <path_corpus> <path_output> <window_size>`
+	`python type-based/count.py <path_corpus> <path_output> <window_size>`
 
-e.g.	`python type-based/count.py data/test/corpus1/lemma.txt.gz test_matrix1 1`
+e.g.	
+	`python type-based/count.py data/test/corpus1/lemma.txt.gz test_matrix1 1`
 
 The usage of each script (including .sh scripts) can be understood by running it with help option `-h`, e.g.:
+
 	`python3 type-based/count.py -h`
 
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for en running `python -m spacy download en_core_web_sm` and de running `python -m spacy download de_core_news_sm`.
@@ -54,7 +56,7 @@ The following data is optional:
 
 A shell script is provided to bring the data into the required format:
 
-	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [path_targets] [path_binary_gold] [path_graded_gold]
+	`bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [path_targets] [path_binary_gold] [path_graded_gold]`
 	
 It is recommeded to choose a unique and descriptive data set identifier <data_set_id>. All automated scripts utilize the data set identifier to obtain the required data. 
 
@@ -78,25 +80,19 @@ Optional:
 
 A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
-	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [sample_id] [sample_size] [max_usages] [max_samples]
+	`bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [sample_id] [sample_size] [max_usages] [max_samples]`
 
-Steps 1a to 4a are executed by providing the parameters until (including) <language>
+Steps 1a to 4a are executed by providing the parameters until (including) <language>, e.g.,:
 
-e.g.
-
-	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en
+	`bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en`
 	
-When the script is exectued with values for the optional parameters [sample_id], [sample_size] and [max_usages], (4b) is also executed:
+When the script is exectued with values for the optional parameters [sample_id], [sample_size] and [max_usages], (4b) is also executed, e.g.:
 
-e.g.
-
-	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25
+	`bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25`
 	
-When all parameters are provided, (5) is also executed:
+When all parameters are provided, (5) is also executed, e.g.:
 
-e.g.
-
-	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25 25
+	`bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25 25`
 	
 	
 #### Contextualized Approach
@@ -118,7 +114,7 @@ Optional:
 
 A shell script is provided that automatically executes (0a) to (0c):
 
-	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
+	`bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>`
 
 e.g.
 
