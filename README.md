@@ -2,11 +2,12 @@
 
   * [General](#general)
   * [Usage](#usage)
-  * [LSCDiscovery](#lscdiscovery)
-  * [Other](#other)
-  * [Models](#models)
+  * [Prepare Data](#prepare-data)
+  * [Automated LSC Discovery](#automated-lsc-discovery)
+     + [Static Approach (SGNS)](#static-approach)
+     + [Contextualized Approach (BERT)](#contextualized-approach)
+  * [Other Tasks](#other-tasks)
   * [Parameter Settings](#parameter-settings)
-
 
 
 ### General
@@ -74,22 +75,44 @@ The sample identifier <sample_id> should also be unique and descriptive.
 
 The following script can be used to automatically discover changing words in the intersection of the corpus vacubaliers:
 
-	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language>
+	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [sample_id] [sample_size] [max_usages] [max_samples]
 
 e.g.
 	
 	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en
+	
+When the script is exectued with values for the optional parameters [sample_id], [sample_size] and [max_usages], a usage-level filtering is applied at the end.
 
+	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en sample_1 100 50
+	
+
+When the script is executed with values for the optional parameters [sample_id], [sample_size] and [max_usages] and [max_samples], the final set of discovered changing words is stored in a format so that they can directly be uploaded to the DURel annotation system.
+
+e.g.
+
+	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en sample_1 100 50 25
+	
+	
 #### Contextualized Approach (BERT)
 
 The following script can be used to automatically discover changing words in a sample of the intersection of the corpus vocabularies:
 
-	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t>
+	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [f2] [max_samples]
 	
 e.g.
 
-	bash scripts/discover_bert.sh test_data sample_1 <en> <token> <1+12> <0.1>
+	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1
 
+When the script is executed with values for the optional parameter [f2], a usage-level filtering is applied at the end.
 
+e.g.
 
+	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1 f2
 
+When the script is executed with values for the optional parameter [f2] and [max_samples], the final set of discovered changing words is stored in a format so that they can directly be uploaded to the DURel annotation system.
+
+e.g.
+
+	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1 f2 25
+	
+	
