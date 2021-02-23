@@ -83,7 +83,7 @@ It is recommeded to choose a unique and descriptive data set identifier <data_se
 The English and German SemEval-2020 data sets can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
 
 
-### Automatic LSC Discovery
+### Automated LSC Discovery
 
 #### Static Approach
 
@@ -158,7 +158,7 @@ When all parameters are provided, (5) is also executed, e.g.:
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 25
 
 
-### Automatic Binary Classification and Graded Ranking
+### Automated Binary Classification and Graded Ranking
 
 #### Static Approach
 
