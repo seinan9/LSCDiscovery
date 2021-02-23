@@ -113,8 +113,8 @@ if [ $# -eq 13 ] || [ $# -eq 14 ]
                     then
                         printf "%s\n" "${line}" >> ${resdir}/${sample_id}/predictions_f2.tsv
                 fi
-                progress_counter+=1
-                echo "PROGRESS : ${progress_counter}/${number_lines}"
+                ((progress_counter=progress_counter+1))
+                echo "PROGRESS: ${progress_counter}/${number_lines}"
             done
 fi
 
@@ -123,8 +123,12 @@ fi
 if [ $# -eq 14 ]
     then
         mkdir -p ${resdir}/${sample_id}/DURel
+        number_lines=$(wc -l ${resdir}/${sample_id}/predictions_f2.tsv | awk '{print $1 }')
+        progress_counter=0
         cat ${resdir}/${sample_id}/predictions_f2.tsv | while read line || [ -n "$line" ]
         do  
             python modules/make_format.py ${outdir}/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/${sample_id}/usages_corpus2/${line}.tsv ${resdir}/${sample_id}/DURel/${line}.tsv ${language} " ${max_samples} "
+            ((progress_counter=progress_counter+1))
+            echo "PROGRESS: ${progress_counter}/${number_lines}"
         done
 fi

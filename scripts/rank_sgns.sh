@@ -38,7 +38,7 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-param_id=win${window_size}_dim${dim}_k${k}_s${s}_mc${min_count1}_mc${min_count2}_i${itera}
+param_id=SGNS_win${window_size}_dim${dim}_k${k}_s${s}_mc${min_count1}_mc${min_count2}_i${itera}
 
 outdir=output/${data_set_id}/${param_id}/ranking
 resdir=results/${data_set_id}/${param_id}/ranking
@@ -57,4 +57,4 @@ python modules/map_embeddings.py --normalize unit center --init_identical --orth
 
 
 # Measure CD for every target word
-python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${data_set_id}/targets.txt ${resdir}/distances_targets.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${data_set_id}/targets/targets.tsv ${resdir}/distances_targets.tsv

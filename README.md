@@ -2,12 +2,11 @@
 
   * [General](#general)
   * [Usage](#usage)
+  * [Pepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
-    + [Prepare Data](#prepare-data)
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
   * [Automated Binary Classification and Graded Ranking](#automated-binary-classification-and-graded-ranking)
-    + [Prepare Data](#prepare-data)
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
   * [Parameter Settings](#parameter-settings)
@@ -46,9 +45,6 @@ The usage of each script (including .sh scripts) can be understood by running it
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for en running `python -m spacy download en_core_web_sm` and de running `python -m spacy download de_core_news_sm`.
 
 
-### Automatic LSC Discovery
-
-
 #### Prepare Data
 
 The minimum required data is the following:
@@ -63,143 +59,93 @@ A shell script is provided to bring the data into the required format:
 
 	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [path_targets] [path_binary_gold] [path_graded_gold]
 	
-e.g.
-
-	bash scripts/prepare_data.sh test_data test/corpus1_lemma.txt.gz test/corpus2_lemma.txt.gz test/corpus1_token.txt.gz test/corpus2_token.txt.gz
-
 It is recommeded to choose a unique and descriptive data set identifier <data_set_id>. All automated scripts utilize the data set identifier to obtain the required data. 
 
-If you want to use the contextualized approach (BERT), word usages (sentences where the word occurs) from the intersection of the corpus vocabularies have to be extracted from the corpora. Due to the large computational effort, we recommend to take a sample of these words instead. We recommend a sample_size of 500, however, it can be freely extended, if desired. A script is provided that takes samples and extracts usages automatically:
+The English and German SemEval-2020 data sets can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
 
-	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
-	
-e.g.
 
-	bash scripts/prepare_sample.sh test_data sample_1 500 25 en
-
-The sample identifier <sample_id> should also be unique and descriptive. 
-
+### Automatic LSC Discovery
 
 #### Static Approach
 
-The following script can be used to automatically discover changing words in the intersection of the corpus vacubaliers:
+The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
+1a. create static word embeddings (`type-based/sgns.py`)
+1b. length-normalize, mean-center and align word embeddings (`modules/map_embeddings.py`) 
+2. measure differences (`measures/cd.py`)
+3. calculate threshold and label changing words (`measures/binary.py`)
+4a. filter out undesirable words (`modules/filter1.py`)
+
+Optional:
+4b. filter on a usage-level (`modules/filter2.py)
+5. store usages for predictions in format for DURel annotation system
+
+A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
 	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [sample_id] [sample_size] [max_usages] [max_samples]
 
-e.g.
-	
-	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en
-	
-When the script is exectued with values for the optional parameters [sample_id], [sample_size] and [max_usages], a usage-level filtering is applied at the end.
-
-	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en sample_1 100 50
-	
-
-When the script is executed with values for the optional parameters [sample_id], [sample_size] and [max_usages] and [max_samples], the final set of discovered changing words is stored in a format so that they can directly be uploaded to the DURel annotation system.
+Steps 1a to 4a are executed by providing the parameters until (including) <language>
 
 e.g.
 
-	bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en sample_1 100 50 25
+	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en
+	
+When the script is exectued with values for the optional parameters [sample_id], [sample_size] and [max_usages], (4b) is also executed:
+
+e.g.
+
+	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25
+	
+When all parameters are provided, (5) is also executed:
+
+e.g.
+
+	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25 25
 	
 	
 #### Contextualized Approach
 
-The following script can be used to automatically discover changing words in a sample of the intersection of the corpus vocabularies:
+BERT requires word usages to generate contextualized word embeddings. Extracting usages for a large amount of words and creating contextualized word embeddings for them afterwards is computationally expensive. We recommend to use a sample of the vocabularies intersection. 
+
+The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
+0a. filter out undesirable words from the vocabularies intersection (`modules/filter1.py`)
+0b. sample words (`modules/sample.py`)
+0c. extract usages for sampled words (`modules/extract_usages.py`)
+1. create contextualized word embeddings (`token-based/bert.py`)
+2. measure differences (`measures/apd.py` or `measures/cos.py`)
+3. calculate threshold and label changing words (`measures/binary.py`)
+Note: filter1 is applied before the sampling, to not waste computational power on undesirable words.
+
+Optional:
+4b. filter on a usage-level (`modules/filter2.py) 
+5. store usages for predictions in format for DURel annotation system
+
+A shell script is provided that automatically executes (0a) to (0c):
+
+	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
+
+e.g.
+
+	bash scripts/prepare_sample.sh en_semeval sample_1 100 25 en 
+
+A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
 	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [f2] [max_samples]
-	
-e.g.
 
-	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1
-
-When the script is executed with values for the optional parameter [f2], a usage-level filtering is applied at the end.
+Steps (1) to (3) are executed by providing the parameters until (including) <t>
 
 e.g.
 
-	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1 f2
+	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 
 
-When the script is executed with values for the optional parameter [f2] and [max_samples], the final set of discovered changing words is stored in a format so that they can directly be uploaded to the DURel annotation system.
+When the script is exectued with values for the optional parameter [f2] (4b) is also executed:
 
-e.g.
+e.g
 
-	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1 f2 25
-	
-	
-### Automated Binary Classification and Graded Ranking
+	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2
 
-Scripts are provided to automatically solve the two SemEval-2020 subtasks Binary Classification and Graded Ranking.
 
-### Prepare Data
-
-The minimum required data is the following:
-1. lemmatized corpus pair (in .txt.gz format)
-2. raw corpus pair (in .txt.gz format)
-3. a file containing target words (one word per line)
-
-The following is required for evaluation and fine-tuning:
-4. binary and graded gold data (one word-value pair per line, tab seperated)
-
-The previously described prepare_data.sh is used, 
-
- e.g.
- 
-	bash scripts/prepare_data.sh test_data test/corpus1_lemma.txt.gz test/corpus2_lemma.txt.gz test/corpus1_token.txt.gz test/corpus2_token.txt.gz test/targets.txt [test/binary_gold.tsv] [test/graded_gold.tsv]
-	
-Again, BERT requieres a sample and usages. If you allready prepared data for the automatic LSC Discovery, you can use the same sample and usages. Otherwise, 
+When all parameters are provided, (5) is also executed:
 
 e.g.
 
-	bash scripts/prepare_sample.sh test_data sample_1 500 25 en
-
-Usages for the target words are also required. A script is provided:
-
-	bash scripts/extract_target_usages.sh <data_set_id> <language> <max_usages>
-
-e.g.
-
-	bash scripts/extract_target_usages.sh test_data en 25
-
-
-#### Static Approach
-
-The following script can be used to generate binary scores for the target words:
-
-	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t>
-	
-e.g.
-
-	bash scripts/classify_sgns.sh 10 50 5 0.001 3 3 5 1.0
-
-
-The following script can be used to generate graded values for the target words:
-
-
-	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
-
-e.g.
-
-	bash scripts/classify_sgns.sh 10 50 5 0.001 3 3 5
-
-
-#### Contextualized Approach
-
-The following script can be used to generate binary scores for the target words:
-
-	bash scripts/classify_sgns.sh <data_set_id> <sample_id> <language> <type> <layers> <t>
-	
-e.g.
-
-	bash scripts/classify_sgns.sh test_data sample_1 en token 1+12 0.1
-
-
-The following script can be used to generate graded values for the target words:
-
-
-	bash scripts/classify_sgns.sh <data_set_id> <language> <type> <layers> 
-
-e.g.
-
-	bash scripts/classify_sgns.sh test_data en token 1+12 
-
-
-### Models
+	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 25

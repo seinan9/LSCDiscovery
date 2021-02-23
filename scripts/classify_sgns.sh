@@ -40,18 +40,18 @@ if [[ ( $1 == "--help") ||  $1 == "-h" ]]
 		exit 0
 fi
 
-param_id=win${window_size}_dim${dim}_k${k}_s${s}_mc${min_count1}_mc${min_count2}_i${itera}
+param_id=SGNS_win${window_size}_dim${dim}_k${k}_s${s}_mc${min_count1}_mc${min_count2}_i${itera}
 
-outdir=output/${id}/${param_id}/classification/t${t}
-resdir=results/${id}/${param_id}/classification/t${t}
+outdir=output/${data_set_id}/${param_id}/classification/t${t}
+resdir=results/${data_set_id}/${param_id}/classification/t${t}
 
 mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 
 # Generate word embeddins with SGNS
-python type-based/sgns.py data/${id}/corpus1/lemma.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
-python type-based/sgns.py data/${id}/corpus2/lemma.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
+python type-based/sgns.py data/${data_set_id}/corpus1/lemma.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
+python type-based/sgns.py data/${data_set_id}/corpus2/lemma.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
 
 
 # Length-normalize, meanc-center and align with OP
@@ -63,7 +63,7 @@ python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca ${resdir}/distances_inte
 
 
 # Measure CD for every target word
-python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${id}/targets.txt ${resdir}/distances_targets.tsv
+python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca data/${data_set_id}/targets/targets.tsv ${resdir}/distances_targets.tsv
 
 
 # Compute binary scores for targets
