@@ -11,7 +11,7 @@
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
   * [Parameter Settings](#parameter-settings)
-  * [Bibtext](#bibtex)
+  * [BibTex](#bibtex)
 
 
 ### General
