@@ -166,4 +166,5 @@ The following script can be used to automatically rank a set of target words acc
 
 	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
 	
-
+### Bibtex eintrag 
+so wie severin
