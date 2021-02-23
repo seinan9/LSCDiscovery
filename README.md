@@ -1,24 +1,23 @@
 # LSCDiscovery
 
   * [General](#general)
+  * [Quick Start](#quick-starts)
   * [Usage](#usage)
   * [Pepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
+  * [Automated Binary Classification and Graded Ranking](#automated-binary-classification-and-graded-ranking)
 
 
 ### General
 
-You can use this framwork to discover changes in bla bla (einfach halten) 
-A framework that utilizes common approaches for Lexical Semantic Change (LSC) Detection to solve the task of LSC Discovery:
-> Given a corpus pair (C1,C2), decide for the intersection of their vocabularies which words lost or gained sense(s) between C_1 and C_2.
-
-The following is provided:
-- scripts to automatically solve the LSC Discovery task 
-- scripts to automatically solve the Binary Classification subtask
-- scripts to automatically solve the Graded Ranking subtask 
-- tools to evaluate and fine-tune the results 
+The framework utilizes common approaches for Lexical Semantic Change (LSC) Detection to discover changing words:
+> Given a corpus pair C1,C2, automatically discover words that undergo a meaning change between C1 and C2.
+The framework can also be used for Binary Classification and Graded Ranking:
+> Given a corpus pair C1,C2 and a list of target words, automatically decide which target words lost or gained sense(s) between C1 and C2.
+> Given a corpus pair C1,C2 and a list of target words, automatically rank the target words according to their degree of LSC between C1 and C2.
+Additional tools are provided for evaluation and fine-tuning.
 
 Currently only English and German are fully supported. 
 
@@ -26,11 +25,8 @@ If you use this software for academic research, please [cite](#bibtex) these pap
 
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
-Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), [torch](https://pypi.org/project/torch/), [transformers](https://huggingface.co/transformers/), [spaCy](https://spacy.io/), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [VecMap](https://github.com/artetxem/vecmap
+Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [torch](https://pypi.org/project/torch/), [transformers](https://huggingface.co/transformers/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [spaCy](https://spacy.io/), [VecMap](https://github.com/artetxem/vecmap)
 
-### Quick Start
-TODO 
-nur SGNS hier benutzen
 
 ### Usage
 
@@ -43,6 +39,16 @@ The usage of each script (including .sh scripts) can be understood by running it
 	python measures/cd.py -h
 
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for English running `python -m spacy download en_core_web_sm` and German running `python -m spacy download de_core_news_sm`.
+
+### Quick Start
+
+Given a lemmatized corpus pair C1, C2 the following steps need to be executed to obtain a set of discovered changing words:
+1. `bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma>`
+2. `bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language>`
+
+Consider the following example using the English SemEval-2020 data set:
+1. `bash scripts/prepare_data.sh en_semeval corpus1.txt.gz corpus2.txt.gz`
+2. `bash scripts/discover_sgns.sh en_semeval 10 50 5 0.001 3 3 5 1.0 en`
 
 
 ### Prepare Data
@@ -59,7 +65,7 @@ These are required for evaluation and fine-tuning:
 
 A shell script is provided to bring the data into the required format:
 
-	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [path_targets] [path_binary_gold] [path_graded_gold]
+	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [<path_targets>] [<path_binary_gold>] [<path_graded_gold>]
 
 It is recommeded to choose a unique and descriptive data set identifier <data_set_id>. All automated scripts utilize the data set identifier to obtain the required data. 
 
@@ -83,13 +89,13 @@ Optional:
 
 A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
-	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [sample_id] [sample_size] [max_usages] [max_samples]
+	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [<sample_id>] [<sample_size>] [<max_usages>] [<max_samples>]
 
-Steps 1a to 4a are executed by providing the parameters until (including) `language`, e.g.,:
+Steps 1a to 4a are executed by providing the parameters until (including) `<language>`, e.g.,:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en
 	
-When the script is exectued with values for the optional parameters `[sample_id]`, `[sample_size]` and `[max_usages]`, (4b) is also executed, e.g.:
+When the script is exectued with values for the optional parameters `[<sample_id>]`, `[<sample_size>]` and `[<max_usages>]`, (4b) is also executed, e.g.:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25
 	
@@ -125,13 +131,13 @@ e.g.
 
 A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
-	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [f2] [max_samples]
+	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [<f2>] [<max_samples>]
 
-Steps (1) to (3) are executed by providing the parameters until (including) `t`, e.g.:
+Steps (1) to (3) are executed by providing the parameters until (including) `<t<`, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 
 
-When the script is exectued with values for the optional parameter `f2`, (4b) is also executed, e.g.:
+When the script is exectued with values for the optional parameter `[<f2>]`, (4b) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2
 
@@ -167,5 +173,16 @@ The following script can be used to automatically rank a set of target words acc
 
 	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
 	
-### Bibtex eintrag 
-so wie severin
+BibTex
+--------
+
+```
+@bachelorsthesis{Laicher2020,
+title={{Historical word sense clustering with deep contextualized word embeddings}},
+author={Laicher, Severin},
+year={2020},
+school = {Institute for Natural Language Processing, University of Stuttgart},
+address = {Stuttgart}
+}
+```
+
