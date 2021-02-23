@@ -2,11 +2,14 @@
 
   * [General](#general)
   * [Usage](#usage)
-  * [Prepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
+    + [Prepare Data](#prepare-data)
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
-  * [Other Tasks](#other-tasks)
+  * [Automated Binary Classification and Graded Ranking](#automated-binary-classification-and-graded-ranking)
+    + [Prepare Data](#prepare-data)
+    + [Static Approach](#static-approach)
+    + [Contextualized Approach](#contextualized-approach)
   * [Parameter Settings](#parameter-settings)
 
 
@@ -43,15 +46,22 @@ The usage of each script (including .sh scripts) can be understood by running it
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`.
 
 
-### Prepare Data
+### Automatic LSC Discovery
+
+
+#### Prepare Data
 
 The minimum required data is the following:
-1. raw corpus pair (in .txt.gz format)
-2. lemmatized corpus pair (in .txt.gz format)
+1. lemmatized corpus pair (in .txt.gz format)
+2. raw corpus pair (in .txt.gz format)
+
+The following data is optional:
+3. a file containing target words (one word per line)
+4. binary and graded gold data (one word-value pair per line, tab seperated)
 
 A shell script is provided to bring the data into the required format:
 
-	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> 
+	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [path_targets] [path_binary_gold] [path_graded_gold]
 	
 e.g.
 
@@ -69,7 +79,6 @@ e.g.
 
 The sample identifier <sample_id> should also be unique and descriptive. 
 
-### Automated LSC Discovery
 
 #### Static Approach
 
@@ -116,3 +125,81 @@ e.g.
 	bash scripts/discover_bert.sh test_data sample_1 en token 1+12 0.1 f2 25
 	
 	
+### Automated Binary Classification and Graded Ranking
+
+Scripts are provided to automatically solve the two SemEval-2020 subtasks Binary Classification and Graded Ranking.
+
+### Prepare Data
+
+The minimum required data is the following:
+1. lemmatized corpus pair (in .txt.gz format)
+2. raw corpus pair (in .txt.gz format)
+3. a file containing target words (one word per line)
+
+The following is required for evaluation and fine-tuning:
+4. binary and graded gold data (one word-value pair per line, tab seperated)
+
+The previously described prepare_data.sh is used, 
+
+ e.g.
+ 
+	bash scripts/prepare_data.sh test_data test/corpus1_lemma.txt.gz test/corpus2_lemma.txt.gz test/corpus1_token.txt.gz test/corpus2_token.txt.gz test/targets.txt [test/binary_gold.tsv] [test/graded_gold.tsv]
+	
+Again, BERT requieres a sample and usages. If you allready prepared data for the automatic LSC Discovery, you can use the same sample and usages. Otherwise, 
+
+e.g.
+
+	bash scripts/prepare_sample.sh test_data sample_1 500 25 en
+
+Usages for the target words are also required. A script is provided:
+
+	bash scripts/extract_target_usages.sh <data_set_id> <language> <max_usages>
+
+e.g.
+
+	bash scripts/extract_target_usages.sh test_data en 25
+
+
+#### Static Approach
+
+The following script can be used to generate binary scores for the target words:
+
+	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t>
+	
+e.g.
+
+	bash scripts/classify_sgns.sh 10 50 5 0.001 3 3 5 1.0
+
+
+The following script can be used to generate graded values for the target words:
+
+
+	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
+
+e.g.
+
+	bash scripts/classify_sgns.sh 10 50 5 0.001 3 3 5
+
+
+#### Contextualized Approach
+
+The following script can be used to generate binary scores for the target words:
+
+	bash scripts/classify_sgns.sh <data_set_id> <sample_id> <language> <type> <layers> <t>
+	
+e.g.
+
+	bash scripts/classify_sgns.sh test_data sample_1 en token 1+12 0.1
+
+
+The following script can be used to generate graded values for the target words:
+
+
+	bash scripts/classify_sgns.sh <data_set_id> <language> <type> <layers> 
+
+e.g.
+
+	bash scripts/classify_sgns.sh test_data en token 1+12 
+
+
+### Parameter Settings
