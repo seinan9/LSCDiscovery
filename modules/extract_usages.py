@@ -22,7 +22,7 @@ def main():
         <path_corpus_token>     = path to the tokenized corpus
         <path_target_words>     = path to the target words list
         <path_output_directory> = directory where the csv-files are saved
-        <language>              = Language of the corpora ( eng | ger | swe | other )
+        <language>              = en | de | sw
         <max_usages>            = maximum number of usages to be extracted 
 
     """)
@@ -48,16 +48,16 @@ def main():
             writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
             writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "lemma"])
     
-    if language == 'ger':
+    if language == 'de':
         trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
                     u'Oͤ' : u'Ö', u'Uͤ' : u'Ü', u'ſ' : u's', u'\ua75b' : u'r',
                     u'm̃' : u'mm', u'æ' : u'ae', u'Æ' : u'Ae', 
                     u'göñ' : u'gönn', u'spañ' : u'spann'}
-    elif language == 'eng':
+    elif language == 'en':
         trans_table = {u' \'s' : u'\'s',
                     u' n\'t' : u'n\'t', u' \'ve' : u'\'ve', u' \'d' : u'\'d',
                     u' \'re' : u'\'re', u' \'ll' : u'\'ll'}
-    elif language == 'swe':
+    elif language == 'sw':
         trans_table = {u' \'s' : u'\'s'}
     else:
         trans_table = {}

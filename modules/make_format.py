@@ -17,19 +17,19 @@ def main():
     # Get the arguments
     args = docopt("""
     Usage:
-        make_format.py <path_uses1> <path_uses2> <path_output> <language> <max_samples>
+        make_format.py <path_usages1> <path_usages2> <path_output> <language> <max_samples>
            
     Arguments:
-        <path_uses1>        = File containing uses from corpus 1
-        <path_uses2>        = file containing uses from corpus 2
+        <path_usages1>        = File containing uses from corpus 1
+        <path_usages2>        = file containing uses from corpus 2
         <path_output>       = output name
         <language>          = en | de | it | ru
         <max_samples>       = maximal number of samples per corpus 
 
     """)
 
-    path_uses1 = args['<path_uses1>']
-    path_uses2 = args['<path_uses2>']
+    path_usages1 = args['<path_usages1>']
+    path_usages2 = args['<path_usages2>']
     path_output = args['<path_output>']
     language = args['<language>']
     max_samples = int(args['<max_samples>'])
@@ -41,7 +41,7 @@ def main():
     # Load sentences 
     logging.info("Load uses")
     sentences1 = []
-    with open(path_uses1, 'r', encoding="utf-8") as f:
+    with open(path_usages1, 'r', encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
             sentences1.append(row)
@@ -54,7 +54,7 @@ def main():
         index_token1.append(sentence["index_token"])
 
     sentences2 = []
-    with open(path_uses2, 'r', encoding="utf-8") as f:
+    with open(path_usages2, 'r', encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
         for row in reader:
             sentences2.append(row)

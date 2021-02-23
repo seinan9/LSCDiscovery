@@ -21,13 +21,13 @@ def main():
     args = docopt("""Create token-based embeddings with BERT.
 
     Usage:
-        Bert.py [-l] <path_usages> <path_output> <language> <type_sentences> <layers>
+        bert.py [-l] <path_usages> <path_output> <language> <type_sentences> <layers>
         
     Arguments:
        
         <path_usages>       = Path to the test sentences
         <path_output>       = Path for storing the vectors
-        <language>          = eng / ger / swe / lat
+        <language>          = en | de
         <type_sentences>    = lemma | token | toklem
         <layers>            = TODO
     
@@ -49,7 +49,6 @@ def main():
     start_time = time.time()
 
     # Load pre-trained model tokenizer (vocabulary) and model (weights)
-    logging.info("LOAD SENTENCES")
     model_language = {
         'en': 'bert-base-cased', 
         'de': 'bert-base-german-cased', 
@@ -75,7 +74,6 @@ def main():
             test_sentences.append(dict(row))
 
         # Create the vectors
-        logging.info("Create Bert embeddings")
         for i in range(0, len(test_sentences)):
             try:
                 # Create target word(s)
@@ -109,8 +107,8 @@ def main():
                                 break
                 
                 if len(target_word_indices) == 0:
-                    print("Indices not found")
-                    break
+                    logging.info("INDICES NOT FOUND. SKIPPED SENTENCE "+str(i))
+                    continue
 
                 # Trim tokenized_text if longer than 512
                 if len(tokenized_text) > 512:
@@ -141,11 +139,11 @@ def main():
                     layers_list = list(map(int, layers_list))
                     #vec = [np.array(token[l]) for l in layers_list]
                     sum_vec = np.sum([np.array(token[l]) for l in layers_list], axis=0)
-                    #sum_vec = np.sum([np.array(token[12]), np.array(token[11]), np.array(token[10]), np.array(token[9])], axis=0)
+                    #sum_vec = np.sum([np.array(token[12]), np.array(token[1])], axis=0)
                     vectors.append(np.array(sum_vec))
                 context_vector_list.append(np.sum(vectors, axis=0, dtype=float))
             except:
-                print('{} {}'.format('Skipped sentence', i))
+                logging.info("SKIPPED SENTENCE "+str(i))
         
     
     # Normalize vectors in length
@@ -153,7 +151,6 @@ def main():
         context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
 
     # Save contextVectorList_sparse matrix
-    logging.info("Save vectors")
     outSpace = Space(matrix=context_vector_list, rows=" ", columns=" ")
     outSpace.save(path_output)
 
