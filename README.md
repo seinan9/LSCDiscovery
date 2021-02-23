@@ -53,11 +53,16 @@ It is strongly recommend you to run the scripts within a [virtual environment](h
 #### Process
 The following steps are executed to obtain a set of predictions:
 
-1.A neural language model (SGNS, BERT) is used to generate word embeddings (dense representation of words in the form of a numeric vector) for words in the intersection of the corpus vocabularies.\footnote{In BERT's case only a sample of the intersection is considered due to computational limitations.}
-2.Differences between word embedding(s) from $C_1$ and word embedding(s) from $C_2$ are measured, resulting in graded values.  
-3.A threshold is calculated according to these graded values. Words whose graded values are greater than or equal to this threshold, are labeled as changing words. 
-4.A filtering is applied to these predictions in order to remove undesirable words (e.g., proper names and foreign words).
-5.(Optional) Usages for the filtered predictions are extracted and saved in a specific format. These can then be used to evaluate the predictions or detect false positives.
+1.A neural language model (SGNS, BERT) is used to generate word embeddings (dense representation of words in the form of a numeric vector) for words in the intersection of the corpus vocabularies.
+2.dad
+3.dadwad
+4.dadad
+5.dadadda
+6..\footnote{In BERT's case only a sample of the intersection is considered due to computational limitations.}
+7.Differences between word embedding(s) from $C_1$ and word embedding(s) from $C_2$ are measured, resulting in graded values.  
+8.A threshold is calculated according to these graded values. Words whose graded values are greater than or equal to this threshold, are labeled as changing words. 
+9.A filtering is applied to these predictions in order to remove undesirable words (e.g., proper names and foreign words).
+10.(Optional) Usages for the filtered predictions are extracted and saved in a specific format. These can then be used to evaluate the predictions or detect false positives.
 
 
 
