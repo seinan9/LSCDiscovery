@@ -102,15 +102,15 @@ A shell script is provided that automatically executes the described steps to ob
 
 	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [<sample_id>] [<sample_size>] [<max_usages>] [<max_samples>]
 
-Steps 1a to 4a are executed by providing the parameters until (including) `<language>`, e.g.,:
+Steps (1) to (5) are executed by providing the parameters until (including) `<language>`, e.g.,:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en
 	
-When the script is exectued with values for the optional parameters `[<sample_id>]`, `[<sample_size>]` and `[<max_usages>]`, (4b) is also executed, e.g.:
+When the script is exectued with values for the optional parameters `[<sample_id>]`, `[<sample_size>]` and `[<max_usages>]`, the optional step (1) is also executed, e.g.:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25
 	
-When all parameters are provided, (5) is also executed, e.g.:
+When all parameters are provided, the optional step (2) is also executed, e.g.:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25 25
 	
@@ -126,13 +126,14 @@ The following steps are executed to discover changing words in the intersection 
 4. create contextualized word embeddings (`token-based/bert.py`)
 5. measure differences (`measures/apd.py` or `measures/cos.py`)
 6. calculate threshold and label changing words (`measures/binary.py`)
-Note: filter1 is applied before the sampling, to not waste computational power on undesirable words.
+
+Note: Filter1 is applied before the sampling (2), to not waste computational power on undesirable words.
 
 Optional:
 1. filter on a usage-level (`modules/filter2.py`) 
-2. store usages for predictions in format for DURel annotation system
+2. store usages for predictions in format for DURel annotation system (`modules/make_format.py`)
 
-A shell script is provided that automatically executes (0a) to (0c):
+A shell script is provided that automatically executes (1) to (3):
 
 	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
 
@@ -144,16 +145,16 @@ A shell script is provided that automatically executes the described steps to ob
 
 	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [<f2>] [<max_samples>]
 
-Steps (1) to (3) are executed by providing the parameters until (including) `<t<`, e.g.:
+Steps (4) to (6) are executed by providing the parameters until (including) `<t<`, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 
 
-When the script is exectued with values for the optional parameter `[<f2>]`, (4b) is also executed, e.g.:
+When the script is exectued with values for the optional parameter `[<f2>]`, the optional step (1) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2
 
 
-When all parameters are provided, (5) is also executed, e.g.:
+When all parameters are provided, the optional step (2) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 25
 
