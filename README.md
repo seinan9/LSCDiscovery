@@ -107,17 +107,17 @@ e.g.
 BERT requires word usages to generate contextualized word embeddings. Extracting usages for a large amount of words and creating contextualized word embeddings for them afterwards is computationally expensive. We recommend to use a sample of the vocabularies intersection. 
 
 The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
-0a. filter out undesirable words from the vocabularies intersection (`modules/filter1.py`)
-0b. sample words (`modules/sample.py`)
-0c. extract usages for sampled words (`modules/extract_usages.py`)
-1. create contextualized word embeddings (`token-based/bert.py`)
-2. measure differences (`measures/apd.py` or `measures/cos.py`)
-3. calculate threshold and label changing words (`measures/binary.py`)
+1. filter out undesirable words from the vocabularies intersection (`modules/filter1.py`)
+2. sample words (`modules/sample.py`)
+3. extract usages for sampled words (`modules/extract_usages.py`)
+4. create contextualized word embeddings (`token-based/bert.py`)
+5. measure differences (`measures/apd.py` or `measures/cos.py`)
+6. calculate threshold and label changing words (`measures/binary.py`)
 Note: filter1 is applied before the sampling, to not waste computational power on undesirable words.
 
 Optional:
-4b. filter on a usage-level (`modules/filter2.py) 
-5. store usages for predictions in format for DURel annotation system
+1. filter on a usage-level (`modules/filter2.py`) 
+2. store usages for predictions in format for DURel annotation system
 
 A shell script is provided that automatically executes (0a) to (0c):
 
