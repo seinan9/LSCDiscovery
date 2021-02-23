@@ -40,7 +40,7 @@ mkdir -p ${sample_dir}/usages_corpus2/
 mkdir -p data/${data_set_id}/tmp
 
 # Generate frequency list of intersection
-python measures/freqs.py data/${data_set_id}/corpus1/lemma/*txt.gz data/${data_set_id}/corpus2/lemma/*txt.gz data/${data_set_id}/tmp/freqs_inter.tsv
+python measures/freqs.py data/${data_set_id}/corpus1/lemma.txt.gz data/${data_set_id}/corpus2/lemma.txt.gz data/${data_set_id}/tmp/freqs_inter.tsv
 
 # Apply Filter1
 python modules/filter1.py data/${data_set_id}/tmp/freqs_inter.tsv data/${data_set_id}/tmp/freqs_inter_f1.tsv en -t
@@ -49,8 +49,8 @@ python modules/filter1.py data/${data_set_id}/tmp/freqs_inter.tsv data/${data_se
 python modules/sample.py data/${data_set_id}/tmp/freqs_inter_f1.tsv ${sample_dir}/sample.tsv " ${sample_size} " 
 
 # Extract usages for sample
-python modules/extract_usages.py data/${data_set_id}/corpus1/lemma/*.txt.gz data/${data_set_id}/corpus1/token/*.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus1/ ${language} " ${usage_size} "
-python modules/extract_usages.py data/${data_set_id}/corpus2/lemma/*.txt.gz data/${data_set_id}/corpus2/token/*.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus2/ ${language} " ${usage_size} "
+python modules/extract_usages.py data/${data_set_id}/corpus1/lemma.txt.gz data/${data_set_id}/corpus1/token.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus1/ ${language} " ${usage_size} "
+python modules/extract_usages.py data/${data_set_id}/corpus2/lemma.txt.gz data/${data_set_id}/corpus2/token.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus2/ ${language} " ${usage_size} "
 
 # Clean
 rm -rf data/${data_set_id}/tmp

@@ -64,8 +64,8 @@ mkdir -p ${outdir}
 mkdir -p ${resdir}
 
 # Generate static word embeddings with SGNS
-python type-based/sgns.py data/${data_set_id}/corpus1/lemma/*.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
-python type-based/sgns.py data/${data_set_id}/corpus2/lemma/*.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
+python type-based/sgns.py data/${data_set_id}/corpus1/lemma.txt.gz ${outdir}/mat1 ${window_size} ${dim} ${k} ${s} ${min_count1} ${itera}
+python type-based/sgns.py data/${data_set_id}/corpus2/lemma.txt.gz ${outdir}/mat2 ${window_size} ${dim} ${k} ${s} ${min_count2} ${itera}
 
 
 # Length-normalize, meanc-center and align with OP
@@ -77,7 +77,7 @@ python measures/cd.py ${outdir}/mat1ca ${outdir}/mat2ca ${resdir}/distances_inte
 
 
 # Create predictions
-python measures/binary.py ${resdir}/cd_intersection.tsv ${resdir}/predictions.tsv " ${t} " 
+python measures/binary.py ${resdir}/distances_intersection.tsv ${resdir}/predictions.tsv " ${t} " 
 
 
 # Apply filter1
@@ -88,18 +88,24 @@ python modules/filter1.py ${resdir}/predictions.tsv ${resdir}/predictions_f1.tsv
 if [ $# -eq 13 ] || [ $# -eq 14 ]
     then
         sample=${resdir}/predictions_f1.tsv
+        
         mkdir -p ${outdir}/${sample_id}/usages_corpus1
         mkdir -p ${outdir}/${sample_id}/usages_corpus2
+        mkdir -p ${resdir}/${sample_id}
+
         number_lines=$(wc -l ${resdir}/predictions_f1.tsv | awk '{print $1 }')
         if [ ${sample_size} -lt ${number_lines} ]
             then
                 python modules/sample.py -s ${resdir}/predictions_f1.tsv ${resdir}/${sample_id}/sample.tsv " ${sample_size} "
                 sample=${resdir}/${sample_id}/sample.tsv
         fi
-        python modules/extract_usages.py data/${data_set_id}/corpus1/lemma/*.txt.gz data/${data_set_id}/corpus1/token/*.txt.gz ${sample} ${outdir}/${sample_id}/usages_corpus1/ ${language} " ${max_usages} "
-        python modules/extract_usages.py data/${data_set_id}/corpus2/lemma/*.txt.gz data/${data_set_id}/corpus2/token/*.txt.gz ${sample} ${outdir}/${sample_id}/usages_corpus2/ ${language} " ${max_usages} "
+
+        python modules/extract_usages.py data/${data_set_id}/corpus1/lemma.txt.gz data/${data_set_id}/corpus1/token.txt.gz ${sample} ${outdir}/${sample_id}/usages_corpus1/ ${language} " ${max_usages} "
+        python modules/extract_usages.py data/${data_set_id}/corpus2/lemma.txt.gz data/${data_set_id}/corpus2/token.txt.gz ${sample} ${outdir}/${sample_id}/usages_corpus2/ ${language} " ${max_usages} "
 
         # Apply filter2
+        number_lines=$(wc -l ${sample} | awk '{print $1 }')
+        progress_counter=0
         cat ${sample} | while read line || [ -n "$line" ]
             do
                 result=$(python modules/filter2.py ${outdir}/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/${sample_id}/usages_corpus2/${line}.tsv ${language})
@@ -107,6 +113,8 @@ if [ $# -eq 13 ] || [ $# -eq 14 ]
                     then
                         printf "%s\n" "${line}" >> ${resdir}/${sample_id}/predictions_f2.tsv
                 fi
+                progress_counter+=1
+                echo "PROGRESS : ${progress_counter}/${number_lines}"
             done
 fi
 

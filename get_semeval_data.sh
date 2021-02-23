@@ -1,22 +1,22 @@
 #!/bin/bash
 
-#ger
-wget https://www2.ims.uni-stuttgart.de/data/sem-eval-ulscd/semeval2020_ulscd_ger.zip
-unzip semeval2020_ulscd_ger.zip
-rm semeval2020_ulscd_ger.zip
+# #ger
+# wget https://www2.ims.uni-stuttgart.de/data/sem-eval-ulscd/semeval2020_ulscd_ger.zip
+# unzip semeval2020_ulscd_ger.zip
+# rm semeval2020_ulscd_ger.zip
 
-mkdir -p semeval/ger
-mv semeval2020_ulscd_ger/* semeval/ger/
-rm -r semeval2020_ulscd_ger
+# mkdir -p semeval/ger
+# mv semeval2020_ulscd_ger/* semeval/ger/
+# rm -r semeval2020_ulscd_ger
 
-# #eng
-# wget https://www2.ims.uni-stuttgart.de/data/sem-eval-ulscd/semeval2020_ulscd_eng.zip
-# unzip semeval2020_ulscd_eng.zip
-# rm semeval2020_ulscd_eng.zip
+#eng
+wget https://www2.ims.uni-stuttgart.de/data/sem-eval-ulscd/semeval2020_ulscd_eng.zip
+unzip semeval2020_ulscd_eng.zip
+rm semeval2020_ulscd_eng.zip
 
-# mkdir -p semeval/eng
-# mv semeval2020_ulscd_eng/* semeval/eng/
-# rm -r semeval2020_ulscd_eng
+mkdir -p semeval/eng
+mv semeval2020_ulscd_eng/* semeval/eng/
+rm -r semeval2020_ulscd_eng
 
 # #swe
 # wget https://zenodo.org/record/3730550/files/semeval2020_ulscd_swe.zip?download=1

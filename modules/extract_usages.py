@@ -39,7 +39,6 @@ def main():
     start_time = time.time()
 
     # Read targetWords into list
-    logging.info("Read target words")
     with open(path_target_words) as f:
         target_words = [line.strip("\n") for line in f]
 
@@ -64,7 +63,6 @@ def main():
         trans_table = {}
 
     # Read and clean lemmatized corpus
-    logging.info("Read corpora ")
     sentences_lemma = []
     with gzip.open(path_corpus_lemma, 'rt', encoding="utf-8") as corpus_lemma:
         for sentence in corpus_lemma:
@@ -79,7 +77,7 @@ def main():
             sentences_token.append(sentence)
 
     # Find uses and write in tab seperated file 
-    logging.info("Find word uses")
+    progress_counter=0
     for target_word in target_words:
         uses = 0
         for i, sentence in enumerate(sentences_lemma):
@@ -110,6 +108,8 @@ def main():
                     break
             if uses == max_usages:
                 break
+        progress_counter+=1
+        logging.info("PROGRESS :"+str(progress_counter)+"/"+str((len(target_words))))
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
     print("")

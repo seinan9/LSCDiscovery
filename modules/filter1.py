@@ -64,6 +64,7 @@ def main():
 
     filtered = []
     nlp = spacy.load(spacy_languages[language])
+    progress_counter=0
     for word in words:
         doc = nlp(word)
         for token in doc:
@@ -71,6 +72,8 @@ def main():
         if len(doc) == 1:
             if pos == 'NOUN' or pos == 'VERB' or pos == 'ADJ':
                 filtered.append(word)
+        progress_counter+=1
+        logging.info("PROGRESS :"+str(progress_counter)+"/"+str((len(words))))
 
     with open(path_output, 'w', encoding='utf-8') as f:
         for word in filtered:
