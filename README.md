@@ -6,18 +6,18 @@
   * [Automated LSC Discovery](#automated-lsc-discovery)
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
-  * [Automated Binary Classification and Graded Ranking](#automated-binary-classification-and-graded-ranking)
-    + [Static Approach](#static-approach)
-    + [Contextualized Approach](#contextualized-approach)
-  * [Parameter Settings](#parameter-settings)
 
 
 ### General
 
-A framework that utilizes common approaches for Lexical Semantic Change (LSC) Detection to solve the task of Lexical Semantic Change Discovery:
-> Given a corpus pair (C1,C2), decide for the intersection of their vocabularies which words lost or gained sense(s) between $C_1$ and $C_2$.
+A framework that utilizes common approaches for Lexical Semantic Change (LSC) Detection to solve the task of LSC Discovery:
+> Given a corpus pair (C1,C2), decide for the intersection of their vocabularies which words lost or gained sense(s) between C_1 and C_2.
 
-Furthermore, additional tools are provided to solve task related to the field of Lexical Semantic Change Detection, e.g., the binary classification and graded ranking.
+The following is provided:
+- scripts to automatically solve the LSC Discovery task 
+- scripts to automatically solve the Binary Classification subtask
+- scripts to automatically solve the Graded Ranking subtask 
+- tools to evaluate and fine-tune the results 
 
 Currently only English and German are fully supported. 
 
@@ -25,24 +25,20 @@ If you use this software for academic research, please [cite](#bibtex) these pap
 
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
-Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [VecMap](https://github.com/artetxem/vecmap).
+Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy),[torch](https://pypi.org/project/torch/),[transformers](https://huggingface.co/transformers/),[spaCy](https://spacy.io/), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [VecMap](https://github.com/artetxem/vecmap
 
 
 ### Usage
 
 The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-	python type-based/count.py <path_corpus> <path_output> <window_size>
-
-e.g.	
-
-	python type-based/count.py data/test/corpus1/lemma.txt.gz test_matrix1 1
+	python measures/cd.py <path_matrix1> <path_matrix2> <path_targets> <path_output>
 
 The usage of each script (including .sh scripts) can be understood by running it with help option `-h`, e.g.:
 
-	python3 type-based/count.py -h
+	python measures/cd.py -h
 
-It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for en running `python -m spacy download en_core_web_sm` and de running `python -m spacy download de_core_news_sm`.
+It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for English running `python -m spacy download en_core_web_sm` and German running `python -m spacy download de_core_news_sm`.
 
 
 #### Prepare Data
@@ -83,11 +79,11 @@ A shell script is provided that automatically executes the described steps to ob
 
 	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [sample_id] [sample_size] [max_usages] [max_samples]
 
-Steps 1a to 4a are executed by providing the parameters until (including) <language>, e.g.,:
+Steps 1a to 4a are executed by providing the parameters until (including) `language`, e.g.,:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en
 	
-When the script is exectued with values for the optional parameters [sample_id], [sample_size] and [max_usages], (4b) is also executed, e.g.:
+When the script is exectued with values for the optional parameters `[sample_id]`, `[sample_size]` and `[max_usages]`, (4b) is also executed, e.g.:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25
 	
@@ -125,11 +121,11 @@ A shell script is provided that automatically executes the described steps to ob
 
 	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [f2] [max_samples]
 
-Steps (1) to (3) are executed by providing the parameters until (including) <t>, e.g.:
+Steps (1) to (3) are executed by providing the parameters until (including) `t`, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 
 
-When the script is exectued with values for the optional parameter [f2] (4b) is also executed, e.g.:
+When the script is exectued with values for the optional parameter `f2`, (4b) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2
 
