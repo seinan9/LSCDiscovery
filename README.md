@@ -32,15 +32,12 @@ Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect)
 
 The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-e.g	`python type-based/count.py <path_corpus> <path_output> <window_size>`
+e.g.	`python type-based/count.py <path_corpus> <path_output> <window_size>`
 
-e.g.
-
-	python type-based/count.py data/test/corpus1/lemma.txt.gz test_matrix1 1
+e.g.	`python type-based/count.py data/test/corpus1/lemma.txt.gz test_matrix1 1`
 
 The usage of each script (including .sh scripts) can be understood by running it with help option `-h`, e.g.:
-
-	python3 type-based/count.py -h
+	`python3 type-based/count.py -h`
 
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for en running `python -m spacy download en_core_web_sm` and de running `python -m spacy download de_core_news_sm`.
 
