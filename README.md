@@ -2,6 +2,8 @@
 
   * [General](#general)
   * [Usage](#usage)
+  * [LSCDiscovery](#lscdiscovery)
+  * [Other](#other)
   * [Models](#models)
     + [Pre-Training](#pre-training)
     + [Semantic Representations](#semantic-representations)
@@ -18,7 +20,8 @@
 ### General
 
 A framework that utilizes common approaches for Lexical Semantic Change Detection to solve the task of lexical semantic change discovery:
->Given a corpus pair (C1,C2), decide for the intersection of their vocabularieswhich words lost or gained sense(s) betweenC1andC2.
+> Given a corpus pair (C1,C2), decide for the intersection of their vocabularieswhich words lost or gained sense(s) betweenC1andC2.
+Furthermore, additional tools are provided to solve task related to the field of Lexical Semantic Change Detection, e.g., the binary classification and graded ranking.
 
 If you use this software for academic research, please [cite](#bibtex) these papers:
 
@@ -29,13 +32,14 @@ Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect)
 
 ### Usage
 
-The scripts should be run directly from the main directory. If you wish to do otherwise, you may have to change the path you add to the path attribute in `sys.path.append('./modules/')` in the scripts. All scripts can be run directly from the command line:
+The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-	python3 representations/count.py <corpDir> <outPath> <windowSize>
+	python measures/cd.py <path_matrix1> <path_matrix2> <path_targets> <path_output> 
 
 e.g.
+	python type-based/sgns.py <path_corpus> <path_output> <window_size> <dim> <k> <s> <min_count> <itera>
 
-	python3 representations/count.py corpora/test/corpus1/ test_matrix1 1
+	python representations/count.py corpora/test/corpus1/ test_matrix1 1
 
 The usage of each script (including .sh scripts) can be understood by running it with help option `-h`, e.g.:
 
