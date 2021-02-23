@@ -8,6 +8,10 @@
     + [Static Approach](#static-approach)
     + [Contextualized Approach](#contextualized-approach)
   * [Automated Binary Classification and Graded Ranking](#automated-binary-classification-and-graded-ranking)
+    + [Static Approach](#static-approach)
+    + [Contextualized Approach](#contextualized-approach)
+  * [Parameter Settings](#parameter-settings)
+  * [Bibtext](#bibtex)
 
 
 ### General
