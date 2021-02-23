@@ -156,7 +156,7 @@ When the script is exectued with values for the optional parameter `[<f2>]`, the
 
 When all parameters are provided, the optional step (2) is also executed, e.g.:
 
-	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 25
+	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2 25
 
 
 ### Automated Binary Classification and Graded Ranking
