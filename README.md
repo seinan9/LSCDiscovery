@@ -4,8 +4,8 @@
   * [Usage](#usage)
   * [Prepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
-     + [Static Approach (SGNS)](#static-approach)
-     + [Contextualized Approach (BERT)](#contextualized-approach)
+    + [Static Approach (SGNS)](#static-approach)
+    + [Contextualized Approach (BERT)](#contextualized-approach)
   * [Other Tasks](#other-tasks)
   * [Parameter Settings](#parameter-settings)
 
