@@ -14,7 +14,7 @@ function usage {
     echo "For a set of target words, decide which words lost or gained sense(s) between C_1 and C_2."
     echo ""
     echo "  Usage:" 
-    echo "      classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> [-s]" 
+    echo "      classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t>" 
     echo ""
     echo "      <data_set_id>       = data set identifier"
     echo "      <window_size>       = the linear distance of context words to consider in each direction"
@@ -28,7 +28,7 @@ function usage {
     echo ""
 }
 
-if [ $# -ne 9 ] && [ $# -ne 10 ]
+if [ $# -ne 9 ]
 	then 
 		usage
 		exit 1
