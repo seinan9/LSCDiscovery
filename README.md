@@ -69,15 +69,15 @@ The English and German SemEval-2020 data sets can be imported by running `bash s
 #### Static Approach
 
 The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
-1a. create static word embeddings (`type-based/sgns.py`)
-1b. length-normalize, mean-center and align word embeddings (`modules/map_embeddings.py`) 
-2. measure differences (`measures/cd.py`)
-3. calculate threshold and label changing words (`measures/binary.py`)
-4a. filter out undesirable words (`modules/filter1.py`)
+1. create static word embeddings (`type-based/sgns.py`)
+2. length-normalize, mean-center and align word embeddings (`modules/map_embeddings.py`) 
+3. measure differences (`measures/cd.py`)
+4. calculate threshold and label changing words (`measures/binary.py`)
+5. filter out undesirable words (`modules/filter1.py`)
 
 Optional:
-4b. filter on a usage-level (`modules/filter2.py)
-5. store usages for predictions in format for DURel annotation system
+1. filter on a usage-level (`modules/filter2.py`)
+2. store usages for predictions in format for DURel annotation system
 
 A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
