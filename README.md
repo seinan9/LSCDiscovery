@@ -43,7 +43,7 @@ The usage of each script (including .sh scripts) can be understood by running it
 
 	python3 type-based/count.py -h
 
-It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`.
+It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for en running `python -m spacy download en_core_web_sm` and de running `python -m spacy download de_core_news_sm`.
 
 
 ### Automatic LSC Discovery
