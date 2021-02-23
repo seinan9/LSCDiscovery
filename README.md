@@ -32,7 +32,7 @@ Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect)
 
 The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-	python type-based/count.py <path_corpus> <path_output> <window_size>
+e.g	`python type-based/count.py <path_corpus> <path_output> <window_size>`
 
 e.g.
 
