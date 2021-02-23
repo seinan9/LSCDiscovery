@@ -115,7 +115,7 @@ Optional:
 
 A shell script is provided that automatically executes (0a) to (0c):
 
-	`bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>`
+	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
 
 e.g.
 
@@ -125,21 +125,15 @@ A shell script is provided that automatically executes the described steps to ob
 
 	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [f2] [max_samples]
 
-Steps (1) to (3) are executed by providing the parameters until (including) <t>
-
-e.g.
+Steps (1) to (3) are executed by providing the parameters until (including) <t>, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 
 
-When the script is exectued with values for the optional parameter [f2] (4b) is also executed:
-
-e.g
+When the script is exectued with values for the optional parameter [f2] (4b) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2
 
 
-When all parameters are provided, (5) is also executed:
-
-e.g.
+When all parameters are provided, (5) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 25
