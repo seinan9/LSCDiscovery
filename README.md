@@ -19,6 +19,7 @@ The framework utilizes common approaches for Lexical Semantic Change (LSC) Detec
 The framework can also be used for Binary Classification and Graded Ranking:
 
 > Given a corpus pair C1,C2 and a list of target words, automatically decide which target words lost or gained sense(s) between C1 and C2.
+
 > Given a corpus pair C1,C2 and a list of target words, automatically rank the target words according to their degree of LSC between C1 and C2.
 
 Additional tools are provided for evaluation and fine-tuning.
