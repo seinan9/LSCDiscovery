@@ -25,7 +25,7 @@ If you use this software for academic research, please [cite](#bibtex) these pap
 
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
-Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy),[torch](https://pypi.org/project/torch/),[transformers](https://huggingface.co/transformers/),[spaCy](https://spacy.io/), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [VecMap](https://github.com/artetxem/vecmap
+Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), [torch](https://pypi.org/project/torch/), [transformers](https://huggingface.co/transformers/), [spaCy](https://spacy.io/), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [VecMap](https://github.com/artetxem/vecmap
 
 
 ### Usage
