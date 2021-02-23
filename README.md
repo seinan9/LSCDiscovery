@@ -41,20 +41,22 @@ The usage of each script (including .sh scripts) can be understood by running it
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for English running `python -m spacy download en_core_web_sm` and German running `python -m spacy download de_core_news_sm`.
 
 
-#### Prepare Data
+### Prepare Data
 
 The minimum required data is the following:
 1. lemmatized corpus pair (in .txt.gz format)
 2. raw corpus pair (in .txt.gz format)
 
-The following data is optional:
+The following data is only required for binary classification and graded ranking:
 1. a file containing target words (one word per line)
-2. binary and graded gold data (one word-value pair per line, tab seperated)
+
+These are required for evaluation and fine-tuning:
+1. binary and graded gold data (one word-value pair per line, tab seperated)
 
 A shell script is provided to bring the data into the required format:
 
 	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [path_targets] [path_binary_gold] [path_graded_gold]
-	
+
 It is recommeded to choose a unique and descriptive data set identifier <data_set_id>. All automated scripts utilize the data set identifier to obtain the required data. 
 
 The English and German SemEval-2020 data sets can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
@@ -133,3 +135,32 @@ When the script is exectued with values for the optional parameter `f2`, (4b) is
 When all parameters are provided, (5) is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 25
+
+
+### Automatic Binary Classification and Graded Ranking
+
+#### Static Approach
+
+The following script can be used to automatically decide for a list of target words, which words lost or gained sense(s) between C_1 and C_2:
+
+	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t>
+
+The following script can be used to automatically rank a set of target words according to their degree of LSC between C_1 and C_2:
+
+	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
+
+#### Contextualized Approach
+
+Again, BERT requires word usags. If word usages were already extracted for the automatic LSC Discovery, you can use these by providing the `<sample_id>`. Otherwise, the follo
+
+	bash scripts/prepare_sample.sh en_semeval sample_1 100 25 en 
+
+The following script can be used to automatically decide for a list of target words, which words lost or gained sense(s) between C_1 and C_2:
+
+	bash scripts/classify_sgns.sh <data_set_id> <sample_id> <language> <type> <layers> <t>
+
+The following script can be used to automatically rank a set of target words according to their degree of LSC between C_1 and C_2:
+
+	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
+	
+
