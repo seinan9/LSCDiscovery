@@ -1,7 +1,7 @@
 # LSCDiscovery
 
   * [General](#general)
-  * [Quick Start](#quick-starts)
+  * [Quick Start](#quick-start)
   * [Usage](#usage)
   * [Pepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
