@@ -54,11 +54,11 @@ It is strongly recommend you to run the scripts within a [virtual environment](h
 
 The following steps are executed to obtain a set of predictions:
 
-1.generate word embeddings 
-2.measure differences between word embeddings
-3.apply thresholding to differences
-4.filter undesirable words
-5.(optional) store usages in format for DURel annotation system
+1. generate word embeddings 
+2. measure differences between word embeddings
+3. apply thresholding to differences
+4. filter undesirable words
+5. (optional) store usages in format for DURel annotation system
 
 
 ### Models
