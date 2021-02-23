@@ -3,19 +3,19 @@ name=$0
 data_set_id=$1
 sample_id=$2
 sample_size=$3
-usage_size=$4
+max_usages=$4
 language=$5
 
 function usage {
-	echo "Generate a sample of size <sample_size> and extract <usage_size> usages for every word from C_1 and C_2."
+	echo "Generate a sample of size <sample_size> and extract <max_usages> usages for every word from C_1 and C_2."
     echo ""
     echo "  Usage:" 
-    echo "      make_samples.sh <data_set_id> <sample_id> <sample_size> <usage_size> <language>"
+    echo "      make_samples.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>"
     echo ""
 	echo "		<data_set_id>	= data set id"
 	echo "		<sample_id>	= identifier for the sample"
 	echo "		<sample_size>	= size of the sample"
-	echo "		<usage_size>	= max number of usages"
+	echo "		<max_usages>	= max number of usages"
 	echo "		<language>	= en | de"
     echo ""
 }
@@ -49,8 +49,8 @@ python modules/filter1.py data/${data_set_id}/tmp/freqs_inter.tsv data/${data_se
 python modules/sample.py data/${data_set_id}/tmp/freqs_inter_f1.tsv ${sample_dir}/sample.tsv " ${sample_size} " 
 
 # Extract usages for sample
-python modules/extract_usages.py data/${data_set_id}/corpus1/lemma.txt.gz data/${data_set_id}/corpus1/token.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus1/ ${language} " ${usage_size} "
-python modules/extract_usages.py data/${data_set_id}/corpus2/lemma.txt.gz data/${data_set_id}/corpus2/token.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus2/ ${language} " ${usage_size} "
+python modules/extract_usages.py data/${data_set_id}/corpus1/lemma.txt.gz data/${data_set_id}/corpus1/token.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus1/ ${language} " ${max_usages} "
+python modules/extract_usages.py data/${data_set_id}/corpus2/lemma.txt.gz data/${data_set_id}/corpus2/token.txt.gz ${sample_dir}/sample.tsv ${sample_dir}/usages_corpus2/ ${language} " ${max_usages} "
 
 # Clean
 rm -rf data/${data_set_id}/tmp

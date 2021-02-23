@@ -43,14 +43,14 @@ mkdir -p ${resdir}/COS
 
 
 # Create vectors with bert, compute APD and COS
-cat data/${language}/targets.tsv | while read line || [ -n "$line" ]
+cat data/${data_set_id}//targets/targets.tsv | while read line || [ -n "$line" ]
 do  
     echo "${line}"
-    python token-based/bert.py -l data/${language}/uses/corpus1/${line}.csv ${outdir}/vectors_corpus1/${line} ${language} ${type} ${layers}
-    python token-based/bert.py -l data/${language}/uses/corpus2/${line}.csv ${outdir}/vectors_corpus2/${line} ${language} ${type} ${layers}
+    python token-based/bert.py -l data/${data_set_id}/targets/usages_corpus1/${line}.tsv ${outdir}/vectors_corpus1/${line} ${language} ${type} ${layers}
+    python token-based/bert.py -l data/${data_set_id}/targets/usages_corpus2/${line}.tsv ${outdir}/vectors_corpus2/${line} ${language} ${type} ${layers}
 
-    apd=$(python modules/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
-    cos=$(python modules/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+    apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
+    cos=$(python measures/cos.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
 
     printf "%s\t%s\n" "${line}" "${apd}" >> ${resdir}/APD/distances_targets.tsv
     printf "%s\t%s\n" "${line}" "${cos}" >> ${resdir}/COS/distances_targets.tsv
