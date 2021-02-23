@@ -37,18 +37,18 @@ Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), 
 
 The scripts should be run directly from the main directory. All scripts can be run directly from the command line:
 
-	python measures/cd.py <path_matrix1> <path_matrix2> <path_targets> <path_output>
+	bash scripts/rank_bert.sh <data_set_id> <language> <type> <layers>
 
-The usage of each script (including .sh scripts) can be understood by running it with help option `-h`, e.g.:
+The usage of each script (including .py scripts) can be understood by running it with help option `-h`, e.g.:
 
-	python measures/cd.py -h
+	bash scripts/rank_bert.sh -h
 
 It is strongly recommend to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.9.1. Install the required packages running `pip install -r requirements.txt`. Download the spaCy trained pipeline for English running `python -m spacy download en_core_web_sm` and German running `python -m spacy download de_core_news_sm`.
 
 ### Quick Start
 
 Given a lemmatized corpus pair C1, C2 the following steps need to be executed to obtain a set of discovered changing words:
-1. `bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma>`
+1. `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`
 2. `bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language>`
 
 Consider the following example using the English SemEval-2020 data set:
@@ -58,7 +58,9 @@ Consider the following example using the English SemEval-2020 data set:
 
 ### Prepare Data
 
-The minimum required data is the following:
+The minimum required data is a corpus pair C1, C2. The data can be prepared by running `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`. While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.  
+
+To recommend data is the following:
 1. lemmatized corpus pair (in .txt.gz format)
 2. raw corpus pair (in .txt.gz format)
 
@@ -68,7 +70,7 @@ The following data is only required for binary classification and graded ranking
 These are required for evaluation and fine-tuning:
 1. binary and graded gold data (one word-value pair per line, tab seperated)
 
-A shell script is provided to bring the data into the required format:
+Use the following script to bring the data into the required format:
 
 	bash scripts/prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> [<path_targets>] [<path_binary_gold>] [<path_graded_gold>]
 
@@ -178,6 +180,9 @@ The following script can be used to automatically rank a set of target words acc
 
 	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
 	
+### Parameter Settings
+TODO
+
 BibTex
 --------
 
