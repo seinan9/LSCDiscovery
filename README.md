@@ -13,10 +13,14 @@
 ### General
 
 The framework utilizes common approaches for Lexical Semantic Change (LSC) Detection to discover changing words:
+
 > Given a corpus pair C1,C2, automatically discover words that undergo a meaning change between C1 and C2.
+
 The framework can also be used for Binary Classification and Graded Ranking:
+
 > Given a corpus pair C1,C2 and a list of target words, automatically decide which target words lost or gained sense(s) between C1 and C2.
 > Given a corpus pair C1,C2 and a list of target words, automatically rank the target words according to their degree of LSC between C1 and C2.
+
 Additional tools are provided for evaluation and fine-tuning.
 
 Currently only English and German are fully supported. 
@@ -177,12 +181,11 @@ BibTex
 --------
 
 ```
-@bachelorsthesis{Laicher2020,
-title={{Historical word sense clustering with deep contextualized word embeddings}},
-author={Laicher, Severin},
-year={2020},
+@bachelorsthesis{Kurtyigit2021,
+title={{Lexical Semantic Change Discovery}},
+author={Kurtyigit, Sinan},
+year={2021},
 school = {Institute for Natural Language Processing, University of Stuttgart},
 address = {Stuttgart}
 }
 ```
-
