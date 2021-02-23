@@ -10,6 +10,7 @@
 
 ### General
 
+You can use this framwork to discover changes in bla bla (einfach halten) 
 A framework that utilizes common approaches for Lexical Semantic Change (LSC) Detection to solve the task of LSC Discovery:
 > Given a corpus pair (C1,C2), decide for the intersection of their vocabularies which words lost or gained sense(s) between C_1 and C_2.
 
