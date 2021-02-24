@@ -187,23 +187,26 @@ The following script can be used to automatically rank a set of target words acc
 	
 ### Parameter Settings
 
+#### Static Approach
 
 |Name | Description | Recommended EN | Recommended DE |
 | --- | --- | --- | --- |
-| `<window_size>` | The linear distance of context words to consider in each direction |
-| `<dim>` | Dimensionality of embeddings
-| `<k>` | Number of negat
-| `<s>` |
-| `<min_count1>` |
-| `<min_count2>` |
-| `<itera>` |
-| `<t>` |
-| `<language` |
-| `<sample_id>` |
-| `<sample_size>` |
-| `<max_usages>` |
-| `<max_samples>` |
+| `<data_set_id>` | Data set identifier | | |
+| `<window_size>` | The linear distance of context words to consider in each direction | | 10 |
+| `<dim>` | Dimensionality of embeddings || 300 |
+| `<k>` | Number of negative parameter | | 5 |
+| `<s>` | Threshold for subsampling | | 0.001 |
+| `<min_count1>` | Number of occurences for a word to be included in the vocabulary C1 | | 39 |
+| `<min_count2>` | Number of occurences for a word to be included in the vocabulary C2 | | 39 |
+| `<itera>` | Number of iterations | | 5 |
+| `<t>` | Threshold = mean + t * standard deviation | | 1.0 |
+| `<language` | en or de | en | de |
+| `<sample_id>` | Sample identifer | | |
+| `<sample_size>` | TODO | 200 | 200 | 
+| `<max_usages>` | TODO | 100 | 100 |
+| `<max_samples>` | TODO | 50 | 50 |
 
+#### Contextualized Approach
 
 
 BibTex
