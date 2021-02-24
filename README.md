@@ -188,11 +188,11 @@ The following script can be used to automatically rank a set of target words acc
 ### Parameter Settings
 
 
-|Name | Description | Recommended EN | Recomended DE |
+|Name | Description | Recommended EN | Recommended DE |
 | --- | --- | --- | --- |
-| `<window_size>` | 
-| `<dim>` |
-| `<k>` |
+| `<window_size>` | The linear distance of context words to consider in each direction |
+| `<dim>` | Dimensionality of embeddings
+| `<k>` | Number of negat
 | `<s>` |
 | `<min_count1>` |
 | `<min_count2>` |
