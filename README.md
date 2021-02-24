@@ -187,11 +187,16 @@ The following script can be used to automatically rank a set of target words acc
 	
 ### Parameter Settings
 
+In this section a description of the parameters as well as recommended values for both languages are provided.
+
+
 #### Static Approach
 
-|Name | Description | Recommended EN | Recommended DE |
+	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [<sample_id>] [<sample_size>] [<max_usages>] [<max_samples>]
+
+| Parameter | Description | Recommended EN | Recommended DE |
 | --- | --- | --- | --- |
-| `<data_set_id>` | Data set identifier | | |
+| `<data_set_id>` | Data set identifier | a meaningful id | a meaningful id |
 | `<window_size>` | The linear distance of context words to consider in each direction | | 10 |
 | `<dim>` | Dimensionality of embeddings || 300 |
 | `<k>` | Number of negative parameter | | 5 |
@@ -201,12 +206,36 @@ The following script can be used to automatically rank a set of target words acc
 | `<itera>` | Number of iterations | | 5 |
 | `<t>` | Threshold = mean + t * standard deviation | | 1.0 |
 | `<language` | en or de | en | de |
-| `<sample_id>` | Sample identifer | | |
-| `<sample_size>` | TODO | 200 | 200 | 
+| `<sample_id>` | Sample identifer | | a meaningful id |
+| `<sample_size>` | TODO | 200 | 500 | 
 | `<max_usages>` | TODO | 100 | 100 |
 | `<max_samples>` | TODO | 50 | 50 |
 
+
 #### Contextualized Approach
+
+	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
+
+| Parameter | Description | Recommended EN | Recommended DE |
+| --- | --- | --- | --- |
+| `<data_set_id>` | Data set identifier | a meaningful id | a meaningful id |
+| `<sample_id>` | Sample identifier | a meaningful id | a meaningful id |
+| `<sample_size>` | TODO | 500 | 500 | 
+| `<max_usages>` | TODO | 100 | 100 |
+| `<language>` | en or de | en | de |
+
+	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> <f2> <max_samples> 
+
+| Parameter | Description | Recommended EN | Recommended DE |
+| --- | --- | --- | --- |
+| `<data_set_id>` | Data set identifier | a meaningful id | a meaningful id |
+| `<sample_id>` | Sample identifier | a meaningful id | a meaningful id |
+| `<language>` | en or de | en | de |
+| `<type>` | lemma or token or toklem | token | toklem |
+| `<layers>` | TODO | 1+12 | 1+12 | 
+| `<t>` | Threshold = mean + t * standard deviation | 0.1 | 1.0 |
+| `<f2>` | TODO | f2 | f2 |
+| `<max_samples>` | TODO | 50 | 50 |
 
 
 BibTex
