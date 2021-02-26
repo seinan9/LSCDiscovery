@@ -69,6 +69,7 @@ To recommend data is the following:
 2. raw corpus pair (in .txt.gz format)
 
 The following data is only required for binary classification and graded ranking:
+
 3. a file containing target words (one word per line)
 
 These are required for evaluation and fine-tuning:
