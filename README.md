@@ -208,7 +208,7 @@ In this section a description of the parameters as well as their recommended val
 | `<sample_id>` | Sample identifer | an expressive id | an expressive id |
 | `<sample_size>` | Number of words to be sampled from filtered words (after filter1)  | 500 | 500 | 
 | `<max_usages>` | Max. number of usages to be extracted from each corpus | 100 | 100 |
-| `<max_samples>` | Max. number of samples stored for annotation | 50 | 50 |
+| `<max_samples>` | Max. number of samples to be stored for annotation | 50 | 50 |
 
 
 #### Contextualized Approach
@@ -234,7 +234,7 @@ In this section a description of the parameters as well as their recommended val
 | `<layers>` | Which layers to extract embeddings from. All possible combinations including numbers from 1 to 12 seperated by a `+` (e.g., 1, 1+2, 1+3+12, etc.) | 1+12 | 1+12 | 
 | `<t>` | Threshold = mean + t * standard deviation | 0.1 | 1.0 |
 | `<f2>` | If you want to apply the second filter write f2 | f2 | f2 |
-| `<max_samples>` | Max. number of usages to be extracted from each corpus | 50 | 50 |
+| `<max_samples>` | Max. number of usages to be stored for annotation | 50 | 50 |
 
 
 BibTex
