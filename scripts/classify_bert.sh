@@ -7,20 +7,19 @@ type=$4
 layers=$5
 t=$6
 
-# USAGES für targets müssen davor erzeugt werden (außerhalb dieses skripts)
 
 function usage {
-    echo "For a set of target words, decide which words lost or gained sense(s) between C_1 and C_2." 
+    echo "For a set of target words, decide which words lost or gained sense(s) between C1 and C2." 
     echo ""
     echo "  Usage:" 
     echo "      classify_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t>"
     echo ""
     echo "      <data_set_id>   = data set identifsier"
     echo "      <sample_id>     = sample identifier"
-    echo "      <language>      = en | de"
+    echo "      <language>      = en | de | sw"
     echo "      <type>          = lemma | token | toklem"
-    echo "      <layers>        = TODO"
-    echo "      <t>             = threshold = mean + t * std"
+    echo "      <layers>        = which layers to extract embeddings from. All possible combinations including numbers from 1 to 12 seperated by a + (e.g., 1, 1+2, 1+3+12, etc.)"
+    echo "      <t>             = threshold = mean + t * standard deviation"
     echo ""
 }
 

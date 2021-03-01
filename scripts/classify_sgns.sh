@@ -11,7 +11,7 @@ itera=$8
 t=$9
 
 function usage {
-    echo "For a set of target words, decide which words lost or gained sense(s) between C_1 and C_2."
+    echo "For a set of target words, decide which words lost or gained sense(s) between C1 and C2."
     echo ""
     echo "  Usage:" 
     echo "      classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t>" 

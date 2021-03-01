@@ -7,15 +7,15 @@ layers=$4
 
 
 function usage {
-    echo "Rank a set of target words according to their degree of LSC between C_1 and C_2."
+    echo "Rank a set of target words according to their degree of LSC between C1 and C2."
     echo ""
     echo "  Usage:"
     echo "      rank_bert.sh <data_set_id> <language> <type> <layers>"
     echo ""
     echo "      <data_set_id>   = data set identifier"
-    echo "      <language>      = eng | ger | swe | lat"
+    echo "      <language>      = en | de | sw | la"
     echo "      <type>          = lemma | token | toklem"
-    echo "      <layers>        = TODO"
+    echo "      <layers>        = which layers to extract embeddings from. All possible combinations including numbers from 1 to 12 seperated by a + (e.g., 1, 1+2, 1+3+12, etc.)"
     echo ""
 }
 

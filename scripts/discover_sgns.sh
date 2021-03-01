@@ -18,7 +18,7 @@ max_usages=${13}
 max_samples=${14}
 
 function usage {
-    echo "Given a corpus pair C_1 and C_2, decide for the intersection of their vocabularies which words lost or gained sense(s) between C_1 and C_2."
+    echo "Given a corpus pair C1 and C2, decide for the intersection of their vocabularies which words lost or gained sense(s) between C1 and C2."
     echo ""
     echo "  Usage:" 
     echo "      discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count> <itera> <t> <language>" 
@@ -35,10 +35,10 @@ function usage {
     echo "      <itera>             = number of iterations"
     echo "      <t>                 = threshold = mean + t * standard deviation"
     echo "      <language>          = en | de"
-    echo "      <sample_id>         = TODO"    
-    echo "      <sample_size>       = TODO"
-    echo "      <max_usages>        = TODO"
-    echo "      <max_samples>       = TODO"
+    echo "      <sample_id>         = sample identifier"    
+    echo "      <sample_size>       = Number of words to be sampled from filtered words (after filter1)"
+    echo "      <max_usages>        = max. number of usages to be extracted from each corpus"
+    echo "      <max_samples>       = max. number of samples stored for annotation"
     echo ""
 }
 

@@ -13,7 +13,7 @@ max_samples=${8}
 
 
 function usage {
-    echo "Given a corpus pair C_1 and C_2, decide for the intersection of their vocabularies which words lost or gained sense(s) between C_1 and C_2."
+    echo "Given a corpus pair C1 and C2, decide for the intersection of their vocabularies which words lost or gained sense(s) between C_1 and C_2."
     echo ""
     echo "  Usage:" 
     echo "      discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t>"
@@ -24,10 +24,10 @@ function usage {
     echo "      <sample_id>         = sample identifier"
     echo "      <language>          = en | de"
     echo "      <type>              = lemma | token | toklem"
-    echo "      <layers>            = TODO"
+    echo "      <layers>            = which layers to extract embeddings from. All possible combinations including numbers from 1 to 12 seperated by a + (e.g., 1, 1+2, 1+3+12, etc.)"
     echo "      <t>                 = threshold = mean + t * standard deviation"
-    echo "      <f2>                = TODO"
-    echo "      <max_samples>       = TODO"
+    echo "      <f2>                = if you want to apply the second filter write f2"
+    echo "      <max_samples>       = max. number of samples stored for annotation"
     echo ""
 }
 

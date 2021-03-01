@@ -10,7 +10,7 @@ min_count2=$7
 itera=$8
 
 function usage {
-    echo "Rank a set of target words according to their degree of LSC between C_1 and C_2."
+    echo "Rank a set of target words according to their degree of LSC between C1 and C2."
     echo ""
     echo "  Usage:" 
     echo "      rank_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera>" 

@@ -7,15 +7,15 @@ max_usages=$4
 language=$5
 
 function usage {
-	echo "Generate a sample of size <sample_size> and extract <max_usages> usages for every word from C_1 and C_2."
+	echo "Generate a sample of size <sample_size> and extract <max_usages> usages for every word from C1 and C2."
     echo ""
     echo "  Usage:" 
     echo "      make_samples.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>"
     echo ""
 	echo "		<data_set_id>	= data set id"
-	echo "		<sample_id>	= identifier for the sample"
-	echo "		<sample_size>	= size of the sample"
-	echo "		<max_usages>	= max number of usages"
+	echo "		<sample_id>	= sample identifier"
+	echo "		<sample_size>	= number of words to be sampled from vocabulary intersection"
+	echo "		<max_usages>	= max. number of usages to be extracted from each corpus"
 	echo "		<language>	= en | de"
     echo ""
 }

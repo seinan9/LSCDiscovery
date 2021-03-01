@@ -11,9 +11,9 @@ function usage {
     echo "  Usage:" 
     echo "      extract_target_usages.sh <data_set_id> <language> <max_usages>"
     echo ""
-	echo "		<data_set_id>	= data set id"
+	echo "		<data_set_id>	= data set identifier"
 	echo "		<language>		= en | de"
-	echo "		<max_usages>	= max number of usages"
+	echo "		<max_usages>	= max. number of usages to be extracted from each corpus"
     echo ""
 }
 

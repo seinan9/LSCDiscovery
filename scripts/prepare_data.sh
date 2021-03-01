@@ -20,7 +20,7 @@ function usage {
     echo "      prepare_data.sh <id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> <path_targets>" 
     echo "      prepare_data.sh <id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> <path_targets> <path_binary_gold> <path_graded_gold>" 
     echo ""
-    echo "      <data_set_id>           = Identifier for data set. Give a good name!"
+    echo "      <data_set_id>           = data set identifier"
     echo "      <path_corpus1_lemma>    = Path to first lemmatized corpus."
     echo "      <path_corpus2_lemma>    = Path to second lemmatized corpus."
     echo "      <path_corpus1_token>    = Path to first raw corpus."
