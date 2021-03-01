@@ -16,9 +16,9 @@
 
 ### General
 
-Given a corpus pair (C_1,C_2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. 
+Given a corpus pair (C1,C2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. 
 
-The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task) or rank the words according to their degree of semantic change between C_1 and C_2 (graded ranking task) ([SemEval-2020](https://arxiv.org/abs/2007.11464)).
+The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C1 and C2 (binary classification task) or rank the words according to their degree of semantic change between C1 and C2 (graded ranking task) ([SemEval-2020](https://arxiv.org/abs/2007.11464)).
 
 Additional tools are provided for evaluation and fine-tuning.
 
@@ -45,7 +45,7 @@ It is strongly recommend to run the scripts within a [virtual environment](https
 
 ### Quick Start
 
-Given a corpus pair C_1, C_2 the following steps need to be executed to discover changing words:
+Given a corpus pair C1, C2 the following steps need to be executed to discover changing words:
 1. `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`
 2. `bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language>`
 
@@ -78,6 +78,7 @@ It is recommeded to choose a unique and descriptive data set identifier <data_se
 
 The English and German [SemEval-2020 data sets](https://www.ims.uni-stuttgart.de/en/research/resources/corpora/sem-eval-ulscd/) can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
 
+Note that you can use all data sets found in [LSCDetection](https://github.com/Garrafao/LSCDetection).
 
 ### Automated LSC Discovery
 
@@ -161,31 +162,31 @@ When all parameters are provided, 8 is also executed, e.g.:
 
 #### Static Approach
 
-The following script can be used to automatically decide for a list of target words, which words lost or gained sense(s) between C_1 and C_2:
+The following script can be used to solve the binary classification task:
 
 	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t>
 
-The following script can be used to automatically rank a set of target words according to their degree of LSC between C_1 and C_2:
+The following script can be used to solve the graded ranking task:
 
 	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
 
 #### Contextualized Approach
 
-Again, BERT requires word usags. If word usages were already extracted for the automatic LSC Discovery, you can use these by providing the `<sample_id>`. Otherwise, the follo
+BERT requires word usages. If word usages were already extracted earlier, you can use these by providing the `<sample_id>`. Otherwise, the following can be executed:
 
 	bash scripts/prepare_sample.sh en_semeval sample_1 100 25 en 
 
-The following script can be used to automatically decide for a list of target words, which words lost or gained sense(s) between C_1 and C_2:
+The following script can be used to solve the binary classification task:
 
 	bash scripts/classify_sgns.sh <data_set_id> <sample_id> <language> <type> <layers> <t>
 
-The following script can be used to automatically rank a set of target words according to their degree of LSC between C_1 and C_2:
+The following script can be used to solve the graded ranking task:
 
 	bash scripts/classify_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> 
 	
 ### Parameter Settings
 
-In this section a description of the parameters as well as recommended values for both languages are provided.
+In this section a description of the parameters as well as their recommended values for both languages are provided. Find detailed notes on model performances and optimal parameter settings in [these papers](#bibtex).
 
 
 #### Static Approach
@@ -194,20 +195,20 @@ In this section a description of the parameters as well as recommended values fo
 
 | Parameter | Description | Recommended EN | Recommended DE |
 | --- | --- | --- | --- |
-| `<data_set_id>` | Data set identifier | a meaningful id | a meaningful id |
-| `<window_size>` | The linear distance of context words to consider in each direction | | 10 |
-| `<dim>` | Dimensionality of embeddings || 300 |
-| `<k>` | Number of negative parameter | | 5 |
-| `<s>` | Threshold for subsampling | | 0.001 |
-| `<min_count1>` | Number of occurences for a word to be included in the vocabulary C1 | | 39 |
-| `<min_count2>` | Number of occurences for a word to be included in the vocabulary C2 | | 39 |
-| `<itera>` | Number of iterations | | 5 |
-| `<t>` | Threshold = mean + t * standard deviation | | 1.0 |
-| `<language` | en or de | en | de |
-| `<sample_id>` | Sample identifer | | a meaningful id |
-| `<sample_size>` | TODO | 200 | 500 | 
-| `<max_usages>` | TODO | 100 | 100 |
-| `<max_samples>` | TODO | 50 | 50 |
+| `<data_set_id>` | Data set identifier | an expressive id | a expressive id |
+| `<window_size>` | The linear distance of context words to consider in each direction | 10 | 10 |
+| `<dim>` | Dimensionality of embeddings | 300 | 300 |
+| `<k>` | Number of negative parameter | 5 | 5 |
+| `<s>` | Threshold for subsampling | 0.001 | 0.001 |
+| `<min_count1>` | Number of occurences for a word to be included in the vocabulary of C1 | 4 | 39 |
+| `<min_count2>` | Number of occurences for a word to be included in the vocabulary of C2 | 4 | 39 |
+| `<itera>` | Number of iterations | 5 | 5 |
+| `<t>` | Threshold = mean + t * standard deviation | 1.0 | 1.0 |
+| `<language` | English or German | en | de |
+| `<sample_id>` | Sample identifer | an expressive id | an expressive id |
+| `<sample_size>` | Number of words to be sampled from filtered words (after filter1)  | 500 | 500 | 
+| `<max_usages>` | Max. number of usages to be extracted from each corpus | 100 | 100 |
+| `<max_samples>` | Max. number of samples stored for annotation | 50 | 50 |
 
 
 #### Contextualized Approach
@@ -216,24 +217,24 @@ In this section a description of the parameters as well as recommended values fo
 
 | Parameter | Description | Recommended EN | Recommended DE |
 | --- | --- | --- | --- |
-| `<data_set_id>` | Data set identifier | a meaningful id | a meaningful id |
-| `<sample_id>` | Sample identifier | a meaningful id | a meaningful id |
-| `<sample_size>` | TODO | 500 | 500 | 
-| `<max_usages>` | TODO | 100 | 100 |
-| `<language>` | en or de | en | de |
+| `<data_set_id>` | Data set identifier | an expressive id | an expressive id |
+| `<sample_id>` | Sample identifier | an expressive id | an expressive id |
+| `<sample_size>` | Number of words to be sampled from vocabulary intersection | 500 | 500 | 
+| `<max_usages>` | Max. number of usages to be extracted from each corpus | 100 | 100 |
+| `<language>` | English or German | en | de |
 
 	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> <f2> <max_samples> 
 
 | Parameter | Description | Recommended EN | Recommended DE |
 | --- | --- | --- | --- |
-| `<data_set_id>` | Data set identifier | a meaningful id | a meaningful id |
-| `<sample_id>` | Sample identifier | a meaningful id | a meaningful id |
-| `<language>` | en or de | en | de |
-| `<type>` | lemma or token or toklem | token | toklem |
-| `<layers>` | TODO | 1+12 | 1+12 | 
+| `<data_set_id>` | Data set identifier | an expressive id | an expressive id |
+| `<sample_id>` | Sample identifier | an expressive id | an expressive id |
+| `<language>` | En or de | en | de |
+| `<type>` | Lemma or token or toklem | token | toklem |
+| `<layers>` | Which layers to extract embeddings from. All possible combinations including numbers from 1 to 12 seperated by `+` | 1+12 | 1+12 | 
 | `<t>` | Threshold = mean + t * standard deviation | 0.1 | 1.0 |
-| `<f2>` | TODO | f2 | f2 |
-| `<max_samples>` | TODO | 50 | 50 |
+| `<f2>` | If you want to apply the second filter write f2 | f2 | f2 |
+| `<max_samples>` | Max. number of usages to be extracted from each corpus | 50 | 50 |
 
 
 BibTex
@@ -248,6 +249,25 @@ school = {Institute for Natural Language Processing, University of Stuttgart},
 address = {Stuttgart}
 }
 ```
-
+```
+@inproceedings{Kaiser2021effects,
+    title = "Effects of Pre- and Post-Processing on type-based Embeddings in Lexical Semantic Change Detection",
+    author = "Kaiser, Jens and Kurtyigit, Sinan and Kotchourko, Serge and Schlechtweg, Dominik",
+    booktitle = "Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics",
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics"
+}
+```
+```
+@InProceedings{Laicher2021explaining,
+author = {Laicher, Severin and Kurtyigit, Sinan and Schlechtweg, Dominik and Kuhn, Jonas and {Schulte im Walde}, Sabine},
+title = {{Explaining and Improving BERT Performance on Lexical Semantic Change Detection}},
+    booktitle = "{Proceedings of the Student Research Workshop at the 16th Conference of the European Chapter of the Association for Computational Linguistics}",
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+}
+```
 <a name="myfootnote1">1</a>: While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.
 
