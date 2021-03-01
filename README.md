@@ -17,7 +17,9 @@
 ### General
 
 Given a corpus pair (C_1,C_2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. 
-The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task). 
+
+The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task).
+
 It is also possible to rank a set of target words according to their degree of semantic change between C_1 and C_2 (graded ranking task).  
 
 Additional tools are provided for evaluation and fine-tuning.
