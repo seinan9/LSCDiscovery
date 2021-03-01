@@ -84,8 +84,8 @@ The English and German [SemEval-2020 data sets](https://www.ims.uni-stuttgart.de
 #### Static Approach
 
 The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
-
 1a. create static word embeddings (`type-based/sgns.py`)
+
 1b. length-normalize, mean-center and align word embeddings (`modules/map_embeddings.py`) 
 
 2. measure differences (`measures/cd.py`)
