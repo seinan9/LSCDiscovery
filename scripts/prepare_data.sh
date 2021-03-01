@@ -16,9 +16,10 @@ function usage {
     echo "Bring data in appropriate format."
     echo ""
     echo "  Usage:"
-    echo "      prepare_data.sh <id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> " 
-    echo "      prepare_data.sh <id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> <path_targets>" 
-    echo "      prepare_data.sh <id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> <path_targets> <path_binary_gold> <path_graded_gold>" 
+    echo "      prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>"
+    echo "      prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> " 
+    echo "      prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> <path_targets>" 
+    echo "      prepare_data.sh <data_set_id> <path_corpus1_lemma> <path_corpus2_lemma> <path_corpus1_token> <path_corpus2_token> <path_targets> <path_binary_gold> <path_graded_gold>" 
     echo ""
     echo "      <data_set_id>           = data set identifier"
     echo "      <path_corpus1_lemma>    = Path to first lemmatized corpus."
@@ -40,7 +41,7 @@ function usage {
     echo "" 
 }
 
-if [ $# -ne 5 ] && [ $# -ne 6 ] && [ $# -ne 8 ]
+if [ $# -ne 3 ] && [ $# -ne 5 ] && [ $# -ne 6 ] && [ $# -ne 8 ]
 	then 
 		usage
 		exit 1
@@ -56,12 +57,25 @@ fi
 mkdir -p data/${data_set_id}/corpus1
 mkdir -p data/${data_set_id}/corpus2
 
-# Store lemma copora and token corpora
-cp ${corpus1_lemma} data/${data_set_id}/corpus1/lemma.txt.gz
-cp ${corpus2_lemma} data/${data_set_id}/corpus2/lemma.txt.gz
+# If used if a single corpus pair
+if [ $# -eq 3 ]
+    then
+        cp ${corpus1_lemma} data/${data_set_id}/corpus1/lemma.txt.gz
+        cp ${corpus2_lemma} data/${data_set_id}/corpus2/lemma.txt.gz
 
-cp ${corpus1_token} data/${data_set_id}/corpus1/token.txt.gz
-cp ${corpus2_token} data/${data_set_id}/corpus2/token.txt.gz
+        cp ${corpus1_lemma} data/${data_set_id}/corpus1/token.txt.gz
+        cp ${corpus2_lemma} data/${data_set_id}/corpus2/token.txt.gz
+fi        
+
+# Store lemma copora and token corpora
+if [ $# -eq 6 ] || [ $# -eq 8 ]
+    then
+        cp ${corpus1_lemma} data/${data_set_id}/corpus1/lemma.txt.gz
+        cp ${corpus2_lemma} data/${data_set_id}/corpus2/lemma.txt.gz
+
+        cp ${corpus1_token} data/${data_set_id}/corpus1/token.txt.gz
+        cp ${corpus2_token} data/${data_set_id}/corpus2/token.txt.gz
+fi
 
 # Store target words
 if [ $# -eq 6 ] || [ $# -eq 8 ]
