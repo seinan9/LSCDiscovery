@@ -20,7 +20,7 @@ Given a corpus pair (C1,C2) (e.g., from different time periods, domains, genres 
 
 The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C1 and C2 (binary classification task) or rank the words according to their degree of semantic change between C1 and C2 (graded ranking task) (for more details see [SemEval-2020 Task 1](https://arxiv.org/abs/2007.11464)).
 
-Additional tools are provided for evaluation and fine-tuning.
+Additional tools are provided for evaluation and fine-tuning (e.g., Spearman correlation).
 
 Currently only English and German are fully supported. However, large parts of the repository can still be used for other languages. Please take a look at the documentation in the code for more details.
 
