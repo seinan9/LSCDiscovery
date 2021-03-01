@@ -204,7 +204,7 @@ In this section a description of the parameters as well as their recommended val
 | `<min_count2>` | Number of occurences for a word to be included in the vocabulary of C2 | 4 | 39 |
 | `<itera>` | Number of iterations | 5 | 5 |
 | `<t>` | Threshold = mean + t * standard deviation | 1.0 | 1.0 |
-| `<language` | English or German | en | de |
+| `<language>` | English or German | en | de |
 | `<sample_id>` | Sample identifer | an expressive id | an expressive id |
 | `<sample_size>` | Number of words to be sampled from filtered words (after filter1)  | 500 | 500 | 
 | `<max_usages>` | Max. number of usages to be extracted from each corpus | 100 | 100 |
