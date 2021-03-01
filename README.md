@@ -229,7 +229,7 @@ In this section a description of the parameters as well as their recommended val
 | --- | --- | --- | --- |
 | `<data_set_id>` | Data set identifier | an expressive id | an expressive id |
 | `<sample_id>` | Sample identifier | an expressive id | an expressive id |
-| `<language>` | En or de | en | de |
+| `<language>` | English or German | en | de |
 | `<type>` | Lemma or token or toklem | token | toklem |
 | `<layers>` | Which layers to extract embeddings from. All possible combinations including numbers from 1 to 12 seperated by a `+` (e.g., 1, 1+2, 1+3+12, etc.) | 1+12 | 1+12 | 
 | `<t>` | Threshold = mean + t * standard deviation | 0.1 | 1.0 |
