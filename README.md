@@ -18,7 +18,7 @@
 
 Given a corpus pair (C_1,C_2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. 
 
-The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task) or rank the words according to their degree of semantic change between C_1 and C_2 (graded ranking task).  
+The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task) or rank the words according to their degree of semantic change between C_1 and C_2 (graded ranking task) ([SemEval-2020](https://arxiv.org/abs/2007.11464)).
 
 Additional tools are provided for evaluation and fine-tuning.
 
@@ -62,12 +62,13 @@ However, the recommend input data is the following:
 1. lemmatized corpus pair (in .txt.gz format)
 2. raw corpus pair (in .txt.gz format)
 
-The following data is only required for binary classification and graded ranking:
+To classify (binary classification task) or rank (graded ranking task) a set of target words, the following is also required:
 
-3. a file containing target words (one word per line)
+3. a file containing target words (one word per line in .txt, .csv or .tsv format)
 
-These are required for evaluation and fine-tuning:
-1. binary and graded gold data (one word-value pair per line, tab seperated)
+If the models shall be evaluated or tuned on exisiting gold data, the following has to be provided as well:
+
+4. binary and graded gold data (one word-value pair per line, tab seperated in .txt, .csv or .tsv format)
 
 Use the following script to bring the data into the required format:
 
@@ -75,9 +76,7 @@ Use the following script to bring the data into the required format:
 
 It is recommeded to choose a unique and descriptive data set identifier <data_set_id>. All automated scripts utilize the data set identifier to obtain the required data. 
 
-The English and German SemEval-2020 data sets can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
-
-<a name="myfootnote1">1</a>: While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.
+The English and German [SemEval-2020 data sets](https://www.ims.uni-stuttgart.de/en/research/resources/corpora/sem-eval-ulscd/) can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
 
 
 ### Automated LSC Discovery
@@ -247,3 +246,6 @@ school = {Institute for Natural Language Processing, University of Stuttgart},
 address = {Stuttgart}
 }
 ```
+
+<a name="myfootnote1">1</a>: While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.
+
