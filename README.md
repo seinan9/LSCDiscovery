@@ -83,34 +83,30 @@ The English and German [SemEval-2020 data sets](https://www.ims.uni-stuttgart.de
 
 #### Static Approach
 
-The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
-1.  create static word embeddings (`type-based/sgns.py`)
- 
-1.1. length-normalize, mean-center and align word embeddings (`modules/map_embeddings.py`) 
-
-2. measure differences (`measures/cd.py`)
-3. calculate threshold and label changing words (`measures/binary.py`)
-4a. filter out undesirable words (`modules/filter1.py`)
+The following steps are executed to discover changing words in the vocabulary intersection:
+1. create static word embeddings (`type-based/sgns.py`)
+2. length-normalize, mean-center and align word embeddings (`modules/map_embeddings.py`) 
+3. measure differences (`measures/cd.py`)
+4. calculate threshold and label changing words (`measures/binary.py`)
+5. filter out undesirable words (`modules/filter1.py`)
 
 Optional:
-
-4b. filter on a usage-level (`modules/filter2.py`)
-
-5. store usages for predictions in format for DURel annotation system
+6. filter on a usage-level (`modules/filter2.py`)
+7. store usages for predictions in format for DURel annotation system
 
 A shell script is provided that automatically executes the described steps to obtain a set of changing words:
 
 	bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language> [<sample_id>] [<sample_size>] [<max_usages>] [<max_samples>]
 
-Steps (1) to (5) are executed by providing the parameters until (including) `<language>`, e.g.,:
+Steps 1 to 5 are executed by providing the parameters until (including) `<language>`, e.g.,:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en
 	
-When the script is exectued with values for the optional parameters `[<sample_id>]`, `[<sample_size>]` and `[<max_usages>]`, the optional step (1) is also executed, e.g.:
+When the script is exectued with values for the optional parameters `[<sample_id>]`, `[<sample_size>]` and `[<max_usages>]`, 6 is also executed, e.g.:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25
 	
-When all parameters are provided, the optional step (2) is also executed, e.g.:
+When all parameters are provided, 7 is also executed, e.g.:
 
 	bash scripts/discover_sgns.sh data/en_semeval 10 50 5 0.001 3 3 5 0.1 en sample_1 100 25 25
 	
@@ -119,21 +115,23 @@ When all parameters are provided, the optional step (2) is also executed, e.g.:
 
 BERT requires word usages to generate contextualized word embeddings. Extracting usages for a large amount of words and creating contextualized word embeddings for them afterwards is computationally expensive. We recommend to use a sample of the vocabularies intersection. 
 
-The following steps are executed to discover changing words in the intersection of the corpus vacabularies:
-1. filter out undesirable words from the vocabularies intersection (`modules/filter1.py`)
-2. sample words (`modules/sample.py`)
+The following steps are executed to discover changing words in the vocabulary intersection:
+1. filter out undesirable words from the vocabulary intersection (`modules/filter1.py`)
+2. sample words from filtered vocabulary intersection (`modules/sample.py`)
 3. extract usages for sampled words (`modules/extract_usages.py`)
-4. create contextualized word embeddings (`token-based/bert.py`)
+4. extract contextualized word embeddings (`token-based/bert.py`)
 5. measure differences (`measures/apd.py` or `measures/cos.py`)
 6. calculate threshold and label changing words (`measures/binary.py`)
 
 Note: Filter1 is applied before the sampling (2), to not waste computational power on undesirable words.
 
 Optional:
-1. filter on a usage-level (`modules/filter2.py`) 
-2. store usages for predictions in format for DURel annotation system (`modules/make_format.py`)
 
-A shell script is provided that automatically executes (1) to (3):
+7. filter on a usage-level (`modules/filter2.py`)
+
+8. store usages for predictions in format for DURel annotation system (`modules/make_format.py`)
+
+A shell script is provided that automatically executes 1 to 3:
 
 	bash scripts/prepare_sample.sh <data_set_id> <sample_id> <sample_size> <max_usages> <language>
 
@@ -145,16 +143,16 @@ A shell script is provided that automatically executes the described steps to ob
 
 	bash scripts/discover_bert.sh <data_set_id> <sample_id> <language> <type> <layers> <t> [<f2>] [<max_samples>]
 
-Steps (4) to (6) are executed by providing the parameters until (including) `<t<`, e.g.:
+Steps 4 to 6 are executed by providing the parameters until (including) `<t<`, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 
 
-When the script is exectued with values for the optional parameter `[<f2>]`, the optional step (1) is also executed, e.g.:
+When the script is exectued with values for the optional parameter `[<f2>]`, 7 is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2
 
 
-When all parameters are provided, the optional step (2) is also executed, e.g.:
+When all parameters are provided, 8 is also executed, e.g.:
 
 	bash scripts/discover_bert.sh en_semeval sample_1 en token 1+12 0.1 f2 25
 
