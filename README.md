@@ -18,13 +18,11 @@
 
 Given a corpus pair (C_1,C_2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. 
 
-The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task).
-
-It is also possible to rank a set of target words according to their degree of semantic change between C_1 and C_2 (graded ranking task).  
+The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task) or rank the words according to their degree of semantic change between C_1 and C_2 (graded ranking task).  
 
 Additional tools are provided for evaluation and fine-tuning.
 
-Currently only English and German are fully supported. However, large parts of the repository can still be used for other languages. Take a look at the description of the specific parts for more details. 
+Currently only English and German are fully supported. However, large parts of the repository can still be used for other languages. Please take a look at the documentation in the code for more details.
 
 If you use this software for academic research, please [cite](#bibtex) these papers:
 
@@ -47,20 +45,22 @@ It is strongly recommend to run the scripts within a [virtual environment](https
 
 ### Quick Start
 
-Given a lemmatized corpus pair C1, C2 the following steps need to be executed to obtain a set of discovered changing words:
+Given a corpus pair C_1, C_2 the following steps need to be executed to discover changing words:
 1. `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`
 2. `bash scripts/discover_sgns.sh <data_set_id> <window_size> <dim> <k> <s> <min_count1> <min_count2> <itera> <t> <language>`
 
-Consider the following example using the English SemEval-2020 data set:
-1. `bash scripts/prepare_data.sh en_semeval corpus1.txt.gz corpus2.txt.gz`
-2. `bash scripts/discover_sgns.sh en_semeval 10 50 5 0.001 3 3 5 1.0 en`
+Consider the following example:
+1. `bash scripts/prepare_data.sh test_data path_to_corpus1/corpus1.txt.gz path_to_corpus2/corpus2.txt.gz`
+2. `bash scripts/discover_sgns.sh test_data 10 50 5 0.001 3 3 5 1.0 en`
 
 
 ### Prepare Data
 
-The minimum required data is a corpus pair C1, C2. The data can be prepared by running `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`. While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.  
+The repository can be used with only one corpus pair (raw or lemmatized). The data can be prepared by running `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`.<sup>1</sup>
 
-To recommend data is the following:
+While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.  
+
+To recommend input data is the following:
 1. lemmatized corpus pair (in .txt.gz format)
 2. raw corpus pair (in .txt.gz format)
 
@@ -79,7 +79,7 @@ It is recommeded to choose a unique and descriptive data set identifier <data_se
 
 The English and German SemEval-2020 data sets can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
 
-
+<sup>1</sup> footnote
 ### Automated LSC Discovery
 
 #### Static Approach
