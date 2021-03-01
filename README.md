@@ -1,8 +1,8 @@
 # LSCDiscovery
 
   * [General](#general)
-  * [Quick Start](#quick-start)
   * [Usage](#usage)
+  * [Quick Start](#quick-start)
   * [Pepare Data](#prepare-data)
   * [Automated LSC Discovery](#automated-lsc-discovery)
     + [Static Approach](#static-approach)
@@ -16,25 +16,17 @@
 
 ### General
 
-The framework utilizes common approaches for Lexical Semantic Change (LSC) Detection to discover changing words:
-
-> Given a corpus pair C1,C2, automatically discover words that undergo a meaning change between C1 and C2.
-
-The framework can also be used for Binary Classification and Graded Ranking:
-
-> Given a corpus pair C1,C2 and a list of target words, automatically decide which target words lost or gained sense(s) between C1 and C2.
-
-> Given a corpus pair C1,C2 and a list of target words, automatically rank the target words according to their degree of LSC between C1 and C2.
+Given a corpus pair (C_1,C_2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C_1 and C_2 (binary classification task). It is also possible to rank a set of target words according to their degree of semantic change between C_1 and C_2 (graded ranking task).  
 
 Additional tools are provided for evaluation and fine-tuning.
 
-Currently only English and German are fully supported. 
+Currently only English and German are fully supported. However, large parts of the repository can still be used for other languages. Take a look at the description of the specific parts for more details. 
 
 If you use this software for academic research, please [cite](#bibtex) these papers:
 
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
-Parts of the code rely on [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [torch](https://pypi.org/project/torch/), [transformers](https://huggingface.co/transformers/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [spaCy](https://spacy.io/), [VecMap](https://github.com/artetxem/vecmap)
+Parts of the code rely on [LSCDetection](https://github.com/Garrafao/LSCDetection), [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [torch](https://pypi.org/project/torch/), [transformers](https://huggingface.co/transformers/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [spaCy](https://spacy.io/), [VecMap](https://github.com/artetxem/vecmap)
 
 
 ### Usage
