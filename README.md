@@ -18,7 +18,7 @@
 
 Given a corpus pair (C1,C2) (e.g., from different time periods, domains, genres etc.), this repository can be used to discover semantically changing words between them. 
 
-The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C1 and C2 (binary classification task) or rank the words according to their degree of semantic change between C1 and C2 (graded ranking task) ([SemEval-2020](https://arxiv.org/abs/2007.11464)).
+The repository can also be used to decide for a set of words, which words gained or lost sense(s) between C1 and C2 (binary classification task) or rank the words according to their degree of semantic change between C1 and C2 (graded ranking task) (for more details see [SemEval-2020](https://arxiv.org/abs/2007.11464)).
 
 Additional tools are provided for evaluation and fine-tuning.
 
