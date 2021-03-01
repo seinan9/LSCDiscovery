@@ -56,11 +56,9 @@ Consider the following example:
 
 ### Prepare Data
 
-The repository can be used with only one corpus pair (raw or lemmatized). The data can be prepared by running `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`.<sup>1</sup>
+The repository can be used with only one corpus pair (raw or lemmatized). The data can be prepared by running `bash scripts/prepare_data.sh <data_set_id> <path_corpus1> <path_corpus2>`.<sup>[1](#myfootnote1)</sup>
 
-While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.  
-
-To recommend input data is the following:
+However, the recommend input data is the following:
 1. lemmatized corpus pair (in .txt.gz format)
 2. raw corpus pair (in .txt.gz format)
 
@@ -79,7 +77,9 @@ It is recommeded to choose a unique and descriptive data set identifier <data_se
 
 The English and German SemEval-2020 data sets can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
 
-<sup>1</sup> footnote
+<a name="myfootnote1">1</a>: While the framework can be used for automatic discovery with only a single corpus pair, it is sub-optimal and hence not recommended.
+
+
 ### Automated LSC Discovery
 
 #### Static Approach
