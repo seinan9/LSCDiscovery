@@ -91,6 +91,7 @@ The following steps are executed to discover changing words in the vocabulary in
 5. filter out undesirable words (`modules/filter1.py`)
 
 Optional:
+
 6. filter on a usage-level (`modules/filter2.py`)
 7. store usages for predictions in format for DURel annotation system
 
@@ -128,7 +129,6 @@ Note: Filter1 is applied before the sampling (2), to not waste computational pow
 Optional:
 
 7. filter on a usage-level (`modules/filter2.py`)
-
 8. store usages for predictions in format for DURel annotation system (`modules/make_format.py`)
 
 A shell script is provided that automatically executes 1 to 3:
