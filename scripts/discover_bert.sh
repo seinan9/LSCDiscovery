@@ -59,8 +59,8 @@ mkdir -p ${resdir}/COS
 cat data/${data_set_id}/samples/${sample_id}/sample.tsv | while read line || [ -n "$line" ]
     do  
         echo "${line}"
-        python token-based/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/vectors_corpus1/${line} ${language} ${type} ${layers}
-        python token-based/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus2/${line}.tsv ${outdir}/vectors_corpus2/${line} ${language} ${type} ${layers}
+        python contextualized/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus1/${line}.tsv ${outdir}/vectors_corpus1/${line} ${language} ${type} ${layers}
+        python contextualized/bert.py -l data/${data_set_id}/samples/${sample_id}/usages_corpus2/${line}.tsv ${outdir}/vectors_corpus2/${line} ${language} ${type} ${layers}
 
         # Measure APD and COS for every word in <sample.tsv>
         apd=$(python measures/apd.py ${outdir}/vectors_corpus1/${line} ${outdir}/vectors_corpus2/${line})
