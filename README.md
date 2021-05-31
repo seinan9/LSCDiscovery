@@ -250,6 +250,15 @@ address = {Stuttgart}
 }
 ```
 ```
+@inproceedings{Kurtyigit2021,
+title={{Lexical Semantic Change Discovery}},
+author={Kurtyigit, Sinan and Park, Maike and Schlechtweg, Dominik and Kuhn, Jonas and {Schulte im Walde}, Sabine},
+year={2021},
+school = {Institute for Natural Language Processing, University of Stuttgart},
+address = {Stuttgart}
+}
+```
+```
 @inproceedings{Kaiser2021effects,
     title = "Effects of Pre- and Post-Processing on type-based Embeddings in Lexical Semantic Change Detection",
     author = "Kaiser, Jens and Kurtyigit, Sinan and Kotchourko, Serge and Schlechtweg, Dominik",
