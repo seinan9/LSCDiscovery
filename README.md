@@ -250,12 +250,13 @@ address = {Stuttgart}
 }
 ```
 ```
-@inproceedings{Kurtyigit2021,
-title={{Lexical Semantic Change Discovery}},
-author={Kurtyigit, Sinan and Park, Maike and Schlechtweg, Dominik and Kuhn, Jonas and {Schulte im Walde}, Sabine},
-year={2021},
-school = {Institute for Natural Language Processing, University of Stuttgart},
-address = {Stuttgart}
+@InProceedings{Kurtyigit2021discovery,
+author = {Kurtyigit, Sinan and Park, Maike and Schlechtweg, Dominik and Kuhn, Jonas and {Schulte im Walde}, Sabine},
+title = {{Lexical Semantic Change Discovery}},
+year = {2021},
+booktitle = {{Proceedings of the Joint Conference of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing}},
+address = {Online},
+publisher = {Association for Computational Linguistics},
 }
 ```
 ```
