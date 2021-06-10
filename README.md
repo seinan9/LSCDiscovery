@@ -26,6 +26,8 @@ Currently only English and German are fully supported. However, large parts of t
 
 If you use this software for academic research, please [cite](#bibtex) these papers:
 
+- Sinan Kurtyigit, Maike Park, Dominik Schlechtweg, Jonas Kuhn and Sabine Schulte im Walde. 2019. [Lexical Semantic Change Discovery](https://arxiv.org/abs/2106.03111). Proceedings of the Joint Conference of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing.
+
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
 Parts of the code rely on [LSCDetection](https://github.com/Garrafao/LSCDetection), [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [torch](https://pypi.org/project/torch/), [transformers](https://huggingface.co/transformers/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [spaCy](https://spacy.io/), [VecMap](https://github.com/artetxem/vecmap)
