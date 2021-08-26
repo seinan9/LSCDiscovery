@@ -80,7 +80,7 @@ Use the following script to bring the data into the required format:
 
 It is recommeded to choose a unique and descriptive data set identifier <data_set_id>. All automated scripts utilize the data set identifier to obtain the required data. 
 
-The English and German [SemEval-2020 data sets](https://www.ims.uni-stuttgart.de/en/research/resources/corpora/sem-eval-ulscd/) can be imported by running `bash scripts/get_semeval_en.sh` and `bash scripts/get_semeval_de.sh` respectively. 
+The English and German [SemEval-2020 data sets](https://www.ims.uni-stuttgart.de/en/research/resources/corpora/sem-eval-ulscd/) can be imported by running `bash scripts/import_semeval_en.sh` and `bash scripts/import_semeval_de.sh` respectively. 
 
 Note that you can use all data sets found in [LSCDetection](https://github.com/Garrafao/LSCDetection).
 
