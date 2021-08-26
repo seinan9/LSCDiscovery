@@ -9,7 +9,9 @@ import time
 
 from docopt import docopt
 from fuzzywuzzy import fuzz
+import re
 import spacy
+
 
 
 def main():
@@ -39,35 +41,21 @@ def main():
     start_time = time.time()
 
     # Load sentences 
-    logging.info("Load uses")
-    sentences1 = []
-    with open(path_usages1, 'r', encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
+    rows1 = []
+    with open(path_usages1, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
+        next(reader, None)
         for row in reader:
-            sentences1.append(row)
+            rows1.append(row)
 
-    sentences_token1 = []
-    index_token1 =[]
-
-    for sentence in sentences1:
-        sentences_token1.append(sentence["sentence_token"])
-        index_token1.append(sentence["index_token"])
-
-    sentences2 = []
-    with open(path_usages2, 'r', encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
+    rows2 = []
+    with open(path_usages2, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE, strict=True)
+        next(reader, None)
         for row in reader:
-            sentences2.append(row)
+            rows2.append(row)
 
-    sentences_token2 = []
-    index_token2 =[]
-
-    for sentence in sentences2:
-        sentences_token2.append(sentence["sentence_token"])
-        index_token2.append(sentence["index_token"])
-
-    lemma = sentences1[0]["lemma"]
-    
+    lemma = rows1[0][4]
     spacy_languages = {
         "en": "en_core_web_sm",
         "de": "de_core_news_sm",
@@ -78,18 +66,78 @@ def main():
     doc = nlp(lemma)
     pos = doc[0].pos_
 
-    sample_size = min(len(sentences_token1), len(sentences_token2), max_samples)
+    sample_size = min(len(rows1), len(rows2), max_samples)
 
-    rand1 = random.sample(range(len(sentences_token1)), sample_size)
-    rand2 = random.sample(range(len(sentences_token2)), sample_size)
+    rand_idx1 = random.sample(range(len(rows1)), sample_size)
+    rand_idx2 = random.sample(range(len(rows2)), sample_size)
+
+    rand_rows1 = []
+    rand_rows2 = []
+
+    for i in rand_idx1:
+        rand_rows1.append(rows1[i])
+
+    for i in rand_idx2:
+        rand_rows2.append(rows2[i])
+
+    header = ["lemma", "pos", "date", "grouping", "identifier", "description", "context", "indexes_target_token", "indexes_target_sentence"]
+
+    final_rows1 = []
+
+    for i in range(0, len(rand_rows1)):
+        context_chars = [char for char in rand_rows1[i][1]]
+        context_words = re.split(r'(\s+)', rand_rows1[i][1])
+        context_words_no_spaces = rand_rows1[i][1].split()
+
+        target = context_words_no_spaces[int(rand_rows1[i][3])]
+        index_with_spaces = context_words.index(target)
+
+        before_word = context_words[0:index_with_spaces]
+        before_word_chars = [char for char in "".join(before_word)]
+
+        tok_start = len(before_word_chars)
+        tok_end = tok_start + len([char for char in target])
+        indexes_target_token = str(tok_start) + ":" + str(tok_end)
+
+        sen_end = len(context_chars)
+        indexes_target_sentence = "0" + ":" + str(sen_end)
+
+        context = rand_rows1[i][1]
+
+        final_rows1.append([lemma, pos, "C1", " ", lemma+"-c1-i"+str(i), " ", context, indexes_target_token, indexes_target_sentence])
+
+    final_rows2 = []
+
+    for i in range(0, len(rand_rows2)):
+        context_chars = [char for char in rand_rows2[i][1]]
+        context_words = re.split(r'(\s+)', rand_rows2[i][1])
+        context_words_no_spaces = rand_rows2[i][1].split()
+
+        target = context_words_no_spaces[int(rand_rows2[i][3])]
+        index_with_spaces = context_words.index(target)
+
+        before_word = context_words[0:index_with_spaces]
+        before_word_chars = [char for char in "".join(before_word)]
+
+        tok_start = len(before_word_chars)
+        tok_end = tok_start + len([char for char in target])
+        indexes_target_token = str(tok_start) + ":" + str(tok_end)
+
+        sen_end = len(context_chars)
+        indexes_target_sentence = "0" + ":" + str(sen_end)
+
+        context = rand_rows2[i][1]
+
+        final_rows2.append([lemma, pos, "C2", " ", lemma+"-c2-i"+str(i), " ", context, indexes_target_token, indexes_target_sentence])
+
 
     with open(path_output, 'w', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-        writer.writerow(["lemmas", "pos", "indexes", "preceding_sentences", "sentences", "following_sentences", "dates", "filenames", "identifiers", "descriptions"])
-        for i in rand1:
-            writer.writerow([lemma, pos, index_token1[i], " ", sentences_token1[i], " ", "C1", " ", lemma+"-c1-i"+str(i), " "])
-        for i in rand2:
-            writer.writerow([lemma, pos, index_token2[i], " ", sentences_token2[i], " ", "C2", " ", lemma+"-c2-i"+str(i), " "])
+        writer.writerow(header)
+        for i in final_rows1:
+            writer.writerow(i)
+        for i in final_rows2:
+            writer.writerow(i)
 
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
