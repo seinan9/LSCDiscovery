@@ -22,7 +22,7 @@ The repository can also be used to decide for a set of words, which words gained
 
 Additional tools are provided for evaluation and fine-tuning (e.g., Spearman correlation).
 
-You can use the openly available [DURel Tool for Annotation and Visualization](https://www.ims.uni-stuttgart.de/data/durel-tool) to validate and improve the predictions through an optimized human annotations process and convenient visualization. Examples of the visualization can be found [here](https://www.ims.uni-stuttgart.de/data/wugs).
+You can use the openly available [DURel Annotation Tool](https://www.ims.uni-stuttgart.de/data/durel-tool) to validate and improve the predictions through an optimized human annotations process and convenient visualization. Examples of the visualization can be found [here](https://www.ims.uni-stuttgart.de/data/wugs).
 
 Currently only English and German are fully supported. However, large parts of the repository can still be used for other languages. Please take a look at the documentation in the code for more details.
 
