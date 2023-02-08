@@ -50,6 +50,7 @@ def main():
 
     # Load pre-trained model tokenizer (vocabulary) and model (weights)
     model_language = {
+        'en-large': 'bert-large-cased', 
         'en': 'bert-base-cased', 
         'de': 'bert-base-german-cased', 
         'sw': 'KB/bert-base-swedish-cased', 
