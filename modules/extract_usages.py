@@ -46,7 +46,7 @@ def main():
     for target_word in target_words:
         with open(path_output_directory+target_word+".tsv", 'w', encoding="utf-8") as f:
             writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-            writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "lemma"])
+            writer.writerow(["sentence_lemma", "sentence_token", "index_lemma", "index_token", "lemma", "instance_id"])
     
     if language == 'de':
         trans_table = {u'aͤ' : u'ä', u'oͤ' : u'ö', u'uͤ' : u'ü', u'Aͤ' : u'Ä',
@@ -93,7 +93,7 @@ def main():
                         if ratio_lemma > max_ratio_lemma:
                             max_ratio_lemma = ratio_lemma
                             index_lemma = sentences_lemma[i].split().index(word_lemma)
-                    for word_token in sentences_token[i].split():
+                    for j, word_token in enumerate(sentences_token[i].split()):
                         ratio_token = fuzz.ratio(
                             lemma.lower(), word_token.lower())
                         if ratio_token > max_ratio_token:
@@ -101,7 +101,7 @@ def main():
                             index_token = sentences_token[i].split().index(word_token)
                     with open(path_output_directory+word+".tsv", 'a', encoding="utf-8") as f:
                         writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar='')
-                        writer.writerow([sentences_lemma[i].strip().replace(target_word, lemma), sentences_token[i].strip(), index_lemma, index_token, lemma])
+                        writer.writerow([sentences_lemma[i].strip().replace(target_word, lemma), sentences_token[i].strip(), index_lemma, index_token, lemma, lemma+'-'+str(i)+'-'+str(j)])
                     uses += 1
                     target_found = True
                 if target_found:
