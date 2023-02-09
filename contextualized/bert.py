@@ -152,7 +152,8 @@ def main():
         context_vector_list = preprocessing.normalize(context_vector_list, norm='l2')
 
     # Save contextVectorList_sparse matrix
-    outSpace = Space(matrix=context_vector_list, rows=" ", columns=" ")
+    rows = [row['instance_id'] if 'identifier' in row else str(i) for i, row in enumerate(test_sentences)]
+    outSpace = Space(matrix=context_vector_list, rows=rows, columns=[])
     outSpace.save(path_output)
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
